@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { NavBar } from "./dashBoard";
+import NavBar from "../../components/NavBar/NavBar"
 import { mockTodayMissionList, mockUserCompletions, mockTaskTemplates } from "./mock-missions";
 import { Check, LoaderCircle, History } from 'lucide-react';
-import ToastNotification from './ToastNotification'; // <-- IMPORT COMPONENT MỚI
+import ToastNotification from '../../components/ToastNotification/ToastNotification'; // <-- IMPORT COMPONENT MỚI
+import Footer from "../../components/Footer/Footer";
 
 // --- COMPONENT CON: MissionItem giữ nguyên như cũ ---
 function MissionItem({ mission, isCompleted, onComplete }) {
@@ -150,6 +151,7 @@ function Missions() {
                     </>
                 )}
             </div>
+            <Footer></Footer>
         </>
     );
 }

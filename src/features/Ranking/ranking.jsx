@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { NavBar } from "./dashBoard";
+import Footer from '../../components/Footer/Footer';
+import NavBar from "../../components/NavBar/NavBar"
 import { CalendarDays, DollarSign, Target, ChevronDown } from 'lucide-react';
 
 // --- DỮ LIỆU MẪU (Tạm thời, sau này sẽ lấy từ API) ---
@@ -96,6 +97,7 @@ function Ranking() {
                     ))}
                 </div>
             </div>
+            <Footer></Footer>
         </>
     );
 }

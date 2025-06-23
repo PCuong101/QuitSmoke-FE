@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { NavBar } from './dashBoard';
+import NavBar from "../../components/NavBar/NavBar"
 import { articles } from './mock-articles';
 import { ArrowLeft, Share2, Rocket } from 'lucide-react';
 

@@ -1,8 +1,8 @@
 // src/Blog.jsx
 
 import { Link } from 'react-router-dom';
-import { NavBar } from './dashBoard';
-import { articles } from './mock-articles';
+import NavBar from "../../components/NavBar/NavBar"
+import { articles } from "../Articles/mock-articles";
 
 function ArticleCard({ article }) {
   return (

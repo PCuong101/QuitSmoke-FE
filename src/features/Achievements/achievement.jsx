@@ -1,4 +1,5 @@
-import { NavBar } from "./dashBoard";
+import Footer from "../../components/Footer/Footer";
+import NavBar from "../../components/NavBar/NavBar"
 import { allAchievements } from "./mock-achievements"; // Import dữ liệu
 import { Share2, Lock } from 'lucide-react';
 
@@ -106,7 +107,9 @@ function Achievement() {
             })}
           </div>
         </section>
+        
       </div>
+      <Footer></Footer>
     </>
   );
 }

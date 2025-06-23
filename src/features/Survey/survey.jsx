@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Footer } from "./homePage";
+import Footer from "../../components/Footer/Footer.jsx";
 import { useNavigate } from "react-router-dom";
 
 function Survey() {

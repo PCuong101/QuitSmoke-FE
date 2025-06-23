@@ -1,4 +1,4 @@
-import { NavBar } from "./dashBoard";
+import NavBar from "../../components/NavBar/NavBar"
 import { useState, useEffect } from "react";
 
 // Một icon 'X' đơn giản bằng SVG để đóng modal

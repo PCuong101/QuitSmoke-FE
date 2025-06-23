@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { NavBar } from "./dashBoard";
-import { Footer } from "./homePage";
-import { getUserId } from "./dashBoard";
+import NavBar from "../../components/NavBar/NavBar"
+import Footer from "../../components/Footer/Footer";
+import useUserId from "../../hooks/useUserId";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
@@ -39,7 +39,7 @@ function Coach() {
   });
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [confirmedSlot, setConfirmedSlot] = useState(null);
-  const userId = getUserId();
+  const userId = useUserId();
   const [userBookings, setUserBookings] = useState([]);
 
   const fetchCoaches = async () => {

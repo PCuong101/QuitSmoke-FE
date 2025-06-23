@@ -1,19 +1,19 @@
-import HomePage from './homePage.jsx'
-import './App.css'
+import HomePage from './pages/homePage.jsx'
+import './styles/App.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Survey from './survey.jsx';
-import DashBoard from './dashBoard.jsx';
-import Diary from './diary.jsx';
-import Missions from './missions.jsx';
-import Ranking from './ranking.jsx';
-import Coach from './coach.jsx';
-import Achievement from './Achievement.jsx';
-import ServicePackage from './ServicePackage.jsx';
-import Login from './login.jsx';
-import PrivateRoute from './PrivateRoute.jsx';
+import Survey from './features/Survey/survey.jsx';
+import DashBoard from './features/Dashboard/dashBoard.jsx';
+import Diary from './features/Diary/diary.jsx';
+import Missions from './features/Missions/missions.jsx';
+import Ranking from './features/Ranking/ranking.jsx';
+import Coach from './features/Coach/coach.jsx';
+import Achievement from './features/Achievements/achievement.jsx';
+import ServicePackage from './features/ServicePackage/ServicePackage.jsx';
+import Login from './pages/login.jsx';
+import PrivateRoute from './routes/PrivateRoute.jsx';
 
-import Blog from './Blog.jsx';
-import ArticleDetail from './ArticleDetail.jsx';
+import Blog from './features/Blog/Blog.jsx';
+import ArticleDetail from './features/Articles/ArticleDetail.jsx';
 function App() {
 
   return (

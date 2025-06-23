@@ -1,6 +1,7 @@
 
 import * as iconFeature from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import Footer from '../components/Footer/Footer';
 
 function BoxValue(props){
     return (
@@ -48,15 +49,7 @@ function Story(props){
     );
 }
 
-function Footer() {
-    return (
-        <footer>
-            <p>© 2025 QuitSmoking. All rights reserved.</p>
-            <p>Liên hệ: <a href="mailto: pcuongvn101@gmail.com">pcuongvn101@gmail.com</a></p>
-            <p>Chính sách bảo mật | Điều khoản sử dụng</p>
-            </footer>
-    );
-}
+
 
 function HomePage() {
     const navigate = useNavigate();
@@ -131,4 +124,3 @@ function HomePage() {
     );
 }
 export default HomePage;
-export {Footer};
