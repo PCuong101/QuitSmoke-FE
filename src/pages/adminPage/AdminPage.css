@@ -1,0 +1,932 @@
+/* ==========================================================================
+   --- 0. GLOBAL & LAYOUT (SHARED STYLES) ---
+   ========================================================================== */
+
+/* --- GLOBAL RESET & DEFAULTS --- */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background-color: #f8f9fa;
+  color: #343a40;
+}
+* {
+  box-sizing: border-box;
+}
+
+.admin-panel-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 270px;
+  background-color: #16a34a;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  position: fixed;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+.sidebar.collapsed {
+  width: 80px;
+}
+.sidebar .sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  height: 64px;
+}
+.sidebar .logo-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.sidebar.collapsed .logo-text {
+  display: none;
+}
+.sidebar .toggle-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+.sidebar .toggle-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.sidebar.collapsed .toggle-btn {
+  margin: 0 auto;
+}
+.sidebar .nav-separator {
+  padding: 10px 20px;
+}
+.sidebar .nav-separator-text {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.sidebar.collapsed .nav-separator-text {
+  display: none;
+}
+.sidebar .nav-menu {
+  list-style: none;
+  padding: 0 12px;
+  margin: 0;
+}
+.sidebar .nav-menu li {
+  padding: 12px 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s, color 0.2s;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.8);
+}
+.sidebar .nav-menu li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+.sidebar .nav-menu li.active {
+  background-color: #ffffff;
+  color: #16a34a;
+}
+.sidebar.collapsed .nav-item-text {
+  display: none;
+}
+.sidebar.collapsed .nav-menu {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.sidebar.collapsed .nav-menu li {
+  justify-content: center;
+  width: 50px;
+}
+
+/* === ĐÂY LÀ PHẦN SỬA LỖI QUAN TRỌNG NHẤT === */
+.main-content {
+  flex-grow: 1;
+  /* Áp dụng padding ở đây */
+  padding: 30px 50px;
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+  width: calc(100% - 250px); /* Đảm bảo chiều rộng đúng */
+}
+.main-content.collapsed {
+  margin-left: 80px;
+  width: calc(100% - 80px);
+}
+
+/* ==========================================================================
+   --- 1. DASHBOARD PAGE STYLES ---
+   ========================================================================== */
+.dashboard-page .page-header {
+  margin-bottom: 24px;
+}
+.dashboard-page .page-header h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0;
+}
+.dashboard-page .card {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+.dashboard-page .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.dashboard-page .dashboard-panels {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+.dashboard-page .stat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+.dashboard-page .stat-icon {
+  color: #adb5bd;
+}
+.dashboard-page .stat-card p {
+  margin: 0;
+  color: #6c757d;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.dashboard-page .stat-card h3 {
+  margin: 8px 0;
+  font-size: 2rem;
+  font-weight: 600;
+}
+.dashboard-page .stat-card .increase {
+  color: #28a745;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+.dashboard-page .recent-activity h3,
+.dashboard-page .weekly-stats h3 {
+  margin: 0 0 20px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.dashboard-page .recent-activity ul,
+.dashboard-page .weekly-stats ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.dashboard-page .recent-activity li {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f1f1;
+}
+.dashboard-page .recent-activity li:last-child {
+  border-bottom: none;
+}
+.dashboard-page .recent-activity .dot {
+  min-width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.dashboard-page .dot.green {
+  background-color: #28a745;
+}
+.dashboard-page .dot.blue {
+  background-color: #1a73e8;
+}
+.dashboard-page .dot.orange {
+  background-color: #fd7e14;
+}
+.dashboard-page .recent-activity p {
+  font-size: 0.9rem;
+  margin: 0;
+}
+.dashboard-page .recent-activity small {
+  color: #6c757d;
+}
+.dashboard-page .weekly-stats li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #f1f1f1;
+}
+.dashboard-page .weekly-stats li:last-child {
+  border-bottom: none;
+}
+.dashboard-page .weekly-stats .percentage {
+  color: #28a745;
+  font-weight: bold;
+}
+
+@media (max-width: 1200px) {
+  .dashboard-page .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 768px) {
+  .dashboard-page .stats-grid,
+  .dashboard-page .dashboard-panels {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   --- 2. OTHER PAGES' STYLES (Blog, User, Coach) ---
+   ========================================================================== */
+/* Các style cho những trang khác không bị ảnh hưởng */
+/* ==========================================================================
+   THÊM ĐOẠN NÀY VÀO CUỐI FILE styles.css
+   --- 5. BLOG MANAGEMENT PAGE STYLES ---
+   ========================================================================== */
+
+/* --- Layout chung cho trang Blog Management --- */
+.blog-management-page .page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.blog-management-page .page-header h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0;
+}
+.blog-management-page .btn-primary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #28a745; /* Màu xanh lá cây */
+  color: white;
+  padding: 11px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+.blog-management-page .btn-primary:hover {
+  background-color: #218838;
+}
+.blog-management-page .card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  margin-bottom: 24px;
+}
+
+/* --- Lưới thống kê --- */
+.blog-management-page .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+.blog-management-page .stat-card {
+  padding: 20px;
+  margin-bottom: 0;
+}
+.blog-management-page .stat-card h3 {
+  margin: 0 0 4px 0;
+  font-size: 2rem;
+  font-weight: 600;
+}
+.blog-management-page .stat-card p {
+  margin: 0;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+/* --- Thanh tìm kiếm & bộ lọc --- */
+.blog-management-page .search-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.blog-management-page .input-with-icon {
+  position: relative;
+  flex-grow: 1;
+}
+.blog-management-page .input-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #adb5bd;
+}
+.blog-management-page .input-with-icon input {
+  width: 100%;
+  padding: 12px 15px 12px 45px;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+.blog-management-page .btn-secondary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: white;
+  border: 1px solid #ced4da;
+  color: #343a40;
+  padding: 11px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* --- Bảng dữ liệu --- */
+.blog-management-page .list-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+}
+.blog-management-page .data-table {
+  width: 100%;
+}
+.blog-management-page .table-header,
+.blog-management-page .table-row {
+  display: grid;
+  grid-template-columns: 2.5fr 1.5fr 1fr 1.5fr 1.5fr 1fr 1fr;
+  align-items: center;
+  padding: 15px 10px;
+  border-bottom: 1px solid #f1f3f5;
+  gap: 15px;
+}
+.blog-management-page .table-header {
+  font-weight: 600;
+  color: #6c757d;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+.blog-management-page .table-row {
+  font-size: 0.9rem;
+}
+.blog-management-page .table-row:last-child {
+  border-bottom: none;
+}
+
+/* --- Tags --- */
+.blog-management-page .status-tag,
+.blog-management-page .category-tag {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: inline-block;
+}
+.blog-management-page .status-published {
+  background-color: #e7f5ec;
+  color: #28a745;
+}
+.blog-management-page .status-draft {
+  background-color: #fff4e5;
+  color: #fd7e14;
+}
+.blog-management-page .cat-huongdan {
+  background-color: #e8f0fe;
+  color: #1a73e8;
+}
+.blog-management-page .cat-yhoc {
+  background-color: #feecf0;
+  color: #dc3545;
+}
+.blog-management-page .cat-cauchuyen {
+  background-color: #fffbe5;
+  color: #f59e0b;
+}
+.blog-management-page .cat-dinhduong {
+  background-color: #e7f5ec;
+  color: #28a745;
+}
+
+/* --- Nút hành động --- */
+.blog-management-page .action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+.blog-management-page .btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 6px;
+  border-radius: 6px;
+}
+.blog-management-page .btn-icon:hover {
+  background-color: #f1f3f5;
+  color: #1a73e8;
+}
+.blog-management-page .btn-icon-delete:hover {
+  color: #dc3545;
+}
+.user-management-page .page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.user-management-page .page-header h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0;
+}
+.user-management-page .btn-primary {
+  background-color: #1a73e8;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.user-management-page .card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+/* --- Style cho thanh Tìm kiếm & Bộ lọc MỚI --- */
+.user-management-page .search-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.user-management-page .input-with-icon {
+  position: relative;
+  flex-grow: 1; /* Cho phép ô input co giãn */
+}
+.user-management-page .input-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #adb5bd; /* Màu xám cho icon */
+  pointer-events: none; /* Để có thể click xuyên qua icon */
+}
+.user-management-page .input-with-icon input {
+  width: 100%;
+  padding: 12px 15px 12px 45px; /* Padding trái lớn để không che icon */
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.user-management-page .input-with-icon input:focus {
+  outline: none;
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15);
+}
+.user-management-page .btn-secondary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: white;
+  border: 1px solid #ced4da;
+  color: #343a40;
+  padding: 11px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.user-management-page .btn-secondary:hover {
+  background-color: #f8f9fa;
+}
+
+/* --- Style cho bảng dữ liệu --- */
+.user-management-page .list-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+}
+.user-management-page .data-table {
+  width: 100%;
+}
+.user-management-page .table-header,
+.user-management-page .table-row {
+  display: grid;
+  grid-template-columns: 1.5fr 2fr 1.2fr 1.5fr 1fr 1.2fr 1fr;
+  align-items: center;
+  padding: 12px 15px;
+  border-bottom: 1px solid #e9ecef;
+  gap: 15px;
+}
+.user-management-page .table-header {
+  font-weight: 600;
+  color: #6c757d;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+.user-management-page .table-row {
+  font-size: 0.9rem;
+}
+.user-management-page .table-row:last-child {
+  border-bottom: none;
+}
+
+/* Style cho các tag trạng thái */
+.user-management-page .status-tag {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: inline-block;
+  text-align: center;
+}
+.user-management-page .status-active {
+  background-color: #e7f5ec;
+  color: #28a745;
+}
+.user-management-page .status-inactive {
+  background-color: #f1f3f5;
+  color: #495057;
+}
+
+/* Style cho thanh tiến trình */
+.user-management-page .progress-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+.user-management-page .progress-bar {
+  flex-grow: 1;
+  height: 8px;
+  border-radius: 4px;
+  background-color: #e9ecef;
+}
+.user-management-page .progress-bar.green {
+  background-color: #28a745;
+}
+.user-management-page .progress-bar.orange {
+  background-color: #fd7e14;
+}
+.user-management-page .progress-bar.red {
+  background-color: #dc3545;
+}
+.user-management-page .progress-text {
+  font-weight: 500;
+  min-width: 30px;
+}
+
+/* Style cho nút hành động */
+.user-management-page .action-buttons {
+  text-align: center;
+}
+.user-management-page .btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s;
+}
+.user-management-page .btn-icon:hover {
+  background-color: #f1f3f5;
+  color: #1a73e8;
+}
+/* ==========================================================================
+   THÊM ĐOẠN NÀY VÀO CUỐI FILE styles.css
+   --- 4. COACH MANAGEMENT PAGE STYLES ---
+   ========================================================================== */
+
+/* --- Layout chung cho trang Coach Management --- */
+.coach-management-page .page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.coach-management-page .page-header h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0;
+}
+.coach-management-page .btn-primary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #28a745; /* Màu xanh lá cây như trong hình */
+  color: white;
+  padding: 11px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+.coach-management-page .btn-primary:hover {
+  background-color: #218838;
+}
+.coach-management-page .card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  margin-bottom: 24px;
+}
+
+/* --- Style cho lưới thống kê --- */
+.coach-management-page .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.coach-management-page .stat-card {
+  text-align: center;
+  padding: 20px;
+  margin-bottom: 0;
+}
+.coach-management-page .stat-card p {
+  margin: 0 0 8px 0;
+  color: #6c757d;
+  font-size: 0.95rem;
+}
+.coach-management-page .stat-number {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: #343a40;
+}
+.coach-management-page .stat-number.green {
+  color: #28a745;
+}
+
+/* --- Style cho bảng dữ liệu --- */
+.coach-management-page .list-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+}
+.coach-management-page .data-table {
+  width: 100%;
+}
+.coach-management-page .table-header,
+.coach-management-page .table-row {
+  display: grid;
+  /* Cấu trúc cột cho bảng này */
+  grid-template-columns: 2fr 1.5fr 2.5fr 1fr 1fr 1fr;
+  align-items: center;
+  padding: 15px 10px;
+  border-bottom: 1px solid #f1f3f5;
+  gap: 15px;
+}
+.coach-management-page .table-header {
+  font-weight: 600;
+  color: #6c757d;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+.coach-management-page .table-row {
+  font-size: 0.9rem;
+}
+.coach-management-page .table-row:last-child {
+  border-bottom: none;
+}
+
+.coach-management-page .coach-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.coach-management-page .coach-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #f1f3f5;
+  color: #495057;
+}
+.coach-management-page .schedule-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #495057;
+}
+.coach-management-page .status-tag {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: inline-block;
+  text-align: center;
+}
+.coach-management-page .status-ready {
+  background-color: #e7f5ec;
+  color: #28a745;
+}
+.coach-management-page .status-busy {
+  background-color: #feecf0;
+  color: #dc3545;
+}
+
+.coach-management-page .action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+.coach-management-page .btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 6px;
+  border-radius: 6px;
+  transition: background-color 0.2s, color 0.2s;
+}
+.coach-management-page .btn-icon:hover {
+  background-color: #f1f3f5;
+  color: #1a73e8;
+}
+.coach-management-page .btn-icon-delete:hover {
+  color: #dc3545;
+}
+
+.coach-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 16px;
+}
+
+.coach-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.schedule-table th,
+.schedule-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.status-ready {
+  color: green;
+  font-weight: 500;
+}
+
+.status-busy {
+  color: red;
+  font-weight: 500;
+}
+
+.create-coach-page {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 32px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.create-coach-page h2 {
+  margin-bottom: 24px;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  color: #444;
+  font-size: 0.95rem;
+}
+
+.form input {
+  margin-top: 6px;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s ease;
+}
+
+.form input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #0069d9;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: #007bff;
+  border: 1px solid #007bff;
+}
+
+.btn-outline:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.error-text {
+  color: #dc3545;
+  font-weight: 500;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.success-text {
+  color: #28a745;
+  font-weight: 500;
+  margin-bottom: 10px;
+  text-align: center;
+}
