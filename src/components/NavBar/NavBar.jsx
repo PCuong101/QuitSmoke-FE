@@ -1,8 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
+// import { mockTodayMissionList } from '../../features/Missions/mock-missions';
 import * as icon from 'lucide-react';
-import axios from 'axios';
-import { mockTodayMissionList } from '../../features/Missions/mock-missions';
 import useLogout from '../../hooks/useLogout';
 
 export default function NavBar() {
@@ -27,21 +26,21 @@ export default function NavBar() {
   ]);
 
   // --- LOGIC MỚI: TỰ ĐỘNG THÊM THÔNG BÁO NHIỆM VỤ ---
-  useEffect(() => {
-    // Tạo thông báo từ danh sách nhiệm vụ hôm nay
-    const missionNotifications = mockTodayMissionList.map((mission, index) => ({
-      id: 100 + mission.templateId, // Tạo ID duy nhất để không trùng lặp
-      type: 'mission',
-      title: `Nhiệm vụ mới: ${mission.title}`,
-      description: 'Hãy hoàn thành mục tiêu hôm nay để tiến gần hơn đến thành công!',
-      time: 'Sáng nay',
-      read: false, // Mặc định là chưa đọc
-      link: '/missions',
-    }));
+  // useEffect(() => {
+  //   // Tạo thông báo từ danh sách nhiệm vụ hôm nay
+  //   const missionNotifications = mockTodayMissionList.map((mission, index) => ({
+  //     id: 100 + mission.templateId, // Tạo ID duy nhất để không trùng lặp
+  //     type: 'mission',
+  //     title: `Nhiệm vụ mới: ${mission.title}`,
+  //     description: 'Hãy hoàn thành mục tiêu hôm nay để tiến gần hơn đến thành công!',
+  //     time: 'Sáng nay',
+  //     read: false, // Mặc định là chưa đọc
+  //     link: '/missions',
+  //   }));
 
-    // Thêm thông báo nhiệm vụ vào đầu danh sách
-    setNotifications(prev => [...missionNotifications, ...prev]);
-  }, []); // Chỉ chạy một lần khi component được mount
+  //   // Thêm thông báo nhiệm vụ vào đầu danh sách
+  //   setNotifications(prev => [...missionNotifications, ...prev]);
+  // }, []); // Chỉ chạy một lần khi component được mount
 
 
   const unreadCount = notifications.filter(n => !n.read).length;

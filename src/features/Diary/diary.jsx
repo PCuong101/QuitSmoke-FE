@@ -42,13 +42,12 @@ function Diary() {
   const [formData, setFormData] = useState({
     logDate: getLocalISODateTime(), // "YYYY-MM-DDTHH:mm"
     smokedToday: "false",
-    cravingLevel: 1,
-    stressLevel: 1,
+    cravingLevel: 0,
+    stressLevel: 0,
     mood: "neutral",
     cigarettesSmoked: 0,
     spentMoneyOnCigarettes: 0
   });
-  console.log(formData);
   const [userId, setUserId] = useState("");
 
   useEffect(() => {
@@ -114,7 +113,6 @@ function Diary() {
         },
         body: JSON.stringify(dataToSend),
       });
-      console.log(response);
       if (!response.ok) {
         alert("Lỗi khi gửi nhật ký.", response.text());
         throw new Error("Lỗi khi gửi nhật ký");
@@ -132,8 +130,8 @@ function Diary() {
       setFormData({
         logDate: getLocalISODateTime(),
         smokedToday: "false",
-        cravingLevel: 1,
-        stressLevel: 1,
+        cravingLevel: 0,
+        stressLevel: 0,
         mood: "neutral",
         cigarettesSmoked: 0,
         spentMoneyOnCigarettes: 0
@@ -189,7 +187,7 @@ function Diary() {
                     </p>
                     <p className="dry-history-text">
                       <span className="dry-history-label">Chi phí NRT:</span>
-                      <span className="dry-history-value">{entry.spentMoneyOnCigarettes} VNĐ</span>
+                      <span className="dry-history-value">{entry.spentMoneyOnNtr.toLocaleString()} VNĐ</span>
                     </p>
                   </div>
                   <p className="dry-history-time">
@@ -257,7 +255,7 @@ function Diary() {
                     id="mood"
                     type=""
                     name="mood"
-                    min="1"
+                    min="0"
                     max="10"
                     value={formData.mood}
                     onChange={handleInputChange}
@@ -282,7 +280,7 @@ function Diary() {
                     id="cravingLevel"
                     type="range"
                     name="cravingLevel"
-                    min="1"
+                    min="0"
                     max="10"
                     value={formData.cravingLevel}
                     onChange={handleInputChange}
@@ -299,7 +297,7 @@ function Diary() {
                     id="stressLevel"
                     type="range"
                     name="stressLevel"
-                    min="1"
+                    min="0"
                     max="10"
                     value={formData.stressLevel}
                     onChange={handleInputChange}

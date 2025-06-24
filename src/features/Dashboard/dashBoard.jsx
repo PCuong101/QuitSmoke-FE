@@ -1,9 +1,6 @@
 import * as icon from 'lucide-react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { SiOxygen } from "react-icons/si";
-import axios from 'axios';
-import { mockTodayMissionList } from "../Missions/mock-missions"; // <-- IMPORT NHIỆM VỤ HÔM NAY
 import NavBar from '../../components/NavBar/NavBar';
 import useUserId from '../../hooks/useUserId';
 

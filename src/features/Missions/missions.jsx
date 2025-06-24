@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, use } from "react";
 import NavBar from "../../components/NavBar/NavBar"
-import { mockTodayMissionList, mockUserCompletions, mockTaskTemplates } from "./mock-missions";
 import { Check, LoaderCircle, History } from 'lucide-react';
 import ToastNotification from '../../components/ToastNotification/ToastNotification'; // <-- IMPORT COMPONENT MỚI
 import Footer from "../../components/Footer/Footer";
+import useUserId from "../../hooks/useUserId";
+import { getIconByTemplateId } from './mock-missions-icon';
 
 // --- COMPONENT CON: MissionItem giữ nguyên như cũ ---
 function MissionItem({ mission, isCompleted, onComplete }) {
@@ -19,7 +20,7 @@ function MissionItem({ mission, isCompleted, onComplete }) {
             </div>
             <button
                 className="mission-item-complete-button"
-                onClick={() => onComplete(mission.templateId)}
+                onClick={() => onComplete(mission.templateID)}
                 disabled={isCompleted}
             >
                 {isCompleted ? (
@@ -45,57 +46,73 @@ function Missions() {
     const [notification, setNotification] = useState({ show: false, message: '' });
     // Dùng useRef để quản lý các bộ đếm thời gian
     const notificationTimer = useRef(null);
-
+    const userId = useUserId();
+    console.log("User ID:", userId); // Kiểm tra xem userId có được lấy đúng không
     useEffect(() => {
-        // ... Logic fetchData giữ nguyên ...
-        const fetchData = () => {
-            setTodayMissions(mockTodayMissionList);
-            const initialCompletions = {};
-            mockTodayMissionList.forEach(mission => {
-                if (mockUserCompletions.some(c => c.templateId === mission.templateId)) {
-                    initialCompletions[mission.templateId] = true;
-                } else {
-                    initialCompletions[mission.templateId] = false;
-                }
-            });
-            setCompletionsMap(initialCompletions);
-            setTotalCompleted(mockUserCompletions.length);
-            setIsLoading(false);
-        };
-        const timer = setTimeout(fetchData, 800);
+        const fetchData = async () => {
+            try {
+                setIsLoading(true);
+                const response = await fetch(`http://localhost:8080/api/tasks/${userId}`); // thay URL nếu khác
+                const data = await response.json();
 
-        // Dọn dẹp khi component unmount
+                setTodayMissions(data);
+                const initialCompletions = {};
+                data.forEach(mission => {
+                    initialCompletions[mission.templateID] = mission.completed;
+                });
+
+                setCompletionsMap(initialCompletions);
+
+                const completedCount = data.filter(m => m.completed).length;
+                setTotalCompleted(completedCount);
+            } catch (error) {
+                console.error("Lỗi khi tải dữ liệu nhiệm vụ:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchData();
+
         return () => {
-            clearTimeout(timer);
-            if (notificationTimer.current) {
-                clearTimeout(notificationTimer.current);
-            }
+            if (notificationTimer.current) clearTimeout(notificationTimer.current);
         };
-    }, []);
+    }, [userId]); // Thêm userId vào dependency array để fetch lại khi userId thay đổi
 
-    const handleCompleteMission = (templateId) => {
-        if (completionsMap[templateId]) return;
 
-        setCompletionsMap(prev => ({ ...prev, [templateId]: true }));
-        setTotalCompleted(prev => prev + 1);
-        
-        // --- LOGIC MỚI ĐỂ HIỂN THỊ THÔNG BÁO ---
-        const mission = todayMissions.find(m => m.templateId === templateId);
-        if (mission) {
-            // Xóa bộ đếm thời gian cũ nếu có
-            if (notificationTimer.current) {
-                clearTimeout(notificationTimer.current);
+    const handleCompleteMission = async (templateID) => {
+        if (completionsMap[templateID]) return;
+
+        try {
+            const res = await fetch(`http://localhost:8080/api/tasks/complete/${userId}/${templateID}`, {
+                method: 'POST'
+            });
+
+            if (!res.ok) throw new Error("Không thể hoàn thành nhiệm vụ");
+
+            // Cập nhật UI
+            setCompletionsMap(prev => ({ ...prev, [templateID]: true }));
+            setTotalCompleted(prev => prev + 1);
+
+            const mission = todayMissions.find(m => m.templateID === templateID);
+            if (mission) {
+                if (notificationTimer.current) clearTimeout(notificationTimer.current);
+                setNotification({ show: true, message: `Hoàn thành: "${mission.title}"` });
+
+                notificationTimer.current = setTimeout(() => {
+                    setNotification({ show: false, message: '' });
+                }, 3000);
             }
-
-            // Hiển thị thông báo mới
-            setNotification({ show: true, message: `Hoàn thành: "${mission.title}"` });
-
-            // Đặt bộ đếm thời gian để tự động ẩn thông báo sau 3 giây
+        } catch (error) {
+            console.error("Lỗi hoàn thành nhiệm vụ:", error);
+            setNotification({ show: true, message: "Lỗi khi hoàn thành nhiệm vụ" });
             notificationTimer.current = setTimeout(() => {
                 setNotification({ show: false, message: '' });
             }, 3000);
         }
     };
+
+
 
     const completedTodayCount = Object.values(completionsMap).filter(Boolean).length;
     const progressPercentage = todayMissions.length > 0 ? (completedTodayCount / todayMissions.length) * 100 : 0;
@@ -104,11 +121,11 @@ function Missions() {
         <>
             {/* Component NavBar của bạn */}
             <NavBar />
-            
+
             {/* Đặt component thông báo ở đây, bên ngoài layout chính */}
-            <ToastNotification 
-                show={notification.show} 
-                message={notification.message} 
+            <ToastNotification
+                show={notification.show}
+                message={notification.message}
             />
 
             {/* --- Phần layout chính của trang --- */}
@@ -136,16 +153,21 @@ function Missions() {
                             <div className="progress-bar-container">
                                 <div className="progress-bar" style={{ width: `${progressPercentage}%` }}></div>
                             </div>
-                            
+
                             <div className="today-mission-list">
-                                {todayMissions.map(mission => (
-                                    <MissionItem
-                                        key={mission.templateId}
-                                        mission={mission}
-                                        isCompleted={completionsMap[mission.templateId]}
-                                        onComplete={handleCompleteMission}
-                                    />
-                                ))}
+                                {todayMissions.map(mission => {
+                                    const Icon = getIconByTemplateId(mission.templateID);
+
+                                    return (
+                                        <MissionItem
+                                            key={mission.templateID}
+                                            mission={{ ...mission, icon: Icon }}
+                                            isCompleted={completionsMap[mission.templateID]}
+                                            onComplete={handleCompleteMission}
+                                        />
+                                    );
+                                })}
+
                             </div>
                         </section>
                     </>
