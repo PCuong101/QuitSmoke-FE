@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import "./AdminPage.css";
+import useLogout from "../../hooks/useLogout";
 
 const AdminPanel = () => {
   const [isCollapsed, setIsCollapsed] = React.useState(false);
@@ -16,6 +17,7 @@ const AdminPanel = () => {
   const location = useLocation();
 
   const isActive = (path) => location.pathname.includes(path);
+
 
   return (
     <div className="admin-panel-container">
@@ -69,6 +71,15 @@ const AdminPanel = () => {
             <span className="nav-item-text">Quản lý bài đăng</span>
           </li>
         </ul>
+        {/* Nút đăng xuất */}
+<div className="logout-section">
+  <button
+    className="logout-btn"
+    onClick={useLogout()}
+  >
+    <span className="nav-item-text">Đăng xuất</span>
+  </button>
+</div>
       </nav>
 
       <main className={`main-content ${isCollapsed ? "collapsed" : ""}`}>

@@ -21,7 +21,10 @@ function Login() {
             });
 
             if (response.ok) {
-                navigate("/dashboard");
+                const data = await response.json();
+                console.log(data.role);
+                if(data.role === "MEMBER") navigate("/dashboard");
+                else if(data.role === "ADMIN") navigate("/admin/dashboard");
             } else {
                 setError("Email hoặc mật khẩu không đúng");
             }

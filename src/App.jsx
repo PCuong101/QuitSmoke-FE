@@ -16,7 +16,7 @@ import Blog from "./features/Blog/Blog.jsx";
 import ArticleDetail from "./features/Articles/ArticleDetail.jsx";
 import AdminPanel from "./pages/adminPage/AdminPanel.jsx";
 import CreateCoachPage from "./pages/adminPage/CreateCoachPage.jsx";
-import Dashboard from "./pages/adminPage/Dashboard.jsx";
+import DashboardAdmin from "./pages/adminPage/DashboardAdmin.jsx";
 import UserManagement from "./pages/adminPage/UserManagement.jsx";
 import CoachManagement from "./pages/adminPage/CoachManagement.jsx";
 import BlogManagement from "./pages/adminPage/BlogManagement.jsx";
@@ -111,17 +111,17 @@ function App() {
               </PrivateRoute>
             }
           >
-            <Route index element={<Dashboard />} />
+            <Route index element={<DashboardAdmin />} />
 
             {/* main pages */}
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="users" element={<UserManagement />} />
-            <Route path="coaches" element={<CoachManagement />} />
-            <Route path="posts" element={<BlogManagement />} />
+            <Route path="dashboard" element={<PrivateRoute><DashboardAdmin /></PrivateRoute>} />
+            <Route path="users" element={<PrivateRoute><UserManagement /></PrivateRoute>} />
+            <Route path="coaches" element={<PrivateRoute><CoachManagement /></PrivateRoute>} />
+            <Route path="posts" element={<PrivateRoute><BlogManagement /></PrivateRoute>} />
 
             {/* child routes of /admin/coaches */}
-            <Route path="create-coach" element={<CreateCoachPage />} />
-            <Route path="coach/:id" element={<CoachDetail />} />
+            <Route path="create-coach" element={<PrivateRoute><CreateCoachPage /></PrivateRoute>} />
+            <Route path="coach/:id" element={<PrivateRoute><CoachDetail /></PrivateRoute>} />
           </Route>
         </Routes>
       </BrowserRouter>

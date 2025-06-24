@@ -46,12 +46,17 @@ function improvedList() {
           credentials: "include"
         });
 
-        if (!res.ok) throw new Error("Không tìm thấy user");
+        if (!res.ok) {
+          console.warn("Không tìm thấy user, reload trang...");
+          window.location.reload();
+          return;
+        }
 
         const userData = await res.json();
         setUserId(userData.userId);
       } catch (error) {
         console.error("Lỗi khi lấy user:", error);
+        window.location.reload()
       }
     };
 
@@ -209,7 +214,4 @@ function DashBoard() {
     </>
   )
 }
-
-
 export default DashBoard;
-export { NavBar };

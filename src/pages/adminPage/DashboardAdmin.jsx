@@ -1,7 +1,7 @@
 import React from 'react';
 import { Users, FileText, Activity, DollarSign } from 'lucide-react';
 
-const Dashboard = () => {
+const DashboardAdmin = () => {
   return (
     // Bọc toàn bộ trang trong div với class "dashboard-page"
     <div className="dashboard-page">
@@ -67,4 +67,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardAdmin;

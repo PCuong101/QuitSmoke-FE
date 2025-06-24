@@ -73,24 +73,32 @@ const UserManagement = () => {
               <div>
                 {new Date(user.registrationDate).toLocaleDateString("vi-VN")}
               </div>
-              <td>
-                <div className="progress-bar-container">
-                  <div
-                    className={`progress-bar ${getProgressColor(
-                      user.addictionLevel
-                    )}`}
-                    style={{
-                      width:
-                        user.addictionLevel === "HIGH"
-                          ? "90%"
-                          : user.addictionLevel === "MEDIUM"
-                          ? "60%"
-                          : "30%",
-                    }}
-                  ></div>
-                  <span className="progress-text">{user.addictionLevel}</span>
-                </div>
-              </td>
+              <table>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div className="progress-bar-container">
+                        <div
+                          className={`progress-bar ${getProgressColor(
+                            user.addictionLevel
+                          )}`}
+                          style={{
+                            width:
+                              user.addictionLevel === "HIGH"
+                                ? "90%"
+                                : user.addictionLevel === "MEDIUM"
+                                  ? "60%"
+                                  : "30%",
+                          }}
+                        ></div>
+                        <span className="progress-text">{user.addictionLevel}</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+
+              </table>
+
               <div>{user.role}</div>
               <div>
                 {user.profilePicture ? (

@@ -3,8 +3,10 @@ import { useState, useRef, useEffect } from 'react';
 import * as icon from 'lucide-react';
 import axios from 'axios';
 import { mockTodayMissionList } from '../../features/Missions/mock-missions';
+import useLogout from '../../hooks/useLogout';
 
 export default function NavBar() {
+  const logout = useLogout();
   const location = useLocation();
   const navigate = useNavigate();
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
@@ -122,16 +124,6 @@ export default function NavBar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await axios.post('http://localhost:8080/api/auth/logout', {}, { withCredentials: true }); // Quan trọng: Gửi cookie
-
-      navigate('/');
-    } catch (error) {
-      console.error('Logout thất bại:', error);
-      alert('Đăng xuất không thành công, vui lòng thử lại.');
-    }
-  };
 
 
   return (
@@ -190,7 +182,7 @@ export default function NavBar() {
               Thông tin cá nhân
             </div>
             <div
-              onClick={handleLogout}
+              onClick={logout}
               style={{
                 padding: '10px 16px',
                 cursor: 'pointer',
