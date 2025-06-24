@@ -21,12 +21,15 @@ import UserManagement from "./pages/adminPage/UserManagement.jsx";
 import CoachManagement from "./pages/adminPage/CoachManagement.jsx";
 import BlogManagement from "./pages/adminPage/BlogManagement.jsx";
 import CoachDetail from "./pages/adminPage/CoachDetail.jsx";
+import DashboardWebsocket from "./features/WebsocketTest/DashboardWebsocket.jsx";
 
 function App() {
+  
   return (
     <>
       <BrowserRouter>
         <Routes>
+          <Route path="/test" element={<DashboardWebsocket />} />
           <Route path="/survey" element={<Survey />} />
           <Route path="/" element={<HomePage />} />
           <Route

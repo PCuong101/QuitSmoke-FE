@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { SiOxygen } from "react-icons/si";
 import NavBar from '../../components/NavBar/NavBar';
 import useUserId from '../../hooks/useUserId';
+import useHealthListRealtime from '../../hooks/useHealthListRealtime';
 
 
 // ... Các phần code khác của Dashboard.jsx giữ nguyên ...
@@ -26,63 +27,6 @@ function ImprovedCard(props) {
       <div className="pulse-value">{props.timeRemaining}</div>
     </div>
   );
-}
-
-function improvedList() {
-  const [userId, setUserId] = useState("");
-  const [healthList, setHealthList] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  // Lấy userId
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch("http://localhost:8080/api/auth/get-session-user", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include"
-        });
-
-        if (!res.ok) {
-          console.warn("Không tìm thấy user, reload trang...");
-          window.location.reload();
-          return;
-        }
-
-        const userData = await res.json();
-        setUserId(userData.userId);
-      } catch (error) {
-        console.error("Lỗi khi lấy user:", error);
-        window.location.reload()
-      }
-    };
-
-    fetchUser();
-  }, []);
-  
-
-  // Lấy health milestone
-  useEffect(() => {
-    if (!userId) return;
-
-    const fetchProgress = async () => {
-      try {
-        const res = await fetch(`http://localhost:8080/api/health-milestones/progress/${userId}`);
-        if (!res.ok) throw new Error("Lỗi khi fetch progress");
-        const data = await res.json();
-        setHealthList(data);
-      } catch (error) {
-        console.error("Lỗi khi gọi API:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProgress();
-  }, [userId]);
-
-
-  return { healthList, loading };
 }
 
 
@@ -170,7 +114,7 @@ useEffect(() => {
 
 
 function DashBoard() {
-  const { healthList, loading } = improvedList();
+  const { healthList, loading } = useHealthListRealtime();
 
   if (loading) return <p>Đang tải dữ liệu...</p>;
 
