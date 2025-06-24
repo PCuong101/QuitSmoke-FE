@@ -115,7 +115,6 @@ useEffect(() => {
 
 function DashBoard() {
   const { healthList, loading } = useHealthListRealtime();
-
   if (loading) return <p>Đang tải dữ liệu...</p>;
 
   return (

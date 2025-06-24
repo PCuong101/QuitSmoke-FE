@@ -3,33 +3,52 @@ import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
 function useHealthListRealtime() {
-  const [healthList, setHealthList] = useState([]);
-  const [loading, setLoading] = useState(true);
+    const [healthList, setHealthList] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const socket = new SockJS('http://localhost:8080/ws');
-    const stompClient = new Client({
-      webSocketFactory: () => socket,
-      onConnect: () => {
-        console.log('✅ Connected to WebSocket');
-        stompClient.subscribe('/topic/health/progress', (message) => {
-          const data = JSON.parse(message.body);
-          setHealthList(data);
-          setLoading(false);
+    useEffect(() => {
+        const socket = new SockJS('http://localhost:8080/ws');
+        const stompClient = new Client({
+            webSocketFactory: () => socket,
+            reconnectDelay: 5000,
+            onConnect: () => {
+                console.log('✅ WebSocket connected');
+
+                const sessionId = stompClient.webSocket._transport.url
+                    .split('/')
+                    .slice(-2)[0]
+                    .replace(/[^a-zA-Z0-9\-]/g, '');
+
+                stompClient.subscribe(`/topic/health/progress/${sessionId}`, (message) => {
+                    const data = JSON.parse(message.body);
+                    setHealthList(data);
+                    setLoading(false);
+                });
+
+                // 👉 Lặp lại publish request-progress mỗi 1 giây
+                const interval = setInterval(() => {
+                    stompClient.publish({
+                        destination: '/app/request-progress',
+                        body: '{}'
+                    });
+                }, 1000);
+
+                // Clear khi rời component
+                return () => {
+                    clearInterval(interval);
+                    stompClient.deactivate();
+                };
+            },
+            onStompError: (frame) => {
+                console.error('❌ STOMP error:', frame);
+            }
         });
-      },
-      onStompError: (err) => console.error('STOMP error:', err),
-      debug: () => {}, // Ẩn log nếu không cần
-    });
 
-    stompClient.activate();
+        stompClient.activate();
+    }, []);
 
-    return () => {
-      stompClient.deactivate();
-    };
-  }, []);
 
-  return { healthList, loading };
+    return { healthList, loading };
 }
 
 export default useHealthListRealtime;
