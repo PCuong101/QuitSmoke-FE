@@ -1,57 +1,56 @@
-import { useEffect, useRef, useState } from 'react';
-import { Client } from '@stomp/stompjs';
-import SockJS from 'sockjs-client';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import dayjs from "dayjs";
+import { useUser } from "../contexts/UserContext";
 
-function useHealthListRealtime() {
-    const [healthList, setHealthList] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const stompClientRef = useRef(null);
-    const intervalRef = useRef(null);
+function useHealthList() {
+  const [healthList, setHealthList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const socket = new SockJS('http://localhost:8080/ws');
-        const stompClient = new Client({
-            webSocketFactory: () => socket,
-            reconnectDelay: 5000,
-            onConnect: () => {
-                console.log('✅ WebSocket connected');
+  const { userId } = useUser();
+  // 📦 Gọi API khi component mount
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8080/api/health-milestones/progress/${userId}`)
+      .then((res) => {
+        const list = res.data.map((item) => ({
+          ...item,
+          timeRemaining: calculateRemaining(item.recoveryEndTime),
+        }));
+        setHealthList(list);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Lỗi khi gọi API:", err);
+        setLoading(false);
+      });
+  }, []);
 
-                const sessionId = stompClient.webSocket._transport.url
-                    .split('/')
-                    .slice(-2)[0]
-                    .replace(/[^a-zA-Z0-9\-]/g, '');
+  // ⏱ Tự trừ timeRemaining mỗi giây
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHealthList((prev) =>
+        prev.map((item) => ({
+          ...item,
+          timeRemaining: Math.max(0, calculateRemaining(item.recoveryEndTime)),
+        }))
+      );
+    }, 1000);
 
-                stompClient.subscribe(`/topic/health/progress/${sessionId}`, (message) => {
-                    const data = JSON.parse(message.body);
-                    setHealthList(data);
-                    setLoading(false);
-                });
+    return () => clearInterval(interval);
+  }, []);
 
-                // 👉 Lặp lại publish request-progress mỗi 1 giây
-                intervalRef.current = setInterval(() => {
-                    stompClient.publish({
-                        destination: '/app/request-progress',
-                        body: '{}'
-                    });
-                }, 1000);
-            },
-            onStompError: (frame) => {
-                console.error('❌ STOMP error:', frame);
-            }
-        });
-
-        stompClient.activate();
-        stompClientRef.current = stompClient;
-
-        // 🔁 Cleanup on unmount
-        return () => {
-            if (intervalRef.current) clearInterval(intervalRef.current);
-            if (stompClientRef.current) stompClientRef.current.deactivate();
-            console.log('🛑 WebSocket disconnected');
-        };
-    }, []);
-
-    return { healthList, loading };
+  return { healthList, loading };
 }
 
-export default useHealthListRealtime;
+// 👉 Hàm tính số giây còn lại đến recoveryEndTime
+function calculateRemaining(recoveryEndTime) {
+  if (!recoveryEndTime) return 0;
+  const end = dayjs(recoveryEndTime); // "2025-06-25T18:45:00"
+  const now = dayjs();
+  if (!end.isValid()) return 0;
+
+  return Math.max(0, end.diff(now, "second")); // trả về số giây
+}
+
+export default useHealthList;

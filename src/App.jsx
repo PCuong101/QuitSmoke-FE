@@ -21,10 +21,9 @@ import UserManagement from "./pages/adminPage/UserManagement.jsx";
 import CoachManagement from "./pages/adminPage/CoachManagement.jsx";
 import BlogManagement from "./pages/adminPage/BlogManagement.jsx";
 import CoachDetail from "./pages/adminPage/CoachDetail.jsx";
-import DashboardWebsocket from "./features/WebsocketTest/DashboardWebsocket.jsx";
+import DashboardWebsocket from "./features/Dashboard/dashBoard.jsx";
 
 function App() {
-  
   return (
     <>
       <BrowserRouter>
@@ -117,14 +116,56 @@ function App() {
             <Route index element={<DashboardAdmin />} />
 
             {/* main pages */}
-            <Route path="dashboard" element={<PrivateRoute><DashboardAdmin /></PrivateRoute>} />
-            <Route path="users" element={<PrivateRoute><UserManagement /></PrivateRoute>} />
-            <Route path="coaches" element={<PrivateRoute><CoachManagement /></PrivateRoute>} />
-            <Route path="posts" element={<PrivateRoute><BlogManagement /></PrivateRoute>} />
+            <Route
+              path="dashboard"
+              element={
+                <PrivateRoute>
+                  <DashboardAdmin />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="users"
+              element={
+                <PrivateRoute>
+                  <UserManagement />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="coaches"
+              element={
+                <PrivateRoute>
+                  <CoachManagement />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="posts"
+              element={
+                <PrivateRoute>
+                  <BlogManagement />
+                </PrivateRoute>
+              }
+            />
 
             {/* child routes of /admin/coaches */}
-            <Route path="create-coach" element={<PrivateRoute><CreateCoachPage /></PrivateRoute>} />
-            <Route path="coach/:id" element={<PrivateRoute><CoachDetail /></PrivateRoute>} />
+            <Route
+              path="create-coach"
+              element={
+                <PrivateRoute>
+                  <CreateCoachPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="coach/:id"
+              element={
+                <PrivateRoute>
+                  <CoachDetail />
+                </PrivateRoute>
+              }
+            />
           </Route>
         </Routes>
       </BrowserRouter>

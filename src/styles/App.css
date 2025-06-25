@@ -12,12 +12,12 @@
 }
 
 #root p {
-  color: #4B5563;
+  color: #4b5563;
 }
 
 #header {
   color: black;
-  background: #F0FCF5;
+  background: #f0fcf5;
   width: 100%;
   padding: 50px 0 20px 0;
   text-align: center;
@@ -29,12 +29,12 @@
 }
 
 #header strong {
-  color: #16a34a
+  color: #16a34a;
 }
 
 #header button {
   margin: 0 10px;
-  border: 1px solid #16a34a
+  border: 1px solid #16a34a;
 }
 
 #header #button-left {
@@ -51,7 +51,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color :#16a34a;
+  color: #16a34a;
 }
 
 #box-container .box-value {
@@ -86,11 +86,11 @@
   margin: 0 10%;
   text-align: center;
   font-size: 15px;
-  color: #4B5563;
+  color: #4b5563;
 }
 
 #box-achievement-container .icon-container {
-  background-color: #DCFCE7;
+  background-color: #dcfce7;
   border-radius: 50%;
   display: inline-flex;
   width: 50px;
@@ -102,7 +102,7 @@
 }
 
 #benefit-container {
-  background: #16A34A;
+  background: #16a34a;
   border-radius: 10px;
 }
 
@@ -110,7 +110,6 @@
   padding: 30px 0 0 0;
   color: white;
   margin: 100px 0 50px 0;
-
 }
 
 #benefit-container .benefit-box {
@@ -131,7 +130,7 @@
   justify-content: center;
 }
 
-#story-container .story{
+#story-container .story {
   width: 30%;
   height: 10%;
   margin: 20px 50px;
@@ -144,9 +143,8 @@
 }
 
 .nav-bar h3 {
-  color:#16A34A;
+  color: #16a34a;
   font-size: 22px;
-
 }
 
 #survey {
@@ -157,16 +155,15 @@
   margin-top: 50px;
 }
 
-#survey h2{
+#survey h2 {
   display: flex;
-  
 }
 
 #survey .input-class {
   width: 50vw;
   height: 40px;
   border-radius: 5px;
-  border: 1px solid #16A34A;
+  border: 1px solid #16a34a;
   padding: 0 10px;
   display: flex;
   background: white;
@@ -183,13 +180,13 @@
   width: 50vw;
   height: 40px;
   border-radius: 5px;
-  border: 1px solid #16A34A;
+  border: 1px solid #16a34a;
   padding: 0 10px;
   background: white;
   color: black;
 }
 
-#survey .input-class-date::-webkit-calendar-picker-indicator{
+#survey .input-class-date::-webkit-calendar-picker-indicator {
   filter: invert(40%) sepia(70%) saturate(400%) hue-rotate(90deg);
   cursor: pointer;
 }
@@ -205,7 +202,7 @@
   height: 40px;
   border-radius: 5px;
   border: none;
-  background: #16A34A;
+  background: #16a34a;
   color: white;
   font-weight: bold;
   cursor: pointer;
@@ -232,18 +229,21 @@
 }
 
 Footer {
-  background: #F0FCF5;
+  background: #f0fcf5;
   color: black;
   width: 100%;
   padding: 20px 0;
   text-align: center;
-  bottom: 0; 
+  bottom: 0;
   left: 0;
-  
 }
 
 .hero-section {
-  background: linear-gradient(to right, #16a34a, #2563eb); /* xanh lá -> xanh dương */
+  background: linear-gradient(
+    to right,
+    #16a34a,
+    #2563eb
+  ); /* xanh lá -> xanh dương */
   padding: 60px 20px;
   text-align: center;
   color: white;
@@ -358,7 +358,8 @@ Footer {
   flex-shrink: 0;
 }
 
-.btn-meet, .btn-cancel {
+.btn-meet,
+.btn-cancel {
   padding: 8px 16px;
   border-radius: 8px;
   font-size: 14px;
@@ -370,13 +371,17 @@ Footer {
   color: white;
   transition: opacity 0.2s;
 }
-.btn-meet { background: #3b82f6; }
-.btn-cancel { background: #ef4444; }
-
-.btn-meet:hover, .btn-cancel:hover {
-  opacity: 0.85;
+.btn-meet {
+  background: #3b82f6;
+}
+.btn-cancel {
+  background: #ef4444;
 }
 
+.btn-meet:hover,
+.btn-cancel:hover {
+  opacity: 0.85;
+}
 
 /* ---- Khu vực Danh sách chuyên gia ---- */
 .coach-page-container {
@@ -467,14 +472,12 @@ Footer {
   background-color: #e9ecef; /* Màu nền dự phòng */
 }
 
-
 .coach-header {
   display: flex;
   flex-direction: column; /* Bắt buộc để trục dọc là trục chính */
-  
+
   gap: 1px;
-  align-items: flex-start; 
-  
+  align-items: flex-start;
 }
 
 .coach-name {
@@ -500,8 +503,6 @@ Footer {
   margin-bottom: 8px;
   margin: 0;
 }
-
-
 
 .status-badge {
   padding: 5px 12px;
@@ -549,10 +550,10 @@ Footer {
 .coach-slot-grid {
   flex: 1; /* Cho phép lưới chiếm hết không gian còn lại */
   display: grid;
-  
+
   /* Quan trọng: Tạo 5 cột có chiều rộng bằng nhau */
-  grid-template-columns: repeat(5, 1fr); 
-  
+  grid-template-columns: repeat(5, 1fr);
+
   gap: 8px; /* Khoảng cách giữa các slot */
 }
 
@@ -588,7 +589,6 @@ Footer {
   border: 2px solid #28a745;
   font-weight: bold;
 }
-
 
 .available-slots {
   display: flex;
@@ -626,7 +626,6 @@ Footer {
   cursor: not-allowed;
 }
 
-
 /* --- TAB LỊCH SỬ BOOKING --- */
 .booking-history-container {
   display: flex;
@@ -640,7 +639,7 @@ Footer {
 }
 
 .booking-history-header h2 {
-    margin-bottom: 4px;
+  margin-bottom: 4px;
 }
 
 .booking-card-simple {
@@ -676,11 +675,11 @@ Footer {
 }
 
 .booking-status {
-    padding: 6px 14px;
-    border-radius: 16px;
-    font-weight: 600;
-    font-size: 0.85rem;
-    white-space: nowrap;
+  padding: 6px 14px;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  white-space: nowrap;
 }
 
 .status-completed {
@@ -718,7 +717,6 @@ Footer {
 }
 .modal-section {
   margin-bottom: 20px;
-  
 }
 .modal-label {
   font-weight: 600;
@@ -738,7 +736,10 @@ Footer {
 
 .slot-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); /* Responsive hơn */
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(130px, 1fr)
+  ); /* Responsive hơn */
   gap: 8px;
 }
 .slot-button {
@@ -804,7 +805,7 @@ Footer {
 .confirmation-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -813,7 +814,7 @@ Footer {
 .confirmation-content {
   background: #ffffff;
   color: #000000;
-width: 90%;
+  width: 90%;
   max-width: 400px;
   padding: 24px;
   border-radius: 12px;
@@ -853,60 +854,57 @@ width: 90%;
   margin: 10px 10vw;
 }
 
-
 #dashBoard .pulse-card {
-          width: 100%;
-          max-width: 20rem;
-          padding: 1rem;
-          border: 1px solid #e5e7eb;
-          border-radius: 0.5rem;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-          display: flex;
-          flex-direction: column;
-          gap: 0.75rem;
-          font-family: sans-serif;
-          margin: 0 20px;
-        }
+  width: 100%;
+  max-width: 20rem;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-family: sans-serif;
+  margin: 0 20px;
+}
 #dashBoard .pulse-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 #dashBoard .pulse-title {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          color: #4b5563;
-          font-weight: 500;
-        }
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #4b5563;
+  font-weight: 500;
+}
 #dashBoard .pulse-icon {
-          color: #16a34a;
-        }
+  color: #16a34a;
+}
 #dashBoard .pulse-change.positive {
-          color: #16a34a;
-          font-weight: 600;
-        }
+  color: #16a34a;
+  font-weight: 600;
+}
 #dashBoard .pulse-change.negative {
-          color: #dc2626;
-          font-weight: 600;
-        }
+  color: #dc2626;
+  font-weight: 600;
+}
 #dashBoard .pulse-value {
-          font-size: 1.5rem;
-          font-weight: bold;
-          
-        }
+  font-size: 1.5rem;
+  font-weight: bold;
+}
 #dashBoard .pulse-bar {
-          width: 100%;
-          height: 0.5rem;
-          background-color: #e5e7eb;
-          border-radius: 0.25rem;
-        }
+  width: 100%;
+  height: 0.5rem;
+  background-color: #e5e7eb;
+  border-radius: 0.25rem;
+}
 #dashBoard .pulse-bar-fill {
-          height: 100%;
-          background-color: #0f172a;
-          border-radius: 0.25rem;
-        }
-
+  height: 100%;
+  background-color: #0f172a;
+  border-radius: 0.25rem;
+}
 
 /* Đảm bảo tất cả văn bản trong modal có màu đen */
 .modal-content {
@@ -934,7 +932,7 @@ width: 90%;
 }
 
 .slot-button.slot-active {
-  color: white  ; /* Giữ màu trắng khi được chọn để dễ đọc */
+  color: white; /* Giữ màu trắng khi được chọn để dễ đọc */
   border: 1px solid green; /* Thêm viền xanh để dễ nhận diện */
   background-color: #16a34a; /* Nền xám nhạt cho slot đã chọn */
 }
@@ -1017,7 +1015,9 @@ width: 90%;
 .ranking-page-container {
   padding: 24px 15vw; /* Căn lề 2 bên giống NavBar */
   background-color: #f8f9fa; /* Màu nền nhẹ nhàng */
-  min-height: calc(100vh - 80px); /* Chiều cao tối thiểu để footer (nếu có) nằm cuối */
+  min-height: calc(
+    100vh - 80px
+  ); /* Chiều cao tối thiểu để footer (nếu có) nằm cuối */
 }
 
 .ranking-header {
@@ -1028,7 +1028,7 @@ width: 90%;
 .ranking-header h1 {
   font-size: 36px;
   font-weight: 700;
-  color: #16A34A; /* Màu xanh lá chủ đạo */
+  color: #16a34a; /* Màu xanh lá chủ đạo */
   margin-bottom: 8px;
 }
 
@@ -1073,10 +1073,15 @@ width: 90%;
   text-align: center;
 }
 /* Style đặc biệt cho top 3 */
-.rank-1 { color: #ffd700; } /* Vàng */
-.rank-2 { color: #c0c0c0; } /* Bạc */
-.rank-3 { color: #cd7f32; } /* Đồng */
-
+.rank-1 {
+  color: #ffd700;
+} /* Vàng */
+.rank-2 {
+  color: #c0c0c0;
+} /* Bạc */
+.rank-3 {
+  color: #cd7f32;
+} /* Đồng */
 
 .member-avatar {
   width: 50px;
@@ -1138,7 +1143,7 @@ width: 90%;
 }
 
 .achievement-icon {
-  color: #16A34A;
+  color: #16a34a;
 }
 
 .achievement-text {
@@ -1157,7 +1162,6 @@ width: 90%;
   color: #6c757d;
 }
 
-
 /* CSS FILE RANKING END HERE*/
 
 /* CSS FILE BLOG */
@@ -1169,11 +1173,10 @@ width: 90%;
   top: 0;
   left: 0;
   height: 4px;
-  background: #16A34A; /* Màu xanh lá chủ đạo */
+  background: #16a34a; /* Màu xanh lá chủ đạo */
   z-index: 1000;
   transition: width 0.1s linear;
 }
-
 
 /* --- Article List Page --- */
 .article-list-page {
@@ -1240,7 +1243,7 @@ width: 90%;
 .card-category {
   display: inline-block;
   align-self: flex-start;
-  background-color: #DCFCE7; /* Màu xanh lá nhạt */
+  background-color: #dcfce7; /* Màu xanh lá nhạt */
   color: #166534; /* Màu xanh lá đậm */
   padding: 4px 12px;
   border-radius: 999px;
@@ -1290,7 +1293,7 @@ width: 90%;
   align-items: center;
   gap: 8px;
   text-decoration: none;
-  color: #16A34A;
+  color: #16a34a;
   font-weight: 600;
   margin-bottom: 24px;
 }
@@ -1344,7 +1347,7 @@ width: 90%;
 }
 
 .article-body blockquote {
-  border-left: 4px solid #16A34A;
+  border-left: 4px solid #16a34a;
   padding-left: 24px;
   margin: 32px 0;
   font-style: italic;
@@ -1384,7 +1387,7 @@ width: 90%;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background-color: #16A34A;
+  background-color: #16a34a;
   color: white;
   padding: 10px 20px;
   border-radius: 8px;
@@ -1398,47 +1401,51 @@ width: 90%;
 }
 
 .related-articles {
-    margin-top: 64px;
-    padding-top: 32px;
-    border-top: 1px solid #e5e7eb;
+  margin-top: 64px;
+  padding-top: 32px;
+  border-top: 1px solid #e5e7eb;
 }
 
 .related-articles h2 {
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 24px;
-    text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  text-align: center;
 }
 
 .related-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
 }
 
 .related-card {
-    text-decoration: none;
-    color: inherit;
+  text-decoration: none;
+  color: inherit;
 }
 
 .related-card img {
-    width: 100%;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 12px;
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 12px;
 }
 .related-card h3 {
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 1.4;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
 /* --- End of Blog / Articles Page Styles --- */
 
 #dashBoard .ImprovedCardContainer {
-  display: flex;
-  margin: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  box-sizing: border-box;
 }
 
 /* CSS FILE ACHIEVEMENT */
@@ -1496,22 +1503,72 @@ width: 90%;
 }
 
 /* Các style khác giữ nguyên */
-.achievement-badge.locked { background-color: #f9fafb; filter: grayscale(80%); opacity: 0.7; }
-.achievement-badge.locked .main-badge-icon { color: #9ca3af; }
-.achievement-badge.locked .badge-icon-wrapper { background-color: #e5e7eb; }
-.achievement-badge.locked .badge-title, .achievement-badge.locked .badge-description { color: #9ca3af; }
-.achievement-badge.unlocked { background-color: #ffffff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); }
-.achievement-badge.unlocked:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); }
-.badge-icon-wrapper { flex-shrink: 0; width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px; }
-.achievement-badge.unlocked.tier-bronze .badge-icon-wrapper { background-color: #fce7d1; }
-.achievement-badge.unlocked.tier-bronze .main-badge-icon { color: #9a3412; }
-.achievement-badge.unlocked.tier-silver .badge-icon-wrapper { background-color: #e5e7eb; }
-.achievement-badge.unlocked.tier-silver .main-badge-icon { color: #4b5563; }
-.achievement-badge.unlocked.tier-gold .badge-icon-wrapper { background-color: #fef9c3; }
-.achievement-badge.unlocked.tier-gold .main-badge-icon { color: #ca8a04; }
-.badge-text { flex-grow: 1; }
-.badge-title { font-size: 18px; font-weight: 600; margin: 0 0 4px 0; color: #1f2937; }
-.badge-description { font-size: 14px; line-height: 1.5; margin: 0; color: #6b7280; }
+.achievement-badge.locked {
+  background-color: #f9fafb;
+  filter: grayscale(80%);
+  opacity: 0.7;
+}
+.achievement-badge.locked .main-badge-icon {
+  color: #9ca3af;
+}
+.achievement-badge.locked .badge-icon-wrapper {
+  background-color: #e5e7eb;
+}
+.achievement-badge.locked .badge-title,
+.achievement-badge.locked .badge-description {
+  color: #9ca3af;
+}
+.achievement-badge.unlocked {
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+.achievement-badge.unlocked:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+.badge-icon-wrapper {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+}
+.achievement-badge.unlocked.tier-bronze .badge-icon-wrapper {
+  background-color: #fce7d1;
+}
+.achievement-badge.unlocked.tier-bronze .main-badge-icon {
+  color: #9a3412;
+}
+.achievement-badge.unlocked.tier-silver .badge-icon-wrapper {
+  background-color: #e5e7eb;
+}
+.achievement-badge.unlocked.tier-silver .main-badge-icon {
+  color: #4b5563;
+}
+.achievement-badge.unlocked.tier-gold .badge-icon-wrapper {
+  background-color: #fef9c3;
+}
+.achievement-badge.unlocked.tier-gold .main-badge-icon {
+  color: #ca8a04;
+}
+.badge-text {
+  flex-grow: 1;
+}
+.badge-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: #1f2937;
+}
+.badge-description {
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+  color: #6b7280;
+}
 
 /* --- CSS CHO NÚT SHARE ĐƯỢC VIẾT LẠI HOÀN TOÀN --- */
 .share-badge-button {
@@ -1519,22 +1576,22 @@ width: 90%;
   position: absolute;
   top: 12px;
   right: 12px;
-  
+
   /* Kích thước và hình dạng */
   width: 32px;
   height: 32px;
-  border-radius: 50%; 
+  border-radius: 50%;
   border: none;
-  
+
   /* Màu nền */
   background-color: #343a40; /* Màu xám đen */
-  
+
   /* Hiệu ứng */
   cursor: pointer;
   transition: background-color 0.2s;
-  
+
   /* Ẩn/Hiện */
-  opacity: 0; 
+  opacity: 0;
   visibility: hidden;
 }
 
@@ -1552,10 +1609,10 @@ width: 90%;
   Điều này sẽ ghi đè mọi xung đột khác.
 */
 .share-badge-button svg {
-  stroke: white;  /* Màu của đường viền icon là MÀU TRẮNG */
-  width: 16px;    /* Kích thước icon */
+  stroke: white; /* Màu của đường viền icon là MÀU TRẮNG */
+  width: 16px; /* Kích thước icon */
   height: 16px;
-  
+
   /* Canh giữa icon bên trong nút một cách thủ công */
   position: absolute;
   top: 50%;
@@ -1567,9 +1624,9 @@ width: 90%;
 
 .badge-unlocked-date {
   font-size: 13px;
-  color: #6b7280;      /* Màu xám nhẹ */
-  margin: 8px 0 0 0;  /* Tạo khoảng cách với mô tả ở trên */
-  font-style: italic;  /* In nghiêng để phân biệt */
+  color: #6b7280; /* Màu xám nhẹ */
+  margin: 8px 0 0 0; /* Tạo khoảng cách với mô tả ở trên */
+  font-style: italic; /* In nghiêng để phân biệt */
   padding-top: 8px;
   border-top: 1px dashed #e5e7eb; /* Thêm đường kẻ gạch nối */
 }
@@ -1681,11 +1738,13 @@ width: 90%;
 }
 
 .mission-item.completed .mission-item-icon-wrapper {
-  background-color: #DCFCE7;
+  background-color: #dcfce7;
   color: #16a34a;
 }
 
-.mission-item-content { flex-grow: 1; }
+.mission-item-content {
+  flex-grow: 1;
+}
 .mission-item-title {
   font-size: 16px;
   font-weight: 600;
@@ -1725,11 +1784,25 @@ width: 90%;
 }
 
 /* CSS cho trạng thái Loading (giữ nguyên) */
-.loading-container { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 50vh; color: #6b7280; }
-.spinner { animation: spin 1.5s linear infinite; }
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  color: #6b7280;
+}
+.spinner {
+  animation: spin 1.5s linear infinite;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 /* --- CSS cho nút Hoàn thành (như cũ) --- */
 .mission-item-complete-button {
@@ -1763,14 +1836,13 @@ width: 90%;
   cursor: not-allowed;
 }
 
-
 /* --- CSS CHO TOAST NOTIFICATION BẰNG CSS THUẦN --- */
 .toast-notification {
   /* Vị trí cố định ở góc trên bên phải */
   position: fixed;
   top: 80px; /* Cách đỉnh một khoảng để không bị NavBar che */
   right: 24px;
-  
+
   /* Thiết kế */
   display: flex;
   align-items: center;
@@ -1780,11 +1852,11 @@ width: 90%;
   padding: 12px 20px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  
+
   /* Hiệu ứng và Trạng thái */
   z-index: 9999; /* Luôn nổi trên cùng */
   transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-  
+
   /* Trạng thái ẩn mặc định */
   opacity: 0;
   transform: translateY(-20px);
@@ -1797,9 +1869,9 @@ width: 90%;
 }
 
 #root .toast-notification p {
-    margin: 0;
-    font-size: 15px;
-    color: #fff; /* Ghi đè để đảm bảo chữ trắng */
+  margin: 0;
+  font-size: 15px;
+  color: #fff; /* Ghi đè để đảm bảo chữ trắng */
 }
 /* Mission END HERE */
 #savedMoney
@@ -1830,10 +1902,18 @@ width: 90%;
   font-weight: bold;
 }
 
-#savedMoney .green { color: #16a34a; }
-#savedMoney .blue { color: #2563eb; }
-#savedMoney .red { color: #dc2626; }
-#savedMoney .orange { color: #f97316; }
+#savedMoney .green {
+  color: #16a34a;
+}
+#savedMoney .blue {
+  color: #2563eb;
+}
+#savedMoney .red {
+  color: #dc2626;
+}
+#savedMoney .orange {
+  color: #f97316;
+}
 
 #savedMoney .detail-button {
   padding: 6px 12px;
@@ -1853,7 +1933,7 @@ width: 90%;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1865,7 +1945,7 @@ width: 90%;
   border-radius: 10px;
   width: 550px;
   padding: 24px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 #savedMoney .modal-header {
@@ -1881,7 +1961,8 @@ width: 90%;
   gap: 40px;
 }
 
-#savedMoney .modal-left, .modal-right {
+#savedMoney .modal-left,
+.modal-right {
   display: flex;
   flex-direction: column;
   gap: 4px;
