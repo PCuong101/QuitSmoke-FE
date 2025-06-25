@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
 function useHealthListRealtime() {
     const [healthList, setHealthList] = useState([]);
     const [loading, setLoading] = useState(true);
+    const stompClientRef = useRef(null);
+    const intervalRef = useRef(null);
 
     useEffect(() => {
         const socket = new SockJS('http://localhost:8080/ws');
@@ -26,18 +28,12 @@ function useHealthListRealtime() {
                 });
 
                 // 👉 Lặp lại publish request-progress mỗi 1 giây
-                const interval = setInterval(() => {
+                intervalRef.current = setInterval(() => {
                     stompClient.publish({
                         destination: '/app/request-progress',
                         body: '{}'
                     });
                 }, 1000);
-
-                // Clear khi rời component
-                return () => {
-                    clearInterval(interval);
-                    stompClient.deactivate();
-                };
             },
             onStompError: (frame) => {
                 console.error('❌ STOMP error:', frame);
@@ -45,8 +41,15 @@ function useHealthListRealtime() {
         });
 
         stompClient.activate();
-    }, []);
+        stompClientRef.current = stompClient;
 
+        // 🔁 Cleanup on unmount
+        return () => {
+            if (intervalRef.current) clearInterval(intervalRef.current);
+            if (stompClientRef.current) stompClientRef.current.deactivate();
+            console.log('🛑 WebSocket disconnected');
+        };
+    }, []);
 
     return { healthList, loading };
 }
