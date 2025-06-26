@@ -1,5 +1,6 @@
+/* === CÁC STYLE CŨ GIỮ NGUYÊN === */
 .page-wrapper {
-  background-color: #f9fafb; /* Nền xám rất nhạt cho cả trang */
+  background-color: #f9fafb;
   min-height: 100vh;
 }
 
@@ -26,7 +27,87 @@
   font-size: 1rem;
 }
 
-/* Schedule List and Cards */
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+
+/* === CSS MỚI CHO BẢNG LỊCH TỔNG QUAN === */
+.availability-container {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+  margin-bottom: 2rem;
+  border: 1px solid #e5e7eb;
+}
+
+.coach-slot-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); /* 7 cột cho 7 ngày */
+  gap: 10px;
+}
+
+.coach-slot {
+  font-size: 13px;
+  text-align: center;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  line-height: 1.4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 50px;
+  transition: all 0.2s ease;
+}
+
+.coach-slot.slot-available {
+  background-color: #f1f3f5;
+  color: #495057;
+}
+
+.coach-slot.slot-booked {
+  background-color: #dbeafe; /* Màu xanh nhạt cho lịch đã đặt */
+  color: #1e40af;
+  font-weight: 600;
+  border-color: #93c5fd;
+}
+
+
+/* === CSS MỚI CHO HỆ THỐNG TAB === */
+.tab-navigation {
+  display: flex;
+  background-color: #e9ecef;
+  border-radius: 8px;
+  padding: 5px;
+  margin-bottom: 2rem;
+  border: 1px solid #dee2e6;
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 10px 15px;
+  font-weight: 600;
+  color: #495057;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.tab-item.active {
+  background-color: #ffffff;
+  color: #16a34a; /* Màu xanh lá cây chủ đạo */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+
+/* === CSS CŨ CHO DANH SÁCH LỊCH HẸN === */
 .schedule-list {
   display: flex;
   flex-direction: column;
@@ -73,6 +154,7 @@
 .status-booked { background-color: #3b82f6; } /* Blue */
 .status-finished { background-color: #16a34a; } /* Green */
 .status-canceled { background-color: #ef4444; } /* Red */
+.status-unknown { background-color: #6b7280; } /* Gray */
 
 .card-body {
   padding: 1.25rem;
@@ -103,8 +185,37 @@
   background-color: #f9fafb;
 }
 
-.card-actions button {
+.btn-action {
   padding: 0.5rem 1rem;
   border-radius: 6px;
   font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.btn-meet {
+  background-color: #2563eb;
+  color: white;
+}
+.btn-meet:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+.btn-finish {
+  background-color: #16a34a;
+  color: white;
+}
+.btn-finish:hover:not(:disabled) {
+  background-color: #15803d;
+}
+
+.btn-action:disabled {
+  background-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+a.btn-action:disabled {
+  pointer-events: none;
 }
