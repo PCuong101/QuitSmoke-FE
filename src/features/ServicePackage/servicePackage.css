@@ -93,6 +93,8 @@ body {
 
                 /* Card Content */
                 .card-header {
+                    display: flex;
+                    flex-direction: column;
                     flex-grow: 1; /* Đẩy button xuống dưới */
                 }
 

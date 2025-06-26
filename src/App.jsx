@@ -22,6 +22,7 @@ import CoachManagement from "./pages/adminPage/CoachManagement.jsx";
 import BlogManagement from "./pages/adminPage/BlogManagement.jsx";
 import CoachDetail from "./pages/adminPage/CoachDetail.jsx";
 import DashboardWebsocket from "./features/Dashboard/dashBoard.jsx";
+import CoachDashboardPage from "./pages/CoachDashboardPage.jsx";
 
 function App() {
   return (
@@ -84,6 +85,15 @@ function App() {
             element={
               <PrivateRoute>
                 <Coach />
+              </PrivateRoute>
+            }
+          />
+              {/* THÊM ROUTE MỚI CHO COACH DASHBOARD DƯỚI ĐÂY */}
+          <Route
+            path="/coach/dashboard"
+            element={
+              <PrivateRoute>
+                <CoachDashboardPage />
               </PrivateRoute>
             }
           />
