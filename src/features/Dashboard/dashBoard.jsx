@@ -4,6 +4,7 @@ import { SiOxygen } from "react-icons/si";
 import NavBar from "../../components/NavBar/NavBar";
 import { useUser } from "../../contexts/UserContext";
 import useHealthList from "../../hooks/useHealthListRealtime";
+import Footer from "../../components/Footer/Footer";
 
 // ... Các phần code khác của Dashboard.jsx giữ nguyên ...
 function ImprovedCard(props) {
@@ -178,7 +179,8 @@ function DashBoard() {
       <div id="savedMoney">
         <SavingsCardWithDetail />
       </div>
-    </>
+      <Footer></Footer>
+      </>
   );
 }
 export default DashBoard;

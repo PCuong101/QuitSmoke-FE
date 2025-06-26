@@ -5,6 +5,7 @@ import ToastNotification from '../../components/ToastNotification/ToastNotificat
 import Footer from "../../components/Footer/Footer";
 import useUserId from "../../hooks/useUserId";
 import { getIconByTemplateId } from './mock-missions-icon';
+import './Missions.css';
 
 // --- COMPONENT CON: MissionItem giữ nguyên như cũ ---
 function MissionItem({ mission, isCompleted, onComplete }) {
@@ -119,17 +120,18 @@ function Missions() {
 
     return (
         <>
+            
             {/* Component NavBar của bạn */}
             <NavBar />
+            {/* --- Phần layout chính của trang --- */}
+            <div className={`missions-page ${isLoading ? 'loading' : ''}`}>
+                
 
             {/* Đặt component thông báo ở đây, bên ngoài layout chính */}
             <ToastNotification
                 show={notification.show}
                 message={notification.message}
             />
-
-            {/* --- Phần layout chính của trang --- */}
-            <div className={`missions-page ${isLoading ? 'loading' : ''}`}>
                 {isLoading ? (
                     <div className="loading-container">
                         <LoaderCircle className="spinner" size={48} />
@@ -172,8 +174,9 @@ function Missions() {
                         </section>
                     </>
                 )}
+                <Footer></Footer>
             </div>
-            <Footer></Footer>
+            
         </>
     );
 }

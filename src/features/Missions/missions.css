@@ -1,0 +1,206 @@
+/* --- CSS FILE MISSION --- */
+/* --- Missions Page Styles (v2 for Multiple Tasks) --- */
+.missions-page {
+  padding: 0 10vw;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.missions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.missions-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.total-missions-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f3f4f6;
+  color: #4b5563;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 16px;
+}
+
+.today-mission-section {
+  background-color: #ffffff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  flex: 1;
+}
+
+.today-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12px;
+}
+
+.today-progress-header h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0;
+}
+.today-progress-header span {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 8px;
+  background-color: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #16a34a;
+  border-radius: 999px;
+  transition: width 0.5s ease-in-out;
+}
+
+.today-mission-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mission-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.mission-item.completed {
+  background-color: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.mission-item-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+
+.mission-item.completed .mission-item-icon-wrapper {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.mission-item-content {
+  flex-grow: 1;
+}
+.mission-item-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 4px 0;
+}
+#root .mission-item-description {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.mission-item-complete-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #e5e7eb;
+  background-color: #fff;
+  color: #9ca3af;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-size: 20px;
+  transition: all 0.2s ease;
+}
+
+.mission-item:not(.completed):hover .mission-item-complete-button {
+  border-color: #16a34a;
+  color: #16a34a;
+}
+
+.mission-item.completed .mission-item-complete-button {
+  background-color: #16a34a;
+  border-color: #16a34a;
+  color: #fff;
+  cursor: not-allowed;
+}
+
+/* CSS cho trạng thái Loading (giữ nguyên) */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  color: #6b7280;
+}
+.spinner {
+  animation: spin 1.5s linear infinite;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --- CSS cho nút Hoàn thành (như cũ) --- */
+.mission-item-complete-button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background-color: #fff;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+
+.mission-item:not(.completed) .mission-item-complete-button:hover {
+  background-color: #f9fafb;
+  border-color: #16a34a;
+  color: #16a34a;
+}
+
+.mission-item.completed .mission-item-complete-button {
+  background-color: #16a34a;
+  border-color: #16a34a;
+  color: #fff;
+  cursor: not-allowed;
+}

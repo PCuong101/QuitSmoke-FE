@@ -1,0 +1,191 @@
+/* CSS FILE ACHIEVEMENT */
+/* --- Achievement Page Styles (FINAL, SIMPLEST FIX) --- */
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.achievement-page {
+  padding: 24px 8vw;
+  background-color: #f9fafb;
+  flex: 1;
+}
+
+.achievement-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.achievement-header h1 {
+  font-size: 36px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+#root .achievement-header p {
+  font-size: 18px;
+  color: #6b7280;
+  max-width: 600px;
+  margin: 8px auto 0;
+}
+
+.achievement-category {
+  margin-bottom: 48px;
+}
+
+.achievement-category h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 24px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.achievement-badge {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+}
+
+/* Các style khác giữ nguyên */
+.achievement-badge.locked {
+  background-color: #f9fafb;
+  filter: grayscale(80%);
+  opacity: 0.7;
+}
+.achievement-badge.locked .main-badge-icon {
+  color: #9ca3af;
+}
+.achievement-badge.locked .badge-icon-wrapper {
+  background-color: #e5e7eb;
+}
+.achievement-badge.locked .badge-title,
+.achievement-badge.locked .badge-description {
+  color: #9ca3af;
+}
+.achievement-badge.unlocked {
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+.achievement-badge.unlocked:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+.badge-icon-wrapper {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+}
+.achievement-badge.unlocked.tier-bronze .badge-icon-wrapper {
+  background-color: #fce7d1;
+}
+.achievement-badge.unlocked.tier-bronze .main-badge-icon {
+  color: #9a3412;
+}
+.achievement-badge.unlocked.tier-silver .badge-icon-wrapper {
+  background-color: #e5e7eb;
+}
+.achievement-badge.unlocked.tier-silver .main-badge-icon {
+  color: #4b5563;
+}
+.achievement-badge.unlocked.tier-gold .badge-icon-wrapper {
+  background-color: #fef9c3;
+}
+.achievement-badge.unlocked.tier-gold .main-badge-icon {
+  color: #ca8a04;
+}
+.badge-text {
+  flex-grow: 1;
+}
+.badge-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: #1f2937;
+}
+.badge-description {
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+  color: #6b7280;
+}
+
+/* --- CSS CHO NÚT SHARE ĐƯỢC VIẾT LẠI HOÀN TOÀN --- */
+.share-badge-button {
+  /* Định vị nút */
+  position: absolute;
+  top: 12px;
+  right: 12px;
+
+  /* Kích thước và hình dạng */
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+
+  /* Màu nền */
+  background-color: #343a40; /* Màu xám đen */
+
+  /* Hiệu ứng */
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  /* Ẩn/Hiện */
+  opacity: 0;
+  visibility: hidden;
+}
+
+.achievement-badge.unlocked:hover .share-badge-button {
+  opacity: 1;
+  visibility: visible;
+}
+
+.share-badge-button:hover {
+  background-color: #495057;
+}
+
+/* 
+  QUAN TRỌNG NHẤT: Trực tiếp style cho thẻ SVG bên trong nút.
+  Điều này sẽ ghi đè mọi xung đột khác.
+*/
+.share-badge-button svg {
+  stroke: white; /* Màu của đường viền icon là MÀU TRẮNG */
+  width: 16px; /* Kích thước icon */
+  height: 16px;
+
+  /* Canh giữa icon bên trong nút một cách thủ công */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* --- Thêm CSS cho ngày đạt được thành tựu --- */
+
+.badge-unlocked-date {
+  font-size: 13px;
+  color: #6b7280; /* Màu xám nhẹ */
+  margin: 8px 0 0 0; /* Tạo khoảng cách với mô tả ở trên */
+  font-style: italic; /* In nghiêng để phân biệt */
+  padding-top: 8px;
+  border-top: 1px dashed #e5e7eb; /* Thêm đường kẻ gạch nối */
+}
+/* ACHIEVEMENT END HERE */

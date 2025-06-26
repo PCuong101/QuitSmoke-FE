@@ -4,6 +4,7 @@ import NavBar from "../../components/NavBar/NavBar";
 import { allAchievements } from "./mock-achievements"; // Import "bảng tra cứu"
 import { Share2, Lock, LoaderCircle } from 'lucide-react';
 import useUserId from "../../hooks/useUserId"; // Dùng lại hook để lấy userId
+import './achievement.css'; // Import CSS cho thành tựu
 
 // --- CÁC THÀNH PHẦN PHỤ ---
 

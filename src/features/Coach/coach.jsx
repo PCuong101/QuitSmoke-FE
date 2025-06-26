@@ -5,6 +5,7 @@ import useUserId from "../../hooks/useUserId";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import "./Coach.css";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -139,9 +140,9 @@ function Coach() {
 
 
   return (
-    <div>
-      <NavBar />
+    <>
       <div className="coach-page-container">
+        <NavBar />
         <div className="coach-page-content">
           <header className="page-header">
             <h1>Nhờ sự giúp đỡ từ chuyên gia</h1>
@@ -472,7 +473,7 @@ function Coach() {
 
         <Footer />
       </div>
-    </div>
+    </>
   );
 }
 
