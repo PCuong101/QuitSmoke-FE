@@ -120,13 +120,13 @@ function Coach() {
     }
   };
 
-  const cancelBooking = async (coachId, scheduleId) => {
+  const cancelBooking = async (bookingId) => {
   if (!window.confirm("Bạn có chắc muốn hủy lịch hẹn này?")) return;
   try {
-    const res = await fetch(`http://localhost:8080/api/bookings/cancel?coachId=${coachId}&scheduleId=${scheduleId}`, {
+    const res = await fetch(`http://localhost:8080/api/bookings/cancel?bookingId=${bookingId}`, {
       method: "PUT"
     });
-    console.log("Hủy lịch:", { coachId, scheduleId });
+    console.log("Hủy lịch:", { bookingId });
     if (!res.ok) throw new Error("Hủy lịch thất bại");
 
     await fetchBookings();
@@ -320,7 +320,7 @@ function Coach() {
                     let meetingStatusLabel = "";
                     let isJoinEnabled = false;
 
-                    if (b.status === "CANCEL") {
+                    if (b.status === "CANCELED") {
                       meetingStatusLabel = "Đã hủy";
                     } else if (b.status === "DONE") {
                       meetingStatusLabel = "Đã hoàn thành";
@@ -377,7 +377,7 @@ function Coach() {
                           )}
                           {b.status === "BOOKED" && (
                             <button
-                              onClick={() => cancelBooking?.(b.coachId, b.scheduleId)}
+                              onClick={() => cancelBooking?.(b.bookingId)}
                               className="btn-cancel"
                             >
                               Hủy lịch
