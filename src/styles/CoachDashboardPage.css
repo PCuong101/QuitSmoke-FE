@@ -1,0 +1,110 @@
+.page-wrapper {
+  background-color: #f9fafb; /* Nền xám rất nhạt cho cả trang */
+  min-height: 100vh;
+}
+
+.coach-dashboard-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.page-header {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.page-header p {
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+/* Schedule List and Cards */
+.schedule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.schedule-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.schedule-card:hover {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  background-color: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.date-tag {
+  font-weight: 600;
+  color: #374151;
+}
+
+.status-tag {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-booked { background-color: #3b82f6; } /* Blue */
+.status-finished { background-color: #16a34a; } /* Green */
+.status-canceled { background-color: #ef4444; } /* Red */
+
+.card-body {
+  padding: 1.25rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.card-body p {
+  margin: 0 0 0.75rem 0;
+  color: #4b5563;
+}
+.card-body p:last-child {
+  margin-bottom: 0;
+}
+.card-body strong {
+  color: #111827;
+  min-width: 100px;
+  display: inline-block;
+}
+
+
+.card-actions {
+  padding: 0 1.25rem 1.25rem 1.25rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1rem;
+  background-color: #f9fafb;
+}
+
+.card-actions button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+}

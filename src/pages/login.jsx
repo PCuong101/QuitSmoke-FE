@@ -29,6 +29,7 @@ function Login() {
 
         if (data.role === "MEMBER") navigate("/dashboard");
         else if (data.role === "ADMIN") navigate("/admin/dashboard");
+        else if (data.role === "COACH") navigate("/coach/dashboard");
       } else {
         setError("Email hoặc mật khẩu không đúng");
       }
