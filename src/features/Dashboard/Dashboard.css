@@ -1,0 +1,196 @@
+/* src/features/Dashboard/Dashboard.css */
+
+.dashboard-container {
+    padding: 24px 10vw;
+    background-color: #f8fafc;
+    min-height: calc(100vh - 160px); /* 100vh trừ đi chiều cao của nav và footer */
+}
+
+.dashboard-header {
+    margin-bottom: 32px;
+}
+
+.dashboard-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+}
+
+.dashboard-header p {
+    font-size: 16px;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+}
+
+.main-column, .side-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.06);
+    border: 1px solid #e2e8f0;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #334155;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.card-header h4 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Health Milestones */
+.health-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.health-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background-color: #f8fafc;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid #f1f5f9;
+}
+
+.health-card-progress {
+    width: 70px;
+    height: 70px;
+    flex-shrink: 0;
+}
+
+.health-card-info h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    color: #334155;
+}
+.health-card-info p {
+    font-size: 13px;
+    margin: 0;
+    color: #64748b;
+}
+.health-card-info strong {
+    font-size: 14px;
+    color: #16a34a;
+}
+.health-card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.health-card-icon { color: #16a34a; }
+
+
+/* Savings Card */
+.savings-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.06);
+    border: 1px solid #e2e8f0;
+}
+
+.savings-total {
+    text-align: center;
+    margin: 16px 0;
+}
+.savings-total span {
+    font-size: 14px;
+    color: #64748b;
+}
+.savings-total h2 {
+    font-size: 36px;
+    font-weight: 700;
+    color: #16a34a;
+    margin: 4px 0 0 0;
+}
+
+.savings-tabs {
+    display: flex;
+    justify-content: center;
+    background-color: #f1f5f9;
+    border-radius: 8px;
+    padding: 4px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    background-color: transparent;
+    color: #475569;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+    background-color: #ffffff;
+    color: #16a34a;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+}
+
+
+/* Quick Actions Card */
+.quick-actions-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.06);
+    border: 1px solid #e2e8f0;
+}
+
+.action-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #334155;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+.action-item:hover {
+    background-color: #f8fafc;
+}
+.action-item:not(:last-child) {
+    margin-bottom: 8px;
+}
+
+@media (max-width: 992px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Progress Chart */
+.progress-chart-container {
+  height: 300px; /* Cho biểu đồ có chiều cao cố định */
+  padding-top: 16px;
+}

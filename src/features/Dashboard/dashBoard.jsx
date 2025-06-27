@@ -1,186 +1,244 @@
-import * as icon from "lucide-react";
+// src/features/Dashboard/dashBoard.jsx
+import { Link } from "react-router-dom";
+import ProgressChart from "./ProgressChart"; // Import component biểu đồ mới
 import { useState, useEffect } from "react";
-import { SiOxygen } from "react-icons/si";
+import { Heart, Droplets, BrainCircuit, Wallet, Pencil, Target } from "lucide-react";
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css'; // Import style cho biểu đồ
+
 import NavBar from "../../components/NavBar/NavBar";
+import Footer from "../../components/Footer/Footer";
 import { useUser } from "../../contexts/UserContext";
 import useHealthList from "../../hooks/useHealthListRealtime";
-import Footer from "../../components/Footer/Footer";
 
-// ... Các phần code khác của Dashboard.jsx giữ nguyên ...
-function ImprovedCard(props) {
-  return (
-    <div className="pulse-card">
-      <div className="pulse-header">
-        <div className="pulse-title">
-          <span className="pulse-icon">
-            <props.Icon></props.Icon>
-          </span>
-          <span>
-            <strong>{props.title}</strong>
-          </span>
-        </div>
-      </div>
-      <div className="pulse-value">
-        {props.value}
-        {props.unit}
-      </div>
-      <div className="pulse-bar">
-        <div
-          className="pulse-bar-fill"
-          style={{ width: `${props.progress}%` }}
-        ></div>
-      </div>
-      <div className="pulse-value">{props.timeRemaining}</div>
-    </div>
-  );
+import './Dashboard.css'; // Import file CSS mới của chúng ta
+
+// --- HELPER FUNCTIONS ---
+function formatRemaining(seconds) {
+  if (typeof seconds !== "number" || isNaN(seconds) || seconds <= 0) return "Hoàn thành";
+  const d = Math.floor(seconds / (3600 * 24));
+  if (d > 0) return `${d} ngày`;
+  const h = Math.floor(seconds / 3600);
+  if (h > 0) return `${h} giờ`;
+  const m = Math.floor(seconds / 60);
+  if (m > 0) return `${m} phút`;
+  return `${seconds} giây`;
 }
 
-function SavingsCardWithDetail() {
-  const [showModal, setShowModal] = useState(false);
+const formatCurrency = (num) => (num ? Math.round(num).toLocaleString('vi-VN') + ' đ' : '0 đ');
 
-  const handleOpen = () => setShowModal(true);
-  const handleClose = () => setShowModal(false);
+// --- NEW SUB-COMPONENTS ---
 
-  const { userId } = useUser();
+// Lời chào đầu trang
+function WelcomeHeader({ userName }) {
+    return (
+        <div className="dashboard-header">
+            <h1>Xin chào, {userName || 'bạn'}!</h1>
+            <p>Hãy cùng xem lại những nỗ lực tuyệt vời của bạn trên hành trình bỏ thuốc lá.</p>
+        </div>
+    );
+}
 
-  const [savedMoney, setSavedMoney] = useState(0);
+// Card hiển thị tiến độ sức khỏe
+function HealthMilestoneCard({ item }) {
+    const Icon = item.name.includes("Tim") ? Heart : (item.name.includes("Oxy") ? Droplets : BrainCircuit);
+    const progress = Math.round(item.progressPercent);
+
+    return (
+        <div className="health-card">
+            <div className="health-card-progress">
+                <CircularProgressbar
+                    value={progress}
+                    text={`${progress}%`}
+                    styles={buildStyles({
+                        textColor: '#166534',
+                        pathColor: '#16a34a',
+                        trailColor: '#dcfce7',
+                    })}
+                />
+            </div>
+            <div className="health-card-info">
+                <div className="health-card-title">
+                    <Icon size={20} className="health-card-icon" />
+                    <h4>{item.name}</h4>
+                </div>
+                <p>Thời gian hồi phục còn lại:</p>
+                <strong>{formatRemaining(item.timeRemaining)}</strong>
+            </div>
+        </div>
+    );
+}
+
+// Card hiển thị tiền tiết kiệm
+function SavingsInsightCard() {
+    const { userId } = useUser();
+    const [savedMoney, setSavedMoney] = useState({});
+    const [activeTab, setActiveTab] = useState('total');
+
+    useEffect(() => {
+        if (!userId) return;
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`http://localhost:8080/api/quit-plan/${userId}/savings`);
+                const data = await response.json();
+                setSavedMoney(data);
+            } catch (error) {
+                console.error("Lỗi khi fetch savings:", error);
+            }
+        };
+        fetchData();
+    }, [userId]);
+    
+    const displayData = {
+        total: { label: "Tổng Tiết Kiệm", value: formatCurrency(savedMoney.totalSavings) },
+        day: { label: "Mỗi Ngày", value: formatCurrency(savedMoney.moneyPerDay) },
+        week: { label: "Mỗi Tuần", value: formatCurrency(savedMoney.moneyPerWeek) },
+        month: { label: "Mỗi Tháng", value: formatCurrency(savedMoney.moneyPerMonth) },
+        year: { label: "Mỗi Năm", value: formatCurrency(savedMoney.moneyPerYear) },
+    }
+
+    return (
+        <div className="savings-card">
+            <div className="card-header">
+                <Wallet size={20} />
+                <h4>Phân Tích Tiết Kiệm</h4>
+            </div>
+            <div className="savings-total">
+                <span>{displayData[activeTab].label}</span>
+                <h2>{displayData[activeTab].value}</h2>
+            </div>
+            <div className="savings-tabs">
+                {Object.keys(displayData).map(key => (
+                    <button 
+                        key={key} 
+                        className={`tab-btn ${activeTab === key ? 'active' : ''}`}
+                        onClick={() => setActiveTab(key)}
+                    >
+                        {key === 'total' ? 'Tổng' : key.charAt(0).toUpperCase() + key.slice(1)}
+                    </button>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+// Card hành động nhanh (ĐÃ SỬA LỖI)
+function QuickActionsCard() {
+    return (
+        <div className="quick-actions-card">
+             <div className="card-header">
+                <h4>Hành Động Nhanh</h4>
+            </div>
+            {/* Dùng Link to thay vì a href */}
+            <Link to="/diary" className="action-item">
+                <Pencil size={20} />
+                <span>Ghi nhật ký hôm nay</span>
+            </Link>
+            <Link to="/missions" className="action-item">
+                <Target size={20} />
+                <span>Kiểm tra nhiệm vụ</span>
+            </Link>
+        </div>
+    )
+}
+
+
+// --- MAIN DASHBOARD COMPONENT ---
+// --- SỬA LẠI COMPONENT CHÍNH DASHBOARD ---
+function DashBoard() {
+  const { healthList, loading: healthLoading } = useHealthList();
+  const [userName, setUserName] = useState("");
+  const { userId } = useUser(); // Lấy userId từ context
+
+  // --- THÊM STATE VÀ LOGIC FETCH DỮ LIỆU NHẬT KÝ ---
+  const [dailyLogs, setDailyLogs] = useState([]);
+  const [logsLoading, setLogsLoading] = useState(true);
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        console.log(userId);
-        const response = await fetch(
-          `http://localhost:8080/api/quit-plan/${userId}/savings`
-        );
-        const savedMoney = await response.json();
-        setSavedMoney(savedMoney);
-      } catch (error) {
-        console.error("Lỗi khi fetch:", error);
-      }
+    // Chỉ fetch khi có userId
+    if (!userId) return;
+
+    // Lấy tên user
+    const fetchUser = async () => {
+        try {
+            const res = await fetch("http://localhost:8080/api/auth/get-session-user", {
+                method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include"
+            });
+            if (res.ok) {
+                const userData = await res.json();
+                setUserName(userData.name);
+            }
+        } catch (error) { console.error("Lỗi khi lấy user:", error); }
     };
 
-    fetchData();
-  }, [userId]);
+    // Lấy dữ liệu nhật ký
+    const fetchDailyLogs = async () => {
+        setLogsLoading(true);
+        try {
+            const response = await fetch(`http://localhost:8080/api/user-daily-logs/get-daily-logs/${userId}`);
+            if (response.ok) {
+                const data = await response.json();
+                // Sắp xếp dữ liệu theo ngày tăng dần để biểu đồ đúng thứ tự
+                const sortedData = data.sort((a, b) => new Date(a.logDate) - new Date(b.logDate));
+                setDailyLogs(sortedData);
+            }
+        } catch (error) {
+            console.error("Lỗi khi fetch daily logs:", error);
+        } finally {
+            setLogsLoading(false);
+        }
+    };
 
-  return (
-    <>
-      {/* Card chính */}
-      <div className="savings-container">
-        <h3>Số tiền tiết kiệm</h3>
-        <div className="savings-content">
-          <div className="savings-left">
-            <p className="label">Số tiền đã tiết kiệm</p>
-            <p className="value green">{savedMoney.totalSavings} đ</p>
-            <button className="detail-button" onClick={handleOpen}>
-              Xem chi tiết
-            </button>
-          </div>
-          <div className="savings-right">
-            <p className="label">Tiết kiệm trong 1 năm</p>
-            <p className="value blue">{savedMoney.moneyPerYear} đ</p>
-          </div>
-        </div>
-      </div>
+    fetchUser();
+    fetchDailyLogs();
+  }, [userId]); // Chạy lại khi có userId
 
-      {/* Modal */}
-      {showModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <div className="modal-header">
-              <h4>Chi tiết số tiền</h4>
-              <icon.X className="close-btn" onClick={handleClose}></icon.X>
-            </div>
-            <div className="modal-body">
-              <div className="modal-left">
-                <p>
-                  <strong>Số tiền tiết kiệm được</strong>
-                </p>
-                <p className="green">{savedMoney.totalSavings} đ</p>
-
-                <p>Đã tiêu cho thuốc lá</p>
-                <p className="red">{savedMoney.totalSpentOnCigarettes} đ</p>
-
-                <p>Đã tiêu cho liệu pháp thay thế Nicotine</p>
-                <p className="orange">{savedMoney.totalSpentOnNrt} đ</p>
-              </div>
-              <div className="modal-right">
-                <p>
-                  <strong>Mỗi ngày</strong>
-                </p>
-                <p>{savedMoney.moneyPerDay} đ</p>
-
-                <p>
-                  <strong>Mỗi tuần</strong>
-                </p>
-                <p>{savedMoney.moneyPerMonth} đ</p>
-
-                <p>
-                  <strong>Mỗi tháng</strong>
-                </p>
-                <p>{savedMoney.moneyPerWeek} đ</p>
-
-                <p>
-                  <strong>Mỗi năm</strong>
-                </p>
-                <p>{savedMoney.moneyPerYear} đ</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
-}
-
-function formatRemaining(seconds) {
-  if (typeof seconds !== "number" || isNaN(seconds)) return "❓";
-  if (seconds <= 0) return "✅ Đã hồi phục";
-
-  const d = Math.floor(seconds / (3600 * 24));
-  const h = Math.floor((seconds % (3600 * 24)) / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = seconds % 60;
-
-  const parts = [];
-  if (d > 0) parts.push(`${d}d`);
-  if (h > 0 || d > 0) parts.push(`${h}h`);
-  if (m > 0 || h > 0 || d > 0) parts.push(`${m}m`);
-  parts.push(`${s}s`);
-
-  return parts.join(" ");
-}
-
-function DashBoard() {
-  const { healthList, loading } = useHealthList();
-
-  if (loading) return <p>Đang tải dữ liệu...</p>;
+  if (healthLoading || logsLoading) {
+    return <p style={{textAlign: 'center', marginTop: '50px'}}>Đang tải dữ liệu tổng quan...</p>;
+  }
 
   return (
     <>
       <NavBar />
-      <div id="dashBoard">
-        <h2 style={{ textAlign: "left" }}>
-          <strong>Tổng Quan</strong>
-        </h2>
-        <h3 style={{ textAlign: "left" }}>Cải thiện sức khỏe của bạn</h3>
-        <div className="ImprovedCardContainer">
-          {healthList.map((h, idx) => (
-            <ImprovedCard
-              key={idx}
-              timeRemaining={formatRemaining(h.timeRemaining)}
-              title={h.name}
-              Icon={idx === 0 ? icon.Heart : SiOxygen}
-              value={h.progressPercent}
-              unit="%"
-              progress={h.progressPercent}
-            />
-          ))}
+      <div className="dashboard-container">
+        <WelcomeHeader userName={userName} />
+
+        <div className="dashboard-grid">
+            {/* Cột chính bên trái */}
+            <div className="main-column">
+                {/* --- THÊM CARD BIỂU ĐỒ VÀO ĐÂY --- */}
+                {dailyLogs.length > 0 && (
+                    <div className="card">
+                        <div className="card-header">
+                            <h4>Tiến Trình Cai Thuốc (Theo Nhật Ký)</h4>
+                        </div>
+                        <ProgressChart dailyLogs={dailyLogs} />
+                    </div>
+                )}
+                
+                <div className="card">
+                    <div className="card-header">
+                        <h4>Mục Tiêu Sức Khỏe</h4>
+                    </div>
+                    <div className="health-grid">
+                        {healthList.map((item, idx) => (
+                            <HealthMilestoneCard key={idx} item={item} />
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            {/* Cột phụ bên phải */}
+            <div className="side-column">
+                <SavingsInsightCard />
+                <QuickActionsCard />
+            </div>
         </div>
+
       </div>
-      <div id="savedMoney">
-        <SavingsCardWithDetail />
-      </div>
-      <Footer></Footer>
-      </>
+      <Footer />
+    </>
   );
 }
+
 export default DashBoard;
