@@ -1,19 +1,20 @@
-// src/features/Dashboard/dashBoard.jsx
-import { Link } from "react-router-dom";
-import ProgressChart from "./ProgressChart"; // Import component biểu đồ mới
+// src/features/Dashboard/dashBoard.jsx (PHIÊN BẢN ĐẦY ĐỦ VÀ ĐÃ SỬA LỖI)
+
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Heart, Droplets, BrainCircuit, Wallet, Pencil, Target } from "lucide-react";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css'; // Import style cho biểu đồ
+import 'react-circular-progressbar/dist/styles.css';
 
 import NavBar from "../../components/NavBar/NavBar";
 import Footer from "../../components/Footer/Footer";
+import ProgressChart from "./ProgressChart";
 import { useUser } from "../../contexts/UserContext";
 import useHealthList from "../../hooks/useHealthListRealtime";
 
-import './Dashboard.css'; // Import file CSS mới của chúng ta
+import './Dashboard.css';
 
-// --- HELPER FUNCTIONS ---
+// --- HELPER FUNCTIONS (Không thay đổi) ---
 function formatRemaining(seconds) {
   if (typeof seconds !== "number" || isNaN(seconds) || seconds <= 0) return "Hoàn thành";
   const d = Math.floor(seconds / (3600 * 24));
@@ -27,9 +28,9 @@ function formatRemaining(seconds) {
 
 const formatCurrency = (num) => (num ? Math.round(num).toLocaleString('vi-VN') + ' đ' : '0 đ');
 
-// --- NEW SUB-COMPONENTS ---
 
-// Lời chào đầu trang
+// --- SUB-COMPONENTS (Component con) ---
+
 function WelcomeHeader({ userName }) {
     return (
         <div className="dashboard-header">
@@ -39,7 +40,6 @@ function WelcomeHeader({ userName }) {
     );
 }
 
-// Card hiển thị tiến độ sức khỏe
 function HealthMilestoneCard({ item }) {
     const Icon = item.name.includes("Tim") ? Heart : (item.name.includes("Oxy") ? Droplets : BrainCircuit);
     const progress = Math.round(item.progressPercent);
@@ -69,25 +69,40 @@ function HealthMilestoneCard({ item }) {
     );
 }
 
-// Card hiển thị tiền tiết kiệm
 function SavingsInsightCard() {
     const { userId } = useUser();
     const [savedMoney, setSavedMoney] = useState({});
     const [activeTab, setActiveTab] = useState('total');
 
     useEffect(() => {
-        if (!userId) return;
+        // Nếu không có userId (đã logout), dọn dẹp state và dừng lại
+        if (!userId) {
+            setSavedMoney({});
+            return;
+        }
+
         const fetchData = async () => {
             try {
                 const response = await fetch(`http://localhost:8080/api/quit-plan/${userId}/savings`);
-                const data = await response.json();
-                setSavedMoney(data);
+                if (response.ok) {
+                    const data = await response.json();
+                    setSavedMoney(data);
+                } else {
+                    setSavedMoney({}); // Nếu lỗi (ví dụ user mới chưa có plan), cũng dọn dẹp
+                }
             } catch (error) {
                 console.error("Lỗi khi fetch savings:", error);
+                setSavedMoney({});
             }
         };
+
         fetchData();
-    }, [userId]);
+
+        // Hàm cleanup: sẽ chạy khi userId thay đổi hoặc component bị unmount
+        return () => {
+            setSavedMoney({});
+        };
+    }, [userId]); // Phụ thuộc vào userId
     
     const displayData = {
         total: { label: "Tổng Tiết Kiệm", value: formatCurrency(savedMoney.totalSavings) },
@@ -95,7 +110,7 @@ function SavingsInsightCard() {
         week: { label: "Mỗi Tuần", value: formatCurrency(savedMoney.moneyPerWeek) },
         month: { label: "Mỗi Tháng", value: formatCurrency(savedMoney.moneyPerMonth) },
         year: { label: "Mỗi Năm", value: formatCurrency(savedMoney.moneyPerYear) },
-    }
+    };
 
     return (
         <div className="savings-card">
@@ -104,8 +119,8 @@ function SavingsInsightCard() {
                 <h4>Phân Tích Tiết Kiệm</h4>
             </div>
             <div className="savings-total">
-                <span>{displayData[activeTab].label}</span>
-                <h2>{displayData[activeTab].value}</h2>
+                <span>{displayData[activeTab]?.label || 'Đang tải...'}</span>
+                <h2>{displayData[activeTab]?.value || '0 đ'}</h2>
             </div>
             <div className="savings-tabs">
                 {Object.keys(displayData).map(key => (
@@ -122,14 +137,12 @@ function SavingsInsightCard() {
     );
 }
 
-// Card hành động nhanh (ĐÃ SỬA LỖI)
 function QuickActionsCard() {
     return (
         <div className="quick-actions-card">
              <div className="card-header">
                 <h4>Hành Động Nhanh</h4>
             </div>
-            {/* Dùng Link to thay vì a href */}
             <Link to="/diary" className="action-item">
                 <Pencil size={20} />
                 <span>Ghi nhật ký hôm nay</span>
@@ -139,64 +152,83 @@ function QuickActionsCard() {
                 <span>Kiểm tra nhiệm vụ</span>
             </Link>
         </div>
-    )
+    );
 }
 
 
-// --- MAIN DASHBOARD COMPONENT ---
-// --- SỬA LẠI COMPONENT CHÍNH DASHBOARD ---
+// --- MAIN DASHBOARD COMPONENT (Đã sửa logic) ---
 function DashBoard() {
-  const { healthList, loading: healthLoading } = useHealthList();
-  const [userName, setUserName] = useState("");
-  const { userId } = useUser(); // Lấy userId từ context
+  const { healthList, loading: healthLoading } = useHealthList(); // Custom hook đã được sửa
+  const { userId } = useUser();
 
-  // --- THÊM STATE VÀ LOGIC FETCH DỮ LIỆU NHẬT KÝ ---
+  const [userName, setUserName] = useState("");
   const [dailyLogs, setDailyLogs] = useState([]);
   const [logsLoading, setLogsLoading] = useState(true);
 
   useEffect(() => {
-    // Chỉ fetch khi có userId
-    if (!userId) return;
+    // Nếu không có userId (vừa logout), dọn dẹp tất cả state và dừng lại
+    if (!userId) {
+      setUserName("");
+      setDailyLogs([]);
+      setLogsLoading(false); // Quan trọng: dừng trạng thái loading
+      return;
+    }
 
-    // Lấy tên user
-    const fetchUser = async () => {
-        try {
-            const res = await fetch("http://localhost:8080/api/auth/get-session-user", {
-                method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include"
-            });
-            if (res.ok) {
-                const userData = await res.json();
-                setUserName(userData.name);
-            }
-        } catch (error) { console.error("Lỗi khi lấy user:", error); }
-    };
-
-    // Lấy dữ liệu nhật ký
-    const fetchDailyLogs = async () => {
-        setLogsLoading(true);
-        try {
-            const response = await fetch(`http://localhost:8080/api/user-daily-logs/get-daily-logs/${userId}`);
-            if (response.ok) {
-                const data = await response.json();
-                // Sắp xếp dữ liệu theo ngày tăng dần để biểu đồ đúng thứ tự
-                const sortedData = data.sort((a, b) => new Date(a.logDate) - new Date(b.logDate));
-                setDailyLogs(sortedData);
-            }
-        } catch (error) {
-            console.error("Lỗi khi fetch daily logs:", error);
-        } finally {
-            setLogsLoading(false);
+    // Khi có userId mới, bắt đầu fetch dữ liệu
+    const fetchAllDashboardData = async () => {
+      // 1. Lấy tên user
+      try {
+        const userRes = await fetch("http://localhost:8080/api/auth/get-session-user", {
+          method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include"
+        });
+        if (userRes.ok) {
+            const userData = await userRes.json();
+            setUserName(userData.name);
         }
+      } catch (error) { console.error("Lỗi khi lấy user:", error); }
+      
+      // 2. Lấy dữ liệu nhật ký
+      setLogsLoading(true);
+      try {
+        const logsRes = await fetch(`http://localhost:8080/api/user-daily-logs/get-daily-logs/${userId}`);
+        if (logsRes.ok) {
+          const data = await logsRes.json();
+          const sortedData = data.sort((a, b) => new Date(a.logDate) - new Date(b.logDate));
+          setDailyLogs(sortedData);
+        } else {
+            setDailyLogs([]); // Nếu response không ok (e.g. 404), set mảng rỗng
+        }
+      } catch (error) {
+        console.error("Lỗi khi fetch daily logs:", error);
+        setDailyLogs([]);
+      } finally {
+        setLogsLoading(false);
+      }
     };
 
-    fetchUser();
-    fetchDailyLogs();
-  }, [userId]); // Chạy lại khi có userId
+    fetchAllDashboardData();
 
+    // Hàm cleanup: Chạy khi component unmount hoặc userId thay đổi
+    return () => {
+        setUserName("");
+        setDailyLogs([]);
+    }
+  }, [userId]); // Phụ thuộc duy nhất vào userId
+
+  // Loading state
   if (healthLoading || logsLoading) {
-    return <p style={{textAlign: 'center', marginTop: '50px'}}>Đang tải dữ liệu tổng quan...</p>;
+    return (
+        <>
+            <NavBar />
+            <div style={{textAlign: 'center', marginTop: '50px', minHeight: '60vh'}}>
+                <p>Đang tải dữ liệu tổng quan...</p>
+            </div>
+            <Footer />
+        </>
+    );
   }
 
+  // Render giao diện
   return (
     <>
       <NavBar />
@@ -204,9 +236,7 @@ function DashBoard() {
         <WelcomeHeader userName={userName} />
 
         <div className="dashboard-grid">
-            {/* Cột chính bên trái */}
             <div className="main-column">
-                {/* --- THÊM CARD BIỂU ĐỒ VÀO ĐÂY --- */}
                 {dailyLogs.length > 0 && (
                     <div className="card">
                         <div className="card-header">
@@ -221,14 +251,17 @@ function DashBoard() {
                         <h4>Mục Tiêu Sức Khỏe</h4>
                     </div>
                     <div className="health-grid">
-                        {healthList.map((item, idx) => (
-                            <HealthMilestoneCard key={idx} item={item} />
-                        ))}
+                        {healthList.length > 0 ? (
+                            healthList.map((item, idx) => (
+                                <HealthMilestoneCard key={idx} item={item} />
+                            ))
+                        ) : (
+                            <p>Không có dữ liệu mục tiêu sức khỏe.</p>
+                        )}
                     </div>
                 </div>
             </div>
 
-            {/* Cột phụ bên phải */}
             <div className="side-column">
                 <SavingsInsightCard />
                 <QuickActionsCard />
