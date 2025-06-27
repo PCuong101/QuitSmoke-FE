@@ -948,3 +948,59 @@ Footer {
 .dropdown-item:hover {
   background-color: #f9fafb;
 }
+.notification-item {
+  position: relative;
+  transition: background-color 0.2s ease; /* Thêm hiệu ứng nền khi hover */
+}
+
+/* Hiệu ứng khi di chuột vào mục thông báo */
+.notification-item:hover {
+  background-color: #f9fafb !important; /* Dùng !important để ghi đè inline-style */
+}
+
+/* 
+  Nút xóa. Mặc định nó sẽ bị ẩn.
+*/
+.delete-notification-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  
+  /* Reset style của button */
+  background: none;
+  border: none;
+  padding: 4px;
+  line-height: 1;
+  
+  /* Style cho icon */
+  color: #9ca3af; /* Màu xám nhạt */
+  cursor: pointer;
+  
+  /* Ẩn nút đi mặc định */
+  opacity: 0;
+  visibility: hidden;
+  
+  /* Thêm hiệu ứng để nó hiện ra mượt mà */
+  transition: opacity 0.2s ease, color 0.2s ease;
+  
+  /* Bo tròn để đẹp hơn */
+  border-radius: 50%;
+}
+
+/* 
+  QUAN TRỌNG: Khi di chuột vào container (.notification-item),
+  nút xóa bên trong (.delete-notification-button) sẽ hiện ra.
+*/
+.notification-item:hover .delete-notification-button {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 
+  Khi di chuột vào chính nút xóa, đổi màu nó sang đỏ 
+  và thêm một nền nhẹ.
+*/
+.delete-notification-button:hover {
+  color: #ef4444; /* Màu đỏ */
+  background-color: #fde2e2;
+}

@@ -46,6 +46,13 @@ export default function NavBar(){
     }
   };
 
+  const handleDeleteNotification = (notificationId, event) => {
+    event.stopPropagation(); // Ngăn việc click vào nút xóa cũng kích hoạt handleItemClick
+    setNotifications(prevNotifications => 
+      prevNotifications.filter(notification => notification.id !== notificationId)
+    );
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (popupRef.current && !popupRef.current.contains(event.target)) {
@@ -267,6 +274,7 @@ export default function NavBar(){
 
                   return (
                     <div key={n.id}
+                    className="notification-item"
                       onClick={() => handleItemClick(n)}
                       style={{
                         display: 'flex',
@@ -299,6 +307,13 @@ export default function NavBar(){
                           marginTop: '6px'
                         }}></div>
                       )}
+                      <button
+                        className="delete-notification-button"
+                        onClick={(e) => handleDeleteNotification(n.id, e)}
+                        title="Xóa thông báo"
+                      >
+                        <icon.X size={16} />
+                      </button>
                     </div>
                   );
                 })
