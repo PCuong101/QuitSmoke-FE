@@ -130,7 +130,7 @@ export default function NavBar(){
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        gap: '20px',
+        gap: '5px',
         position: 'relative'
       }}
     >

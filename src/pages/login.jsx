@@ -93,7 +93,7 @@ const styles = {
     backgroundColor: "#fff",
     padding: "2rem 2.5rem",
     borderRadius: "1rem",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+    boxShadow: "0 4px 12px rgba(10, 10, 10, 0.1)",
     textAlign: "center",
     maxWidth: "400px",
     width: "100%",
@@ -117,6 +117,8 @@ const styles = {
     border: "1px solid #ccc",
     borderRadius: "8px",
     fontSize: "1rem",
+    backgroundColor: "#fff",
+    color: "#000",
   },
   button: {
     backgroundColor: "#16a34a",

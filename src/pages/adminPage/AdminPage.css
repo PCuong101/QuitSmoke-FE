@@ -510,6 +510,8 @@ body {
   border-radius: 8px;
   font-size: 0.95rem;
   transition: border-color 0.2s, box-shadow 0.2s;
+  background-color: white;
+  color: black;
 }
 .user-management-page .input-with-icon input:focus {
   outline: none;
@@ -929,4 +931,10 @@ body {
   font-weight: 500;
   margin-bottom: 10px;
   text-align: center;
+}
+.logout-btn{
+  background-color: red;
+}
+.logout-btn:hover{
+  background-color: #d20f39;
 }
