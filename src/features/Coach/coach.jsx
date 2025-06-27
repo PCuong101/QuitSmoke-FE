@@ -323,7 +323,7 @@ function Coach() {
 
                     if (b.status === "CANCELED") {
                       meetingStatusLabel = "Đã hủy";
-                    } else if (b.status === "DONE") {
+                    } else if (b.status === "FINISHED") {
                       meetingStatusLabel = "Đã hoàn thành";
                     } else if (b.status === "BOOKED") {
                       if (now.isBefore(meetingStartTime)) {
