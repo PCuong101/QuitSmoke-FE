@@ -25,7 +25,7 @@ function Survey() {
         yearsSmoking: "",
         packPrice: "",
         firstSmokeTime: "",
-        dateStart: "",
+        dateStart:  todayStr,
     });
 
     // State cho đăng ký
