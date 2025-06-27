@@ -54,7 +54,7 @@ body {
                     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
                     display: flex;
                     flex-direction: column;
-                    min-height: 540px; /* Đặt chiều cao tối thiểu để các nút canh đều */
+                    min-height: 590px; /* Đặt chiều cao tối thiểu để các nút canh đều */
                     position: relative;
                 }
 

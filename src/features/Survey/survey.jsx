@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Footer from "../../components/Footer/Footer.jsx";
 import { useNavigate } from "react-router-dom";
+import "./survey.css"; // Import CSS styles
 
 function Survey() {
     const [showRegisterModal, setShowRegisterModal] = useState(false);

@@ -1,10 +1,10 @@
 // src/pages/CoachDashboardPage.jsx
 
 import { useState, useEffect } from "react";
-import CoachNavBar from "../components/NavBar/CoachNavBar"; 
-import Footer from "../components/Footer/Footer";
-import useUserId from "../hooks/useUserId";
-import "../styles/CoachDashboardPage.css"; // Sẽ cập nhật file này
+import CoachNavBar from "../../components/NavBar/CoachNavBar"; 
+import Footer from "../../components/Footer/Footer";
+import useUserId from "../../hooks/useUserId";
+import "./CoachDashboardPage.css"; // Sẽ cập nhật file này
 import dayjs from "dayjs";
 
 import "dayjs/locale/vi";
@@ -98,9 +98,18 @@ function CoachDashboardPage() {
            )}
         </div>
         <div className="card-actions">
-          <a href="https://meet.google.com/" target="_blank" rel="noopener noreferrer" className="btn-action btn-meet" disabled={schedule.bookingStatus !== 'BOOKED'}>
-            Vào buổi gặp
-          </a>
+          <button
+  className="btn-action btn-meet"
+  onClick={() => {
+    if (schedule.bookingStatus === 'BOOKED') {
+      window.open('https://meet.google.com/', '_blank', 'noopener,noreferrer');
+    }
+  }}
+  disabled={schedule.bookingStatus !== 'BOOKED'}
+>
+  Vào buổi gặp
+</button>
+
           <button 
             className="btn-action btn-finish"
             disabled={schedule.bookingStatus !== 'BOOKED'}

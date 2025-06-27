@@ -22,7 +22,7 @@ import CoachManagement from "./pages/adminPage/CoachManagement.jsx";
 import BlogManagement from "./pages/adminPage/BlogManagement.jsx";
 import CoachDetail from "./pages/adminPage/CoachDetail.jsx";
 import DashboardWebsocket from "./features/Dashboard/dashBoard.jsx";
-import CoachDashboardPage from "./pages/CoachDashboardPage.jsx";
+import CoachDashboardPage from "./pages/coachPage/CoachDashboardPage.jsx";
 
 function App() {
   return (

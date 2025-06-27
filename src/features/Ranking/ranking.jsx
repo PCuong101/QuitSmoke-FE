@@ -3,6 +3,7 @@ import Footer from '../../components/Footer/Footer';
 import NavBar from "../../components/NavBar/NavBar";
 import { CalendarDays, DollarSign, Target, ChevronDown, LoaderCircle } from 'lucide-react';
 import { allAchievements } from '../Achievements/mock-achievements'; // Import "bảng tra cứu" đã cập nhật
+import './ranking.css';
 
 // --- HÀM HELPER: "BỘ NÃO" CỦA TRANG RANKING ---
 // Suy luận ra các thành tựu cao nhất từ các chỉ số của người dùng
