@@ -2,6 +2,7 @@ import { useState } from "react";
 import Footer from "../../components/Footer/Footer.jsx";
 import { useNavigate } from "react-router-dom";
 import "./survey.css"; // Import CSS styles
+import { toZonedTime, format } from 'date-fns-tz';
 
 function Survey() {
     const [showRegisterModal, setShowRegisterModal] = useState(false);
@@ -9,6 +10,13 @@ function Survey() {
     const [errorMessage, setErrorMessage] = useState("");
 
     const navigate = useNavigate();
+
+    
+
+    const timeZone = 'Asia/Ho_Chi_Minh';
+    const now = new Date();
+    const zonedDate = toZonedTime(now, timeZone);
+    const todayStr = format(zonedDate, 'yyyy-MM-dd');
 
     // State cho survey
     const [surveyData, setSurveyData] = useState({
@@ -127,7 +135,7 @@ function Survey() {
                     </div>
 
                     <h2>Ngày bạn muốn bắt đầu?</h2>
-                    <input className="input-class-date" type="date" name="dateStart" required onChange={handleSurveyChange} /> <br></br>
+                    <input className="input-class-date" type="date" name="dateStart" required value={todayStr} readOnly /> <br></br>
                     <div className="button-container">
                         <input type="submit" value="Tiếp tục" />
                     </div>

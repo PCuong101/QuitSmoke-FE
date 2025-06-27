@@ -11,10 +11,6 @@ import {
 import { allAchievements } from "../Achievements/mock-achievements"; // Import "bảng tra cứu" đã cập nhật
 import "./ranking.css";
 
-// --- HÀM HELPER: "BỘ NÃO" CỦA TRANG RANKING ---
-// Suy luận ra các thành tựu cao nhất từ các chỉ số của người dùng
-//--HÀM GẺTOP ACHIEVEMENTS--V2--
-// --- HÀM HELPER ĐÃ ĐƯỢC CẬP NHẬT THEO LOGIC MỚI ---
 function getTopAchievements(member) {
   // Định nghĩa các loại thành tựu và thứ tự ưu tiên của chúng
   const categoriesInOrder = ["time", "money", "mission", "diary"];
