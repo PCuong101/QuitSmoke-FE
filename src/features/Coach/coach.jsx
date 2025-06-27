@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import "./Coach.css";
+import { useNotifications } from '../../contexts/NotificationContext.jsx';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -31,6 +32,7 @@ function formatDateWithWeekday(dateStr) {
 
 function Coach() {
   // --- STATE VÀ HÀM CỦA BẠN ĐƯỢC GIỮ NGUYÊN HOÀN TOÀN ---
+  const { addBookingNotification } = useNotifications();
   const [activeTab, setActiveTab] = useState("list");
   const [coaches, setCoaches] = useState([]);
   const [selected, setSelected] = useState({
@@ -42,6 +44,9 @@ function Coach() {
   const [confirmedSlot, setConfirmedSlot] = useState(null);
   const userId = useUserId();
   const [userBookings, setUserBookings] = useState([]);
+
+
+  
 
   const fetchCoaches = async () => {
     try {
@@ -97,6 +102,11 @@ function Coach() {
         }),
       });
       if (!res.ok) throw new Error("Lỗi khi booking");
+      const bookedSlotDetails = selected.coach.schedules.find(s => s.scheduleId === selected.slot);
+      if (bookedSlotDetails) {
+        // GỌI HÀM TỪ CONTEXT, truyền thêm hàm formatDateWithWeekday vào
+        addBookingNotification(selected.coach.name, bookedSlotDetails, formatDateWithWeekday);
+      }
 
       setConfirmedSlot({ coachId: selected.coach.id, slot: selected.slot });
 
@@ -142,7 +152,7 @@ function Coach() {
   return (
     <>
       <div className="coach-page-container">
-        <NavBar />
+        <NavBar/>
         <div className="coach-page-content">
           <header className="page-header">
             <h1>Nhờ sự giúp đỡ từ chuyên gia</h1>

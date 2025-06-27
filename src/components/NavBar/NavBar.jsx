@@ -3,27 +3,18 @@ import { useState, useRef, useEffect } from 'react';
 // import { mockTodayMissionList } from '../../features/Missions/mock-missions';
 import * as icon from 'lucide-react';
 import useLogout from '../../hooks/useLogout';
+import { useNotifications } from '../../contexts/NotificationContext.jsx';
 
-export default function NavBar() {
+export default function NavBar(){
   const logout = useLogout();
   const location = useLocation();
   const navigate = useNavigate();
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const { notifications, setNotifications } = useNotifications();
+
   const popupRef = useRef();
 
-  const [notifications, setNotifications] = useState([
-    // Dữ liệu ban đầu có thể để trống hoặc chỉ chứa các loại khác
-    {
-      id: 1, type: "achievement", title: "Chúc mừng! Bạn đã đạt được thành tựu mới",
-      description: "Huy hiệu 'Tuần Lễ Vàng' - Hoàn thành 7 ngày không hút thuốc",
-      time: "2 phút trước", read: false, link: '/achievement',
-    },
-    {
-      id: 2, type: "appointment", title: "Lịch hẹn với chuyên gia",
-      description: "Bạn có cuộc hẹn với Dr. Trần Minh Tuấn vào 15:00 ngày mai",
-      time: "1 giờ trước", read: false, link: '/coach',
-    },
-  ]);
+  
 
   // --- LOGIC MỚI: TỰ ĐỘNG THÊM THÔNG BÁO NHIỆM VỤ ---
   // useEffect(() => {

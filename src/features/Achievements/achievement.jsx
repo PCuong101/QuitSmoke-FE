@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import Footer from "../../components/Footer/Footer";
 import NavBar from "../../components/NavBar/NavBar";
-import { allAchievements } from "./mock-achievements"; // Import "bảng tra cứu"
+import { allAchievements } from "./mock-achievements";
 import { Share2, Lock, LoaderCircle } from 'lucide-react';
-import useUserId from "../../hooks/useUserId"; // Dùng lại hook để lấy userId
-import './achievement.css'; // Import CSS cho thành tựu
+import useUserId from "../../hooks/useUserId";
+import './achievement.css';
+import { useNotifications } from '../../contexts/NotificationContext.jsx';
 
-// --- CÁC THÀNH PHẦN PHỤ ---
-
-// Hàm helper để format ngày tháng
+// --- CÁC THÀNH PHẦN PHỤ (Không thay đổi) ---
 function formatAchievedDate(dateString) {
   if (!dateString) return '';
   return new Date(dateString).toLocaleDateString('vi-VN', {
@@ -16,10 +15,7 @@ function formatAchievedDate(dateString) {
   });
 }
 
-// Component hiển thị một huy hiệu
 function AchievementBadge({ achievementInfo, unlockedData }) {
-  // achievementInfo: Dữ liệu từ bảng tra cứu (chứa icon, tier...)
-  // unlockedData: Dữ liệu từ API (chứa ngày đạt được...)
   const Icon = achievementInfo.icon;
   const isUnlocked = !!unlockedData;
 
@@ -31,7 +27,6 @@ function AchievementBadge({ achievementInfo, unlockedData }) {
       <div className="badge-text">
         <h4 className="badge-title">{achievementInfo.title}</h4>
         <p className="badge-description">{achievementInfo.description}</p>
-        
         {isUnlocked && (
           <p className="badge-unlocked-date">
             Đạt được ngày: {formatAchievedDate(unlockedData.achievedAt)}
@@ -47,53 +42,100 @@ function AchievementBadge({ achievementInfo, unlockedData }) {
   );
 }
 
-
-// --- COMPONENT CHÍNH ---
-
+// --- COMPONENT CHÍNH ĐÃ ĐƯỢC VIẾT LẠI LOGIC ---
 function Achievement() {
   const userId = useUserId();
   const [userAchievementsMap, setUserAchievementsMap] = useState(new Map());
   const [isLoading, setIsLoading] = useState(true);
+  const { addAchievementNotification } = useNotifications();
 
   useEffect(() => {
-    // Chỉ chạy khi đã có userId
-    if (userId) {
-      const fetchAndProcessAchievements = async () => {
-        setIsLoading(true);
-        try {
-          const response = await fetch(`http://localhost:8080/api/achievements/${userId}`);
-          if (!response.ok) throw new Error(`Lỗi API: ${response.status}`);
-          
-          const unlockedDtos = await response.json(); // Đây là List<AchievementDTO>
-          
-          // Chuyển List<AchievementDTO> thành một Map để tra cứu nhanh
-          // Key của Map là `title` của thành tựu (vì đây là trường duy nhất có thể khớp)
-          const unlockedMap = new Map();
-          for (const dto of unlockedDtos) {
-            unlockedMap.set(dto.name, dto);
-          }
-          setUserAchievementsMap(unlockedMap);
-
-        } catch (error) {
-          console.error("Lỗi khi fetch thành tựu:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      };
-
-      fetchAndProcessAchievements();
-    } else {
-        // Nếu không có userId, vẫn dừng loading sau một khoảng thời gian
-        const timer = setTimeout(() => setIsLoading(false), 2000);
-        return () => clearTimeout(timer);
+    if (!userId) {
+      setIsLoading(false);
+      return;
     }
-  }, [userId]);
+
+    const fetchAndProcessAchievements = async () => {
+      setIsLoading(true);
+      try {
+        // 1. Fetch đồng thời dữ liệu chính và dữ liệu phụ
+        const [achievementsResponse, savingsResponse] = await Promise.all([
+          fetch(`http://localhost:8080/api/achievements/${userId}`),
+          fetch(`http://localhost:8080/api/quit-plan/${userId}/savings`)
+        ]);
+
+        if (!achievementsResponse.ok) throw new Error(`Lỗi API thành tựu: ${achievementsResponse.status}`);
+        
+        const unlockedDtos = await achievementsResponse.json();
+        let totalSavings = 0;
+        if (savingsResponse.ok) {
+            const savingsData = await savingsResponse.json();
+            totalSavings = savingsData.totalSavings || 0;
+        }
+
+        // 2. Tạo một Map duy nhất, là "nguồn chân lý" cuối cùng để hiển thị
+        const finalDisplayMap = new Map();
+        unlockedDtos.forEach(dto => finalDisplayMap.set(dto.name, dto));
+
+        // 3. Lấy dữ liệu đã biết từ localStorage để so sánh
+        const knownAchievementsKey = `known_achievements_count_${userId}`;
+        const knownAchievementsListKey = `known_achievements_list_${userId}`;
+        const knownCount = parseInt(localStorage.getItem(knownAchievementsKey) || '0', 10);
+        const knownAchievementsList = JSON.parse(localStorage.getItem(knownAchievementsListKey) || '[]');
+        
+        // 4. KIỂM TRA VÀ CẬP NHẬT TRỰC TIẾP VÀO `finalDisplayMap`
+        // Lặp qua tất cả các mẫu thành tựu để kiểm tra điều kiện
+        allAchievements.forEach(achTemplate => {
+          // Chỉ kiểm tra các thành tựu thuộc loại 'money' mà chưa được mở khóa từ API
+          if (achTemplate.category === 'money' && !finalDisplayMap.has(achTemplate.title)) {
+            // Nếu đủ điều kiện tiền tiết kiệm
+            if (totalSavings >= achTemplate.milestone) {
+              const newFakeDto = {
+                name: achTemplate.title,
+                achievedAt: new Date().toISOString(),
+                description: achTemplate.description
+              };
+              // Cập nhật trực tiếp vào Map cuối cùng
+              finalDisplayMap.set(achTemplate.title, newFakeDto);
+            }
+          }
+        });
+
+        // 5. SO SÁNH `finalDisplayMap` (ĐÃ CẬP NHẬT) VỚI LOCALSTORAGE ĐỂ GỬI THÔNG BÁO
+        if (finalDisplayMap.size > knownCount) {
+            finalDisplayMap.forEach((dto, title) => {
+                // Nếu thành tựu này không có trong danh sách đã biết -> nó là mới!
+                if (!knownAchievementsList.includes(title)) {
+                    const achievementTemplate = allAchievements.find(a => a.title === title);
+                    if (achievementTemplate) {
+                        addAchievementNotification(achievementTemplate);
+                    }
+                }
+            });
+        }
+        
+        // 6. CẬP NHẬT LOCALSTORAGE VỚI TRẠNG THÁI MỚI NHẤT
+        localStorage.setItem(knownAchievementsKey, finalDisplayMap.size.toString());
+        localStorage.setItem(knownAchievementsListKey, JSON.stringify(Array.from(finalDisplayMap.keys())));
+
+        // 7. SET STATE ĐỂ RENDER GIAO DIỆN BẰNG MAP CUỐI CÙNG
+        setUserAchievementsMap(finalDisplayMap);
+
+      } catch (error) {
+        console.error("Lỗi khi fetch và xử lý thành tựu:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAndProcessAchievements();
+  }, [userId, addAchievementNotification]);
 
   // Phân loại các thành tựu dựa trên "bảng tra cứu" allAchievements
   const achievementsByCategory = {
     time: allAchievements.filter(a => a.category === 'time' || a.category === 'health'),
     money: allAchievements.filter(a => a.category === 'money'),
-    mission: allAchievements.filter(a => a.category === 'mission'),
+    mission: allAchievements.filter(a => a.category === 'mission' || a.category === 'diary'), // Gộp chung
   };
 
   // Giao diện khi đang tải
@@ -110,6 +152,7 @@ function Achievement() {
     );
   }
 
+  // Render giao diện chính
   return (
     <>
       <NavBar />
@@ -119,17 +162,15 @@ function Achievement() {
           <p>Mỗi huy hiệu là một minh chứng cho sự kiên trì và nỗ lực phi thường của bạn!</p>
         </header>
 
-        {/* --- Render các hạng mục --- */}
         <section className="achievement-category">
           <h2>Cột Mốc & Sức Khỏe</h2>
           <div className="achievement-grid">
             {achievementsByCategory.time.map(achTemplate => {
-              // Lấy dữ liệu đã mở khóa từ map, dựa trên title
               const unlockedData = userAchievementsMap.get(achTemplate.title);
               return <AchievementBadge 
                 key={achTemplate.customLogicKey} 
-                achievementInfo={achTemplate} // Truyền toàn bộ thông tin từ bảng tra cứu
-                unlockedData={unlockedData}   // Truyền dữ liệu từ API (nếu có)
+                achievementInfo={achTemplate}
+                unlockedData={unlockedData}
               />
             })}
           </div>

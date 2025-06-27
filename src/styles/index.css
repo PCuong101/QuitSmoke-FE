@@ -1,8 +1,4 @@
 
-
-/* Mình để các phần custom CSS phía dưới để không ghi đè Tailwind */
-
-
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

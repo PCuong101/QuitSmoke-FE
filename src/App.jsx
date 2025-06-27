@@ -23,10 +23,11 @@ import BlogManagement from "./pages/adminPage/BlogManagement.jsx";
 import CoachDetail from "./pages/adminPage/CoachDetail.jsx";
 import DashboardWebsocket from "./features/Dashboard/dashBoard.jsx";
 import CoachDashboardPage from "./pages/coachPage/CoachDashboardPage.jsx";
+import { NotificationProvider } from './contexts/NotificationContext.jsx';
 
 function App() {
   return (
-    <>
+    <NotificationProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/test" element={<DashboardWebsocket />} />
@@ -179,7 +180,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-    </>
+    </NotificationProvider>
   );
 }
 
