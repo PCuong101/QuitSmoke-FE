@@ -1,18 +1,24 @@
-import './Footer.css'; // Import file CSS thuần
+import './Footer.css';
+import { SocialIcon } from 'react-social-icons';
 export default function Footer() {
     return (
-        <footer className="footer">
-            <div className="footer-container">
-                <p>&copy; 2025 <span className="footer-brand">QuitSmoking</span>. All rights reserved.</p>
-                <p>
-                    Liên hệ: <a href="mailto:pcuongvn101@gmail.com">pcuongvn101@gmail.com</a>
-                </p>
-                <div className="footer-links">
-                    <a href="/privacy">Chính sách bảo mật</a>
-                    <span>|</span>
-                    <a href="/terms">Điều khoản sử dụng</a>
-                </div>
-            </div>
-        </footer>
+        <footer className="site-footer">
+  <div className="footer-content">
+    <div className="footer-brand">
+      <span>© 2025 <strong style={{color: "#28a745"}}>QuitSmoking</strong>. All rights reserved.</span>
+    </div>
+    <div className="footer-links">
+      <a href="mailto:pcuong101@gmail.com">Liên hệ</a>
+      <a href="#">Chính sách bảo mật</a>
+      <a href="#">Điều khoản sử dụng</a>
+    </div>
+    <div className="footer-social">
+      <SocialIcon url="https://facebook.com" />
+      <SocialIcon url="https://instagram.com" />
+      <SocialIcon url="https://twitter.com" />
+    </div>
+  </div>
+</footer>
+
     );
 }
