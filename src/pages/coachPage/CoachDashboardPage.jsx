@@ -1,10 +1,10 @@
-// src/pages/CoachDashboardPage.jsx
+// src/pages/CoachDashboardPage.jsx (PHIÊN BẢN SỬA LỖI LOGIC)
 
 import { useState, useEffect } from "react";
 import CoachNavBar from "../../components/NavBar/CoachNavBar";
 import Footer from "../../components/Footer/Footer";
 import useUserId from "../../hooks/useUserId";
-import "./CoachDashboardPage.css"; // Sẽ cập nhật file này
+import "./CoachDashboardPage.css";
 import dayjs from "dayjs";
 
 import "dayjs/locale/vi";
@@ -12,7 +12,7 @@ import updateLocale from "dayjs/plugin/updateLocale";
 dayjs.extend(updateLocale);
 dayjs.locale("vi");
 
-// Helper function để format ngày tháng (giống bên Member)
+// --- HELPER FUNCTIONS ---
 function formatDateWithWeekday(dateStr) {
   if (!dateStr) return "";
   const date = new Date(dateStr);
@@ -23,10 +23,27 @@ function formatDateWithWeekday(dateStr) {
   });
 }
 
+// =======================================================================
+// ================== SỬA LOGIC CỦA HÀM NÀY ================================
+// Hàm này sẽ chuyển đổi label của slot thành chuỗi thời gian cụ thể
+const getSlotTimeRange = (slotLabel) => {
+    // Kiểm tra xem chuỗi có chứa "sáng" hoặc "chiều" không (không phân biệt hoa thường)
+    if (slotLabel.toLowerCase().includes('sáng')) {
+        return 'Sáng (08:00 - 10:00)'; // Cập nhật đúng giờ theo DB của bạn
+    }
+    if (slotLabel.toLowerCase().includes('chiều')) {
+        return 'Chiều (14:00 - 16:00)'; // Cập nhật đúng giờ theo DB của bạn
+    }
+    // Trả về chính label nếu không khớp
+    return slotLabel;
+};
+// =======================================================================
+// =======================================================================
+
 function CoachDashboardPage() {
   const [schedules, setSchedules] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("schedule"); // State cho tab
+  const [activeTab, setActiveTab] = useState("schedule");
   const userId = useUserId();
 
   const fetchCoachSchedules = async () => {
@@ -35,6 +52,7 @@ function CoachDashboardPage() {
       return;
     }
     try {
+      setLoading(true);
       const response = await fetch(
         `http://localhost:8080/api/bookings/coach/${userId}/schedule`
       );
@@ -53,23 +71,16 @@ function CoachDashboardPage() {
   };
 
   const handleFinishBooking = async (bookingId) => {
-    if (
-      !window.confirm(
-        "Bạn có chắc chắn muốn đánh dấu cuộc hẹn này là đã hoàn thành?"
-      )
-    ) {
+    if (!window.confirm("Bạn có chắc chắn muốn đánh dấu cuộc hẹn này là đã hoàn thành?")) {
       return;
     }
     try {
       const response = await fetch(
-        `http://localhost:8080/api/bookings/${bookingId}/finish`,
-        {
-          method: "PUT",
-        }
+        `http://localhost:8080/api/bookings/${bookingId}/finish`, { method: "PUT" }
       );
       if (!response.ok) throw new Error("Không thể hoàn thành cuộc hẹn.");
       alert("Đã cập nhật trạng thái thành FINISHED!");
-      fetchCoachSchedules();
+      await fetchCoachSchedules();
     } catch (error) {
       console.error("Lỗi khi hoàn thành booking:", error);
       alert("Có lỗi xảy ra, vui lòng thử lại.");
@@ -80,7 +91,6 @@ function CoachDashboardPage() {
     fetchCoachSchedules();
   }, [userId]);
 
-  // Lọc dữ liệu cho các tab
   const activeBookings = schedules.filter((s) => s.bookingStatus === "BOOKED");
   const pastBookings = schedules.filter(
     (s) => s.bookingStatus === "FINISHED" || s.bookingStatus === "CANCELED"
@@ -97,59 +107,36 @@ function CoachDashboardPage() {
             {dayjs(schedule.date).format("dddd, DD/MM/YYYY")}
           </span>
           {schedule.bookingStatus && schedule.bookingStatus !== "UNKNOWN" && (
-            <span
-              className={`status-tag status-${schedule.bookingStatus.toLowerCase()}`}
-            >
+            <span className={`status-tag status-${schedule.bookingStatus.toLowerCase()}`}>
               {schedule.bookingStatus}
             </span>
           )}
         </div>
         <div className="card-body">
-          <p>
-            <strong>Slot:</strong>{" "}
-            {schedule.slotLabel === "1" ? "Sáng" : "Chiều"}
-          </p>
-          {schedule.bookedByName ? (
+            <p><strong>Slot:</strong> {getSlotTimeRange(schedule.slotLabel)}</p>
+            {schedule.bookedByName ? (
             <>
-              <p>
-                <strong>Người đặt:</strong> {schedule.bookedByName} (
-                {schedule.bookedByEmail})
-              </p>
-              <p>
-                <strong>Triệu chứng:</strong>{" "}
-                {schedule.notes || "Không có ghi chú"}
-              </p>
+              <p><strong>Người đặt:</strong> {schedule.bookedByName} ({schedule.bookedByEmail})</p>
+              <p><strong>Triệu chứng:</strong> {schedule.notes || "Không có ghi chú"}</p>
             </>
-          ) : (
-            <p>
-              <i>
-                Thông tin người đặt không có sẵn (có thể lịch đã kết thúc hoặc
-                bị hủy).
-              </i>
-            </p>
-          )}
+            ) : (
+            <p><i>Thông tin người đặt không có sẵn.</i></p>
+            )}
         </div>
         <div className="card-actions">
           <button
             className="btn-action btn-meet"
             onClick={() => {
               if (schedule.bookingStatus === "BOOKED" && schedule.meetingLink) {
-                window.open(
-                  schedule.meetingLink,
-                  "_blank",
-                  "noopener,noreferrer"
-                );
+                window.open(schedule.meetingLink, "_blank", "noopener,noreferrer");
               } else {
                 alert("Không có link Google Meet cho lịch này!");
               }
             }}
-            disabled={
-              schedule.bookingStatus !== "BOOKED" || !schedule.meetingLink
-            }
+            disabled={schedule.bookingStatus !== "BOOKED" || !schedule.meetingLink}
           >
             Vào buổi gặp
           </button>
-
           <button
             className="btn-action btn-finish"
             disabled={schedule.bookingStatus !== "BOOKED"}
@@ -166,51 +153,29 @@ function CoachDashboardPage() {
     <div className="page-wrapper">
       <CoachNavBar />
       <div className="coach-dashboard-container">
-        {/* --- BẢNG LỊCH TỔNG QUAN --- */}
         <div className="availability-container">
           <h2 className="section-title">Tổng quan lịch làm việc</h2>
           <div className="coach-slot-grid">
-            {loading ? (
-              <p>Đang tải lịch...</p>
-            ) : (
+            {loading ? <p>Đang tải lịch...</p> : (
               schedules.map((s) => (
-                <div
-                  key={s.scheduleId}
-                  className={`coach-slot ${
-                    s.bookingStatus !== "EMPTY"
-                      ? "slot-booked"
-                      : "slot-available"
-                  }`}
-                >
+                <div key={s.scheduleId} className={`coach-slot ${s.bookingStatus !== "EMPTY" ? "slot-booked" : "slot-available"}`}>
                   <div>{formatDateWithWeekday(s.date)}</div>
-                  <div>{s.slotLabel === "1" ? "Sáng" : "Chiều"}</div>
+                  <div>{getSlotTimeRange(s.slotLabel)}</div>
                 </div>
               ))
             )}
           </div>
         </div>
-
-        {/* --- HỆ THỐNG TAB --- */}
         <div className="tab-navigation">
-          <div
-            className={`tab-item ${activeTab === "schedule" ? "active" : ""}`}
-            onClick={() => setActiveTab("schedule")}
-          >
+          <div className={`tab-item ${activeTab === "schedule" ? "active" : ""}`} onClick={() => setActiveTab("schedule")}>
             Lịch làm việc ({activeBookings.length})
           </div>
-          <div
-            className={`tab-item ${activeTab === "history" ? "active" : ""}`}
-            onClick={() => setActiveTab("history")}
-          >
+          <div className={`tab-item ${activeTab === "history" ? "active" : ""}`} onClick={() => setActiveTab("history")}>
             Lịch sử ({pastBookings.length})
           </div>
         </div>
-
-        {/* --- NỘI DUNG TAB --- */}
         <div className="tab-content">
-          {loading ? (
-            <h2>Đang tải...</h2>
-          ) : (
+          {loading ? <h2>Đang tải...</h2> : (
             <>
               {activeTab === "schedule" && (
                 <div className="schedule-list">

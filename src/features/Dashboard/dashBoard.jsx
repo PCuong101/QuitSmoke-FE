@@ -59,7 +59,7 @@ function HealthMilestoneCard({ item }) {
             </div>
             <div className="health-card-info">
                 <div className="health-card-title">
-                    <Icon size={20} className="health-card-icon" />
+                    {/* <Icon size={20} className="health-card-icon" /> */}
                     <h4>{item.name}</h4>
                 </div>
                 <p>Thời gian hồi phục còn lại:</p>
@@ -129,7 +129,7 @@ function SavingsInsightCard() {
                         className={`tab-btn ${activeTab === key ? 'active' : ''}`}
                         onClick={() => setActiveTab(key)}
                     >
-                        {key === 'total' ? 'Tổng' : key.charAt(0).toUpperCase() + key.slice(1)}
+                        {displayData[key].label}
                     </button>
                 ))}
             </div>

@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import NavBar from "../../components/NavBar/NavBar"
+import NavBar from "../../components/NavBar/NavBar";
 import Footer from "../../components/Footer/Footer";
 import useUserId from "../../hooks/useUserId";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import "./Coach.css";
-import { useNotifications } from '../../contexts/NotificationContext.jsx';
+import { useNotifications } from "../../contexts/NotificationContext.jsx";
+import { Video } from 'lucide-react';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -44,9 +45,7 @@ function Coach() {
   const [confirmedSlot, setConfirmedSlot] = useState(null);
   const userId = useUserId();
   const [userBookings, setUserBookings] = useState([]);
-
-
-  
+  const [activeMeetingLinks, setActiveMeetingLinks] = useState(new Map());
 
   const fetchCoaches = async () => {
     try {
@@ -62,16 +61,35 @@ function Coach() {
   };
 
   const fetchBookings = async () => {
-    if (!userId) return;
+    if (!userId) {
+      setUserBookings([]);
+      setActiveMeetingLinks(new Map());
+      return;
+    }
     try {
-      const res = await fetch(
-        `http://localhost:8080/api/bookings/get-booking/${userId}`
-      );
-      if (!res.ok) return;
+      const res = await fetch(`http://localhost:8080/api/bookings/get-booking/${userId}`);
+      if (!res.ok) {
+        setUserBookings([]);
+        setActiveMeetingLinks(new Map());
+        return;
+      }
       const data = await res.json();
       setUserBookings(data);
+
+      const activeLinksMap = new Map();
+      data.forEach((booking) => {
+        // LOGIC MỚI: Chỉ cần lịch hẹn đã được đặt và có link là sẽ hiển thị nút.
+        // Thêm kiểm tra booking.meetingLink !== "string" để phòng trường hợp dữ liệu rác.
+        if (booking.status === "BOOKED" && booking.meetingLink && booking.meetingLink !== "string") {
+          activeLinksMap.set(booking.coachId, booking.meetingLink);
+        }
+      });
+      setActiveMeetingLinks(activeLinksMap);
+
     } catch (err) {
       console.error("Lỗi khi lấy lịch người dùng:", err);
+      setUserBookings([]);
+      setActiveMeetingLinks(new Map());
     }
   };
 
@@ -102,10 +120,16 @@ function Coach() {
         }),
       });
       if (!res.ok) throw new Error("Lỗi khi booking");
-      const bookedSlotDetails = selected.coach.schedules.find(s => s.scheduleId === selected.slot);
+      const bookedSlotDetails = selected.coach.schedules.find(
+        (s) => s.scheduleId === selected.slot
+      );
       if (bookedSlotDetails) {
         // GỌI HÀM TỪ CONTEXT, truyền thêm hàm formatDateWithWeekday vào
-        addBookingNotification(selected.coach.name, bookedSlotDetails, formatDateWithWeekday);
+        addBookingNotification(
+          selected.coach.name,
+          bookedSlotDetails,
+          formatDateWithWeekday
+        );
       }
 
       setConfirmedSlot({ coachId: selected.coach.id, slot: selected.slot });
@@ -132,27 +156,29 @@ function Coach() {
   };
 
   const cancelBooking = async (bookingId) => {
-  if (!window.confirm("Bạn có chắc muốn hủy lịch hẹn này?")) return;
-  try {
-    const res = await fetch(`http://localhost:8080/api/bookings/cancel?bookingId=${bookingId}`, {
-      method: "PUT"
-    });
-    console.log("Hủy lịch:", { bookingId });
-    if (!res.ok) throw new Error("Hủy lịch thất bại");
+    if (!window.confirm("Bạn có chắc muốn hủy lịch hẹn này?")) return;
+    try {
+      const res = await fetch(
+        `http://localhost:8080/api/bookings/cancel?bookingId=${bookingId}`,
+        {
+          method: "PUT",
+        }
+      );
+      console.log("Hủy lịch:", { bookingId });
+      if (!res.ok) throw new Error("Hủy lịch thất bại");
 
-    await fetchBookings();
-    await fetchCoaches();
-  } catch (error) {
-    console.error("Lỗi khi hủy lịch:", error);
-    alert("Hủy lịch không thành công. Vui lòng thử lại.");
-  }
-};
-
+      await fetchBookings();
+      await fetchCoaches();
+    } catch (error) {
+      console.error("Lỗi khi hủy lịch:", error);
+      alert("Hủy lịch không thành công. Vui lòng thử lại.");
+    }
+  };
 
   return (
     <>
       <div className="coach-page-container">
-        <NavBar/>
+        <NavBar />
         <div className="coach-page-content">
           <header className="page-header">
             <h1>Nhờ sự giúp đỡ từ chuyên gia</h1>
@@ -181,8 +207,10 @@ function Coach() {
             {activeTab === "list" && (
               <div className="coach-list-container">
                 {coaches.map((c) => {
+                  const meetingLink = activeMeetingLinks.get(c.id);
                   return (
                     <div key={c.id} className="coach-card-detailed">
+
                       <div className="coach-main-info">
                         <img
                           src={c.avatar}
@@ -197,8 +225,11 @@ function Coach() {
                           <div className="coach-header">
                             <h3 className="coach-name">{c.name}</h3>
                             <p className="coach-email">{c.email}</p>
+                            
                           </div>
                         </div>
+                        
+
                       </div>
 
                       <div className="coach-availability-section">
@@ -240,12 +271,27 @@ function Coach() {
                       </div>
 
                       {/* Nút Booking vẫn nằm ngoài như cũ */}
-                      <button
-                        className="btn-booking"
-                        onClick={() => openModal(c)}
-                      >
-                        Booking
-                      </button>
+                      <div className="coach-card-actions">
+                        {/* Nút vào buổi gặp sẽ chỉ hiển thị nếu có link */}
+                        {meetingLink && (
+                          <a
+                            href={meetingLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn-action btn-join-meet"
+                          >
+                            <Video size={16} />
+                            <span>Vào buổi gặp</span>
+                          </a>
+                        )}
+
+                        <button
+                          className="btn-action btn-booking"
+                          onClick={() => openModal(c)}
+                        >
+                          Booking
+                        </button>
+                      </div>
                     </div>
                   );
                 })}
