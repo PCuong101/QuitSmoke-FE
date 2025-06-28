@@ -6,7 +6,6 @@ const UserContext = createContext();
 export function UserProvider({ children }) {
   const [userId, setUserIdState] = useState(null);
 
-  // Khi app khởi động, lấy userId từ localStorage (nếu có)
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
     if (storedUserId) {
@@ -14,14 +13,18 @@ export function UserProvider({ children }) {
     }
   }, []);
 
-  // Khi gọi setUserId, lưu luôn vào localStorage
   const setUserId = (id) => {
-    localStorage.setItem("userId", id);
-    setUserIdState(id);
+    localStorage.setItem("userId", String(id));
+    setUserIdState(Number(id));
+  };
+
+  const clearUserId = () => {
+    localStorage.removeItem("userId");
+    setUserIdState(null);
   };
 
   return (
-    <UserContext.Provider value={{ userId, setUserId }}>
+    <UserContext.Provider value={{ userId, setUserId, clearUserId }}>
       {children}
     </UserContext.Provider>
   );

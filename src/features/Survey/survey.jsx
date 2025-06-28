@@ -3,8 +3,12 @@ import Footer from "../../components/Footer/Footer.jsx";
 import { useNavigate } from "react-router-dom";
 import "./survey.css"; // Import CSS styles
 import { toZonedTime, format } from 'date-fns-tz';
+import { useUser } from "../../contexts/UserContext.jsx"; // Giả sử bạn có UserContext để lấy userId
 
 function Survey() {
+
+    const { setUserId } = useUser();
+
     const [showRegisterModal, setShowRegisterModal] = useState(false);
 
     const [errorMessage, setErrorMessage] = useState("");
@@ -16,7 +20,7 @@ function Survey() {
     const timeZone = 'Asia/Ho_Chi_Minh';
     const now = new Date();
     const zonedDate = toZonedTime(now, timeZone);
-    const todayStr = format(zonedDate, 'yyyy-MM-dd');
+    const todayStr = format(zonedDate, 'yyyy-MM-dd HH:mm:ss.SSS', { timeZone });
 
     // State cho survey
     const [surveyData, setSurveyData] = useState({
@@ -77,8 +81,11 @@ function Survey() {
             });
 
             if (response.ok) {
+                const data = await response.json();
                 alert("Gửi thành công!");
                 setShowRegisterModal(false);
+                console.log("Đăng ký thành công:", data);
+                setUserId(data.userId); // Giả sử API trả về userId
                 navigate("/dashboard");
             } else {
                 alert("Gửi thất bại.");
@@ -135,7 +142,7 @@ function Survey() {
                     </div>
 
                     <h2>Ngày bạn muốn bắt đầu?</h2>
-                    <input className="input-class-date" type="date" name="dateStart" required value={todayStr} readOnly /> <br></br>
+                    <input className="input-class-date" type="datetime-local" name="dateStart" required value={todayStr} readOnly /> <br></br>
                     <div className="button-container">
                         <input type="submit" value="Tiếp tục" />
                     </div>

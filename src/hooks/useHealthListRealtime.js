@@ -19,7 +19,7 @@ function useHealthList() {
       setLoading(false);
       return;
     }
-    
+    console.log("Gọi API health-milestones với userId:", userId);
     setLoading(true); // Bắt đầu loading khi có userId mới
     axios
       .get(`http://localhost:8080/api/health-milestones/progress/${userId}`)
@@ -39,25 +39,21 @@ function useHealthList() {
       });
   }, [userId]); // <-- SỬA Ở ĐÂY: Thêm [userId] để hook chạy lại khi user thay đổi
 
-  // ⏱ Tự trừ timeRemaining mỗi giây
   useEffect(() => {
-    // Nếu không có dữ liệu, không chạy bộ đếm
-    if (healthList.length === 0) {
-      return;
-    }
-
     const interval = setInterval(() => {
-      setHealthList((prev) =>
-        prev.map((item) => ({
+      setHealthList((prev) => {
+        if (prev.length === 0) {
+          return prev;
+        }
+        return prev.map((item) => ({
           ...item,
-          // Chỉ cần trừ 1 giây từ giá trị hiện tại, không cần tính lại từ đầu
-          timeRemaining: Math.max(0, item.timeRemaining - 1), 
-        }))
-      );
+          timeRemaining: Math.max(0, item.timeRemaining - 1),
+        }));
+      });
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [healthList]); // <-- CẢI TIẾN: Chạy lại interval khi healthList thay đổi
+  }, []);
 
   return { healthList, loading };
 }
