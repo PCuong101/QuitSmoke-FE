@@ -50,85 +50,63 @@ function Achievement() {
   const { addAchievementNotification } = useNotifications();
 
   useEffect(() => {
-    if (!userId) {
-      setIsLoading(false);
-      return;
-    }
+    if (userId) {
+      const fetchAndProcessAchievements = async () => {
+        setIsLoading(true);
+        try {
+          const response = await fetch(`http://localhost:8080/api/achievements/${userId}`);
+          if (!response.ok) throw new Error(`Lỗi API: ${response.status}`);
+          
+          const unlockedDtos = await response.json(); // Dữ liệu từ API
+          
+          // === LOGIC PHÁT HIỆN THÀNH TỰU MỚI ===
 
-    const fetchAndProcessAchievements = async () => {
-      setIsLoading(true);
-      try {
-        // 1. Fetch đồng thời dữ liệu chính và dữ liệu phụ
-        const [achievementsResponse, savingsResponse] = await Promise.all([
-          fetch(`http://localhost:8080/api/achievements/${userId}`),
-          fetch(`http://localhost:8080/api/quit-plan/${userId}/savings`)
-        ]);
+          // 1. Lấy số lượng thành tựu đã biết từ localStorage
+          const knownAchievementsKey = `known_achievements_count_${userId}`;
+          const knownCount = parseInt(localStorage.getItem(knownAchievementsKey) || '0', 10);
+          
+          // 2. So sánh số lượng mới và cũ
+          if (unlockedDtos.length > knownCount) {
+            // Có thành tựu mới!
+            
+            // Tìm ra chính xác những thành tựu nào là mới
+            const knownAchievements = JSON.parse(localStorage.getItem(`known_achievements_list_${userId}`) || '[]');
+            const newAchievements = unlockedDtos.filter(dto => !knownAchievements.includes(dto.name));
 
-        if (!achievementsResponse.ok) throw new Error(`Lỗi API thành tựu: ${achievementsResponse.status}`);
-        
-        const unlockedDtos = await achievementsResponse.json();
-        let totalSavings = 0;
-        if (savingsResponse.ok) {
-            const savingsData = await savingsResponse.json();
-            totalSavings = savingsData.totalSavings || 0;
-        }
-
-        // 2. Tạo một Map duy nhất, là "nguồn chân lý" cuối cùng để hiển thị
-        const finalDisplayMap = new Map();
-        unlockedDtos.forEach(dto => finalDisplayMap.set(dto.name, dto));
-
-        // 3. Lấy dữ liệu đã biết từ localStorage để so sánh
-        const knownAchievementsKey = `known_achievements_count_${userId}`;
-        const knownAchievementsListKey = `known_achievements_list_${userId}`;
-        const knownCount = parseInt(localStorage.getItem(knownAchievementsKey) || '0', 10);
-        const knownAchievementsList = JSON.parse(localStorage.getItem(knownAchievementsListKey) || '[]');
-        
-        // 4. KIỂM TRA VÀ CẬP NHẬT TRỰC TIẾP VÀO `finalDisplayMap`
-        // Lặp qua tất cả các mẫu thành tựu để kiểm tra điều kiện
-        allAchievements.forEach(achTemplate => {
-          // Chỉ kiểm tra các thành tựu thuộc loại 'money' mà chưa được mở khóa từ API
-          if (achTemplate.category === 'money' && !finalDisplayMap.has(achTemplate.title)) {
-            // Nếu đủ điều kiện tiền tiết kiệm
-            if (totalSavings >= achTemplate.milestone) {
-              const newFakeDto = {
-                name: achTemplate.title,
-                achievedAt: new Date().toISOString(),
-                description: achTemplate.description
-              };
-              // Cập nhật trực tiếp vào Map cuối cùng
-              finalDisplayMap.set(achTemplate.title, newFakeDto);
-            }
-          }
-        });
-
-        // 5. SO SÁNH `finalDisplayMap` (ĐÃ CẬP NHẬT) VỚI LOCALSTORAGE ĐỂ GỬI THÔNG BÁO
-        if (finalDisplayMap.size > knownCount) {
-            finalDisplayMap.forEach((dto, title) => {
-                // Nếu thành tựu này không có trong danh sách đã biết -> nó là mới!
-                if (!knownAchievementsList.includes(title)) {
-                    const achievementTemplate = allAchievements.find(a => a.title === title);
-                    if (achievementTemplate) {
-                        addAchievementNotification(achievementTemplate);
-                    }
-                }
+            // 3. Gửi thông báo cho từng thành tựu mới
+            newAchievements.forEach(newAchDto => {
+              // Tìm thông tin chi tiết (icon, description) từ bảng tra cứu
+              const achievementTemplate = allAchievements.find(a => a.title === newAchDto.name);
+              if (achievementTemplate) {
+                // Gọi hàm từ context để tạo thông báo
+                addAchievementNotification(achievementTemplate);
+              }
             });
+          }
+
+          // 4. Cập nhật localStorage với dữ liệu mới nhất
+          localStorage.setItem(knownAchievementsKey, unlockedDtos.length.toString());
+          localStorage.setItem(`known_achievements_list_${userId}`, JSON.stringify(unlockedDtos.map(dto => dto.name)));
+
+          // === KẾT THÚC LOGIC PHÁT HIỆN ===
+
+          // Chuyển List thành Map để render giao diện (giữ nguyên)
+          const unlockedMap = new Map();
+          unlockedDtos.forEach(dto => unlockedMap.set(dto.name, dto));
+          setUserAchievementsMap(unlockedMap);
+
+        } catch (error) {
+          console.error("Lỗi khi fetch thành tựu:", error);
+        } finally {
+          setIsLoading(false);
         }
-        
-        // 6. CẬP NHẬT LOCALSTORAGE VỚI TRẠNG THÁI MỚI NHẤT
-        localStorage.setItem(knownAchievementsKey, finalDisplayMap.size.toString());
-        localStorage.setItem(knownAchievementsListKey, JSON.stringify(Array.from(finalDisplayMap.keys())));
+      };
 
-        // 7. SET STATE ĐỂ RENDER GIAO DIỆN BẰNG MAP CUỐI CÙNG
-        setUserAchievementsMap(finalDisplayMap);
-
-      } catch (error) {
-        console.error("Lỗi khi fetch và xử lý thành tựu:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchAndProcessAchievements();
+      fetchAndProcessAchievements();
+    } else {
+        const timer = setTimeout(() => setIsLoading(false), 2000);
+        return () => clearTimeout(timer);
+    }
   }, [userId, addAchievementNotification]);
 
   // Phân loại các thành tựu dựa trên "bảng tra cứu" allAchievements

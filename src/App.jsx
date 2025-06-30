@@ -23,7 +23,8 @@ import BlogManagement from "./pages/adminPage/BlogManagement.jsx";
 import CoachDetail from "./pages/adminPage/CoachDetail.jsx";
 import DashboardWebsocket from "./features/Dashboard/dashBoard.jsx";
 import CoachDashboardPage from "./pages/coachPage/CoachDashboardPage.jsx";
-import { NotificationProvider } from './contexts/NotificationContext.jsx';
+import { NotificationProvider } from "./contexts/NotificationContext.jsx";
+import Profile from "./features/Profile/Profile.jsx";
 
 function App() {
   return (
@@ -89,7 +90,15 @@ function App() {
               </PrivateRoute>
             }
           />
-              {/* THÊM ROUTE MỚI CHO COACH DASHBOARD DƯỚI ĐÂY */}
+          <Route
+            path="profile"
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
+          {/* THÊM ROUTE MỚI CHO COACH DASHBOARD DƯỚI ĐÂY */}
           <Route
             path="/coach/dashboard"
             element={
