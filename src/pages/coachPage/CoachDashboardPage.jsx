@@ -1,11 +1,13 @@
 // src/pages/CoachDashboardPage.jsx (PHIÊN BẢN SỬA LỖI LOGIC)
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import CoachNavBar from "../../components/NavBar/CoachNavBar";
 import Footer from "../../components/Footer/Footer";
 import useUserId from "../../hooks/useUserId";
 import "./CoachDashboardPage.css";
 import dayjs from "dayjs";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+dayjs.extend(isSameOrAfter);
 
 import "dayjs/locale/vi";
 import updateLocale from "dayjs/plugin/updateLocale";
@@ -46,7 +48,7 @@ function CoachDashboardPage() {
   const [activeTab, setActiveTab] = useState("schedule");
   const userId = useUserId();
 
-  const fetchCoachSchedules = async () => {
+  const fetchCoachSchedules = useCallback(async () => {
     if (!userId) {
       setLoading(false);
       return;
@@ -68,7 +70,7 @@ function CoachDashboardPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [userId]);
 
   const handleFinishBooking = async (bookingId) => {
     if (!window.confirm("Bạn có chắc chắn muốn đánh dấu cuộc hẹn này là đã hoàn thành?")) {
@@ -89,12 +91,27 @@ function CoachDashboardPage() {
 
   useEffect(() => {
     fetchCoachSchedules();
-  }, [userId]);
+  }, [userId, fetchCoachSchedules]);
 
-  const activeBookings = schedules.filter((s) => s.bookingStatus === "BOOKED");
-  const pastBookings = schedules.filter(
-    (s) => s.bookingStatus === "FINISHED" || s.bookingStatus === "CANCELED"
+const today = dayjs().startOf("day");
+
+const activeBookings = schedules.filter(
+  (s) =>
+    s.bookingStatus === "BOOKED" &&
+    dayjs(s.date).isSameOrAfter(today)
+);
+
+const schedulesUpcoming = schedules.filter(
+  (s) => dayjs(s.date).isSameOrAfter(today)
   );
+
+
+const pastBookings = schedules.filter(
+  (s) =>
+    s.bookingStatus === "FINISHED" ||
+    s.bookingStatus === "CANCELED" ||
+    (s.bookingStatus === "BOOKED" && dayjs(s.date).isBefore(today))
+);
 
   const renderScheduleList = (bookings) => {
     if (bookings.length === 0) {
@@ -104,7 +121,7 @@ function CoachDashboardPage() {
       <div key={schedule.scheduleId} className="schedule-card">
         <div className="card-header">
           <span className="date-tag">
-            {dayjs(schedule.date).format("dddd, DD/MM/YYYY")}
+            {dayjs(schedule.date).format("dd, DD/MM/YYYY")}
           </span>
           {schedule.bookingStatus && schedule.bookingStatus !== "UNKNOWN" && (
             <span className={`status-tag status-${schedule.bookingStatus.toLowerCase()}`}>
@@ -113,7 +130,7 @@ function CoachDashboardPage() {
           )}
         </div>
         <div className="card-body">
-            <p><strong>Slot:</strong> {getSlotTimeRange(schedule.slotLabel)}</p>
+            <p><strong>Slot:</strong>{getSlotTimeRange(schedule.slotLabel)}</p>
             {schedule.bookedByName ? (
             <>
               <p><strong>Người đặt:</strong> {schedule.bookedByName} ({schedule.bookedByEmail})</p>
@@ -157,7 +174,7 @@ function CoachDashboardPage() {
           <h2 className="section-title">Tổng quan lịch làm việc</h2>
           <div className="coach-slot-grid">
             {loading ? <p>Đang tải lịch...</p> : (
-              schedules.map((s) => (
+              schedulesUpcoming.map((s) => (
                 <div key={s.scheduleId} className={`coach-slot ${s.bookingStatus !== "EMPTY" ? "slot-booked" : "slot-available"}`}>
                   <div>{formatDateWithWeekday(s.date)}</div>
                   <div>{getSlotTimeRange(s.slotLabel)}</div>

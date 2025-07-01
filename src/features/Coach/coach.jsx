@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import NavBar from "../../components/NavBar/NavBar";
 import Footer from "../../components/Footer/Footer";
 import useUserId from "../../hooks/useUserId";
@@ -60,7 +60,7 @@ function Coach() {
     }
   };
 
-  const fetchBookings = async () => {
+  const fetchBookings = useCallback(async () => {
     if (!userId) {
       setUserBookings([]);
       setActiveMeetingLinks(new Map());
@@ -91,14 +91,14 @@ function Coach() {
       setUserBookings([]);
       setActiveMeetingLinks(new Map());
     }
-  };
+  }, [userId]);
 
   useEffect(() => {
     fetchCoaches();
     if (userId) {
       fetchBookings();
     }
-  }, [userId]);
+  }, [userId, fetchBookings]);
 
   const openModal = (coach) => setSelected({ coach, symptom: "", slot: null });
   const closeModal = () =>
@@ -273,7 +273,7 @@ function Coach() {
                       {/* Nút Booking vẫn nằm ngoài như cũ */}
                       <div className="coach-card-actions">
                         {/* Nút vào buổi gặp sẽ chỉ hiển thị nếu có link */}
-                        {meetingLink && (
+                        {/* {meetingLink && (
                           <a
                             href={meetingLink}
                             target="_blank"
@@ -283,7 +283,7 @@ function Coach() {
                             <Video size={16} />
                             <span>Vào buổi gặp</span>
                           </a>
-                        )}
+                        )} */}
 
                         <button
                           className="btn-action btn-booking"
@@ -367,9 +367,6 @@ function Coach() {
                   </p>
                 ) : (
                   userBookings.map((b) => {
-                    const meetingStartTime = dayjs(
-                      `${b.bookingDate} ${b.startTime}`
-                    );
                     const meetingEndTime = dayjs(
                       `${b.bookingDate} ${b.endTime}`
                     );
@@ -382,18 +379,11 @@ function Coach() {
                     } else if (b.status === "FINISHED") {
                       meetingStatusLabel = "Đã hoàn thành";
                     } else if (b.status === "BOOKED") {
-                      if (now.isBefore(meetingStartTime)) {
-                        meetingStatusLabel = "Chưa tới ngày";
-                      } else if (now.isAfter(meetingEndTime)) {
+                      if (now.isAfter(meetingEndTime)) {
                         meetingStatusLabel = "Đã quá hạn";
-                      } else if (
-                        now.isAfter(meetingStartTime.subtract(10, "minute")) &&
-                        now.isBefore(meetingEndTime)
-                      ) {
+                      } else {
                         meetingStatusLabel = "Vào buổi gặp";
                         isJoinEnabled = true;
-                      } else {
-                        meetingStatusLabel = "Chưa tới giờ";
                       }
                     } else {
                       meetingStatusLabel = "Không xác định";

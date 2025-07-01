@@ -178,6 +178,12 @@ function Diary() {
                         {entry.smokedToday === true ? "Có" : "Không"}
                       </span>
                     </p>
+                    <p className="dry-history-text" hidden={entry.smokedToday === false}>
+                      <span className="dry-history-label">Số điếu hút:</span>
+                      <span className="dry-history-value" style={{ color: entry.smokedToday === true ? "#ef4444" : "#10b981", fontWeight: 'bold' }}>
+                        {entry.cigarettesSmoked}
+                      </span>
+                    </p>
                     <p className="dry-history-text">
                       <span className="dry-history-label">Mức độ thèm:</span>
                       <span className="dry-history-value">{entry.cravingLevel}/10</span>
@@ -203,7 +209,7 @@ function Diary() {
 
       {/* Modal Popup */}
       {isModalOpen && (
-        <div className="dry-modal-overlay" onClick={() => setIsModalOpen(false)}>
+        <div className="dry-modal-overlay">
           <div className="dry-modal-content" onClick={(e) => e.stopPropagation()}>
             <button className="dry-modal-close-button" onClick={() => setIsModalOpen(false)}>
               <CloseIcon />
