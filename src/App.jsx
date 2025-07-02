@@ -125,7 +125,7 @@ function App() {
           />
           {/* Giữ cả 2 format route cho blog để tương thích */}
           <Route
-            path="blog/:slug"
+            path="blog/:id"
             element={
               <PrivateRoute>
                 <ArticleDetail />

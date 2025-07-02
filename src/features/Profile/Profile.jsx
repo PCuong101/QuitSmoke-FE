@@ -76,7 +76,7 @@ const Profile = () => {
         return;
     }
 
-    const updateUrl = `http://localhost:8080/api/users/${sessionUser.id}`;
+    const updateUrl = `http://localhost:8080/api/users`;
     
     // Dữ liệu để gửi lên server
     const dataToSend = {
