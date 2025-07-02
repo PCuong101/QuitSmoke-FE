@@ -66,6 +66,21 @@ export const NotificationProvider = ({ children }) => {
     setNotifications(prev => [newNotification, ...prev]);
   };
 
+  const addMissionCompletionNotification = (mission) => {
+    const newNotification = {
+      // Sử dụng ID của mission để tránh tạo thông báo trùng lặp nếu người dùng click nhanh
+      id: `mission-complete-${mission.templateID}-${new Date().toISOString()}`,
+      type: 'mission_complete', // Một loại mới để phân biệt với "nhiệm vụ mới"
+      title: 'Nhiệm vụ hoàn thành!',
+      description: `Chúc mừng! Bạn đã hoàn thành: "${mission.title}"`,
+      time: 'Vừa xong',
+      read: false, // Mặc định là chưa đọc
+      link: '/missions', // Link về trang nhiệm vụ
+    };
+    // Thêm vào đầu danh sách
+    setNotifications(prev => [newNotification, ...prev]);
+  };
+
 
 
   // Giá trị cung cấp cho Context (không đổi)
@@ -73,7 +88,8 @@ export const NotificationProvider = ({ children }) => {
     notifications,
     setNotifications,
     addBookingNotification,
-    addAchievementNotification
+    addAchievementNotification,
+    addMissionCompletionNotification
   };
 
   return (

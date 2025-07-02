@@ -6,6 +6,7 @@ import Footer from "../../components/Footer/Footer";
 import useUserId from "../../hooks/useUserId";
 import { getIconByTemplateId } from './mock-missions-icon';
 import './Missions.css';
+import { useNotifications } from "../../contexts/NotificationContext";
 
 // --- COMPONENT CON: MissionItem giữ nguyên như cũ ---
 function MissionItem({ mission, isCompleted, onComplete }) {
@@ -48,6 +49,7 @@ function Missions() {
     // Dùng useRef để quản lý các bộ đếm thời gian
     const notificationTimer = useRef(null);
     const userId = useUserId();
+    const { addMissionCompletionNotification } = useNotifications();
     console.log("User ID:", userId); // Kiểm tra xem userId có được lấy đúng không
     useEffect(() => {
         const fetchData = async () => {
@@ -103,6 +105,7 @@ function Missions() {
                 notificationTimer.current = setTimeout(() => {
                     setNotification({ show: false, message: '' });
                 }, 3000);
+                addMissionCompletionNotification(mission);
             }
         } catch (error) {
             console.error("Lỗi hoàn thành nhiệm vụ:", error);
