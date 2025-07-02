@@ -1,26 +1,24 @@
-// src/components/NavBar/CoachNavBar.jsx
+// src/components/NavBar/CoachNavBar.jsx (PHIÊN BẢN ĐẦY ĐỦ - ĐÃ CẬP NHẬT)
 
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; // <-- THÊM IMPORT "Link"
 import * as icon from 'lucide-react';
-import useLogout from '../../hooks/useLogout'; // Sử dụng lại hook logout
-import { useUser } from '../../contexts/UserContext'; // Sử dụng hook để lấy thông tin user
+import useLogout from '../../hooks/useLogout';
+import { useUser } from '../../contexts/UserContext';
 
 export default function CoachNavBar() {
   const logout = useLogout();
   const navigate = useNavigate();
-  const { userId } = useUser(); // Lấy userId từ context
+  const { userId } = useUser();
   
-  const [userName, setUserName] = useState("Coach"); // Giá trị mặc định
+  const [userName, setUserName] = useState("Coach");
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef();
 
-  // Lấy tên của Coach khi có userId
   useEffect(() => {
     if (userId) {
       const fetchCoachName = async () => {
         try {
-          // Chúng ta dùng lại API get-session-user vì nó đã có sẵn
           const response = await fetch("http://localhost:8080/api/auth/get-session-user", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -38,7 +36,6 @@ export default function CoachNavBar() {
     }
   }, [userId]);
 
-  // Logic để đóng menu khi click ra ngoài
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
@@ -51,8 +48,17 @@ export default function CoachNavBar() {
 
   return (
     <div className="coach-navbar">
-      <h3 className="navbar-brand"><strong>QuitSmoking - Coach Panel</strong></h3>
+      <h3 className="navbar-brand" onClick={() => navigate('/coach/dashboard')} style={{cursor: 'pointer'}}>
+          <strong>QuitSmoking - Coach Panel</strong>
+      </h3>
       
+      {/* ================== THÊM CÁC LINK ĐIỀU HƯỚNG TẠI ĐÂY ================== */}
+      <div className="coach-nav-links">
+        <Link to="/coach/dashboard" className="coach-nav-link">Lịch hẹn</Link>
+        <Link to="/coach/blog" className="coach-nav-link">Quản lý Blog</Link>
+      </div>
+      {/* ====================================================================== */}
+
       <div style={{ position: 'relative', marginLeft: 'auto' }} ref={userMenuRef}>
         <div
           className="user-menu-trigger"

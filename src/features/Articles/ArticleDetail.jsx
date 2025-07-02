@@ -1,40 +1,43 @@
-// src/ArticleDetail.jsx
+// src/features/Articles/ArticleDetail.jsx (Đã nâng cấp)
 
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import NavBar from "../../components/NavBar/NavBar"
-import { articles } from './mock-articles';
-import { ArrowLeft, Share2, Rocket } from 'lucide-react';
+import NavBar from "../../components/NavBar/NavBar";
+import { ArrowLeft } from 'lucide-react';
+import dayjs from 'dayjs';
 
 function ArticleDetail() {
-  const { slug } = useParams(); // Lấy slug từ URL
-  const article = articles.find(a => a.slug === slug);
-
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-  // Xử lý thanh tiến trình đọc
-  const handleScroll = () => {
-    const totalHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    const progress = (window.scrollY / totalHeight) * 100;
-    setScrollProgress(progress);
-  };
-
+  const { id } = useParams(); // <-- Lấy id thay vì slug
+  const [article, setArticle] = useState(null);
+  const [loading, setLoading] = useState(true);
+  
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    window.scrollTo(0, 0); // Cuộn lên đầu trang khi mở bài viết mới
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [slug]); // Chạy lại effect khi slug thay đổi
+    window.scrollTo(0, 0);
+    const fetchArticle = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/blog/${id}`);
+            if (!response.ok) throw new Error("Không tìm thấy bài viết");
+            const data = await response.json();
+            setArticle(data);
+        } catch(error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    fetchArticle();
+  }, [id]);
+
+  if (loading) {
+    return <div>Đang tải bài viết...</div>;
+  }
 
   if (!article) {
     return <div>Bài viết không tồn tại.</div>;
   }
 
-  // Lấy 3 bài viết khác để hiển thị ở cuối
-  const relatedArticles = articles.filter(a => a.id !== article.id).slice(0, 3);
-
   return (
     <>
-      <div className="reading-progress-bar" style={{ width: `${scrollProgress}%` }}></div>
       <NavBar />
       <div className="article-detail-page">
         <div className="article-content-wrapper">
@@ -43,41 +46,15 @@ function ArticleDetail() {
           </Link>
           <h1 className="article-detail-title">{article.title}</h1>
           <div className="article-detail-meta">
-            <span>Bởi <strong>{article.author}</strong></span>
+            <span>Bởi <strong>{article.authorName}</strong></span>
             <span>•</span>
-            <span>{article.date}</span>
-            <span>•</span>
-            <span>{article.readTime}</span>
+            <span>{dayjs(article.createdAt).format("DD/MM/YYYY")}</span>
           </div>
-          <img src={article.imageUrl} alt={article.title} className="article-detail-image" />
-
-          {/* Hiển thị nội dung HTML từ mock data */}
+          <img src={`https://picsum.photos/seed/${article.id}/1200/600`} alt={article.title} className="article-detail-image" />
           <div
             className="article-body"
             dangerouslySetInnerHTML={{ __html: article.content }}
           />
-
-          <div className="article-footer">
-            <div className="share-buttons">
-              <span>Chia sẻ:</span>
-              <button><Share2 size={20} /></button>
-            </div>
-            <Link to="/missions" className="cta-button">
-              <Rocket size={20} /> Bắt đầu nhiệm vụ hôm nay!
-            </Link>
-          </div>
-
-          <div className="related-articles">
-              <h2>Bài viết liên quan</h2>
-              <div className="related-grid">
-                  {relatedArticles.map(rel => (
-                      <Link key={rel.id} to={`/blog/${rel.slug}`} className="related-card">
-                           <img src={rel.imageUrl} alt={rel.title} />
-                           <h3>{rel.title}</h3>
-                      </Link>
-                  ))}
-              </div>
-          </div>
         </div>
       </div>
     </>

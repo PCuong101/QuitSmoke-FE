@@ -1,3 +1,5 @@
+// src/App.jsx (PHIÊN BẢN ĐÃ GỘP - HOÀN CHỈNH)
+
 import HomePage from "./pages/homePage.jsx";
 import "./styles/App.css";
 import "./pages/adminPage/AdminPage.css";
@@ -21,19 +23,32 @@ import UserManagement from "./pages/adminPage/UserManagement.jsx";
 import CoachManagement from "./pages/adminPage/CoachManagement.jsx";
 import BlogManagement from "./pages/adminPage/BlogManagement.jsx";
 import CoachDetail from "./pages/adminPage/CoachDetail.jsx";
-import DashboardWebsocket from "./features/Dashboard/dashBoard.jsx";
-import CoachDashboardPage from "./pages/coachPage/CoachDashboardPage.jsx";
 import { NotificationProvider } from "./contexts/NotificationContext.jsx";
+
+// ================== IMPORTS CHO CÁC TRANG CỦA COACH ==================
+import CoachDashboardPage from "./pages/coachPage/CoachDashboardPage.jsx";
+import CoachBlogManagementPage from "./pages/CoachBlogManagementPage.jsx";
+// =====================================================================
+
+// ================== IMPORTS THÊM TỪ FILE CỦA BẠN ==================
+import DashboardWebsocket from "./features/Dashboard/dashBoard.jsx";
 import Profile from "./features/Profile/Profile.jsx";
+// ===================================================================
 
 function App() {
   return (
     <NotificationProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/test" element={<DashboardWebsocket />} />
+          {/* === CÁC ROUTE CÔNG KHAI === */}
           <Route path="/survey" element={<Survey />} />
           <Route path="/" element={<HomePage />} />
+          <Route path="login" element={<Login />} />
+          
+          {/* === ROUTE TEST (từ file của bạn) === */}
+          <Route path="/test" element={<DashboardWebsocket />} />
+
+          {/* === CÁC ROUTE CHO MEMBER === */}
           <Route
             path="/dashboard"
             element={
@@ -98,17 +113,8 @@ function App() {
               </PrivateRoute>
             }
           />
-          {/* THÊM ROUTE MỚI CHO COACH DASHBOARD DƯỚI ĐÂY */}
-          <Route
-            path="/coach/dashboard"
-            element={
-              <PrivateRoute>
-                <CoachDashboardPage />
-              </PrivateRoute>
-            }
-          />
-          <Route path="login" element={<Login />} />
-          {/* Cấu trúc route cho Blog */}
+
+          {/* === CÁC ROUTE CHO BLOG (USER) === */}
           <Route
             path="blog"
             element={
@@ -117,6 +123,7 @@ function App() {
               </PrivateRoute>
             }
           />
+          {/* Giữ cả 2 format route cho blog để tương thích */}
           <Route
             path="blog/:slug"
             element={
@@ -126,6 +133,34 @@ function App() {
             }
           />
           <Route
+            path="blog/:id"
+            element={
+              <PrivateRoute>
+                <ArticleDetail />
+              </PrivateRoute>
+            }
+          />
+
+          {/* === CÁC ROUTE DÀNH RIÊNG CHO COACH === */}
+          <Route
+            path="/coach/dashboard"
+            element={
+              <PrivateRoute>
+                <CoachDashboardPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/coach/blog"
+            element={
+              <PrivateRoute>
+                <CoachBlogManagementPage />
+              </PrivateRoute>
+            }
+          />
+
+          {/* === CÁC ROUTE DÀNH CHO ADMIN === */}
+          <Route
             path="/admin"
             element={
               <PrivateRoute>
@@ -134,8 +169,6 @@ function App() {
             }
           >
             <Route index element={<DashboardAdmin />} />
-
-            {/* main pages */}
             <Route
               path="dashboard"
               element={
@@ -168,8 +201,6 @@ function App() {
                 </PrivateRoute>
               }
             />
-
-            {/* child routes of /admin/coaches */}
             <Route
               path="create-coach"
               element={

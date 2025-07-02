@@ -1004,3 +1004,22 @@ Footer {
   color: #ef4444; /* Màu đỏ */
   background-color: #fde2e2;
 }
+
+/* CoachNavBar styles */
+
+.coach-nav-links { 
+    margin-left: 40px; 
+    display: flex; 
+    gap: 20px; 
+}
+.coach-nav-link { 
+    color: #334155; 
+    text-decoration: none; 
+    font-weight: 600; 
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+.coach-nav-link:hover {
+    background-color: #f1f5f9;
+}
