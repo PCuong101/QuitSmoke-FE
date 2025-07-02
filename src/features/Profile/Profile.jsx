@@ -11,6 +11,8 @@ import {
   FaTrophy,
   FaLeaf,
 } from "react-icons/fa";
+import NavBar from "../../components/NavBar/NavBar";
+import Footer from "../../components/Footer/Footer";
 
 const Profile = () => {
   const [sessionUser, setSessionUser] = useState(null);
@@ -168,124 +170,130 @@ const Profile = () => {
   }
 
   return (
-    <div className="profile-container">
-      <div className="profile-card">
-        <h1 className="profile-title">Thông tin cá nhân</h1>
-        <p className="profile-subtitle">
-          Quản lý thông tin và theo dõi tiến trình của bạn
-        </p>
+    <>
+      <NavBar />
+      <div className="profile-container">
+        <div className="profile-card">
+          <h1 className="profile-title">Thông tin cá nhân</h1>
+          <p className="profile-subtitle">
+            Quản lý thông tin và theo dõi tiến trình của bạn
+          </p>
 
-        <div className="profile-header">
-          <div className="avatar-container">
-            <div className="avatar"></div>
-            {isEditing && (
-              <div className="camera-icon">
-                <FaCamera />
-              </div>
-            )}
-          </div>
-          <div className="premium-badge">
-            <FaCrown /> Premium
-          </div>
-        </div>
-
-        {/* --- 3. CẬP NHẬT JSX ĐỂ DÙNG STATE MỚI --- */}
-        <div className="stats-grid">
-          <div className="stat-item">
-            <div
-              className="stat-icon-wrapper"
-              style={{ backgroundColor: "#e0f2fe" }}
-            >
-              <FaPiggyBank style={{ color: "#0ea5e9" }} />
-            </div>
-            <div className="stat-text">
-              {/* Sử dụng state 'moneySaved' */}
-              <h3>{moneySaved.toLocaleString("vi-VN") || 0} đ</h3>
-              <p>Tiền tiết kiệm</p>
-            </div>
-          </div>
-          <div className="stat-item">
-            <div
-              className="stat-icon-wrapper"
-              style={{ backgroundColor: "#fefce8" }}
-            >
-              <FaTrophy style={{ color: "#eab308" }} />
-            </div>
-            <div className="stat-text">
-              {/* Sử dụng state 'achievementsCount' */}
-              <h3>{achievementsCount || 0}</h3>
-              <p>Thành tựu đạt được</p>
-            </div>
-          </div>
-        </div>
-        {/* --- KẾT THÚC CẬP NHẬT JSX --- */}
-        <div className="profile-form-section">
-          <h2 className="form-section-title">Chi tiết tài khoản</h2>
-          <div className="profile-form">
-            <div className="form-group">
-              <label htmlFor="fullName">Họ và tên</label>
-              <div className="form-field">
-                {isEditing ? (
-                  <input
-                    type="text"
-                    id="fullName"
-                    name="fullName"
-                    className="form-control"
-                    value={formData.fullName || ""}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  <>
-                    <p className="info-text">{formData.fullName}</p>
-
-                  </>
-                )}
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <div className="form-field">
-                {isEditing ? (
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    className="form-control"
-                    value={formData.email || ""}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  <>
-                    <p className="info-text">{formData.email}</p>
-                  </>
-                )}
-              </div>
-            </div>
-            <div className="button-group">
-              {isEditing ? (
-                <>
-                  <button className="btn btn-primary" onClick={handleSaveClick}>
-                    Lưu thay đổi
-                  </button>
-                  <button
-                    className="btn btn-secondary"
-                    onClick={handleCancelClick}
-                  >
-                    Hủy
-                  </button>
-                </>
-              ) : (
-                <button className="btn btn-dark" onClick={handleEditClick}>
-                  <FaPencilAlt style={{ marginRight: "8px" }} />
-                  Cập nhật thông tin
-                </button>
+          <div className="profile-header">
+            <div className="avatar-container">
+              <div className="avatar"></div>
+              {isEditing && (
+                <div className="camera-icon">
+                  <FaCamera />
+                </div>
               )}
+            </div>
+            <div className="premium-badge">
+              <FaCrown /> Premium
+            </div>
+          </div>
+
+          {/* --- 3. CẬP NHẬT JSX ĐỂ DÙNG STATE MỚI --- */}
+          <div className="stats-grid">
+            <div className="stat-item">
+              <div
+                className="stat-icon-wrapper"
+                style={{ backgroundColor: "#e0f2fe" }}
+              >
+                <FaPiggyBank style={{ color: "#0ea5e9" }} />
+              </div>
+              <div className="stat-text">
+                {/* Sử dụng state 'moneySaved' */}
+                <h3>{moneySaved.toLocaleString("vi-VN") || 0} đ</h3>
+                <p>Tiền tiết kiệm</p>
+              </div>
+            </div>
+            <div className="stat-item">
+              <div
+                className="stat-icon-wrapper"
+                style={{ backgroundColor: "#fefce8" }}
+              >
+                <FaTrophy style={{ color: "#eab308" }} />
+              </div>
+              <div className="stat-text">
+                {/* Sử dụng state 'achievementsCount' */}
+                <h3>{achievementsCount || 0}</h3>
+                <p>Thành tựu đạt được</p>
+              </div>
+            </div>
+          </div>
+          {/* --- KẾT THÚC CẬP NHẬT JSX --- */}
+          <div className="profile-form-section">
+            <h2 className="form-section-title">Chi tiết tài khoản</h2>
+            <div className="profile-form">
+              <div className="form-group">
+                <label htmlFor="fullName">Họ và tên</label>
+                <div className="form-field">
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      id="fullName"
+                      name="fullName"
+                      className="form-control"
+                      value={formData.fullName || ""}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    <>
+                      <p className="info-text">{formData.fullName}</p>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="email">Email</label>
+                <div className="form-field">
+                  {isEditing ? (
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      className="form-control"
+                      value={formData.email || ""}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    <>
+                      <p className="info-text">{formData.email}</p>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="button-group">
+                {isEditing ? (
+                  <>
+                    <button
+                      className="btn btn-primary"
+                      onClick={handleSaveClick}
+                    >
+                      Lưu thay đổi
+                    </button>
+                    <button
+                      className="btn btn-secondary"
+                      onClick={handleCancelClick}
+                    >
+                      Hủy
+                    </button>
+                  </>
+                ) : (
+                  <button className="btn btn-dark" onClick={handleEditClick}>
+                    <FaPencilAlt style={{ marginRight: "8px" }} />
+                    Cập nhật thông tin
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 
