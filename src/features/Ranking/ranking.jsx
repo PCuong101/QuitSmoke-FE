@@ -1,13 +1,7 @@
 import { useState, useEffect } from "react";
 import Footer from "../../components/Footer/Footer";
 import NavBar from "../../components/NavBar/NavBar";
-import {
-  CalendarDays,
-  DollarSign,
-  Target,
-  ChevronDown,
-  LoaderCircle,
-} from "lucide-react";
+import { CalendarDays, DollarSign, Target, ChevronDown, LoaderCircle } from "lucide-react";
 import { allAchievements } from "../Achievements/mock-achievements"; // Import "bảng tra cứu" đã cập nhật
 import "./ranking.css";
 
@@ -227,6 +221,7 @@ function Ranking() {
                 justifyContent: "center",
                 flexDirection: "column",
                 gap: "1rem",
+                flex: 1, // Cho phép chiếm hết không gian còn lại
               }}
             >
               <LoaderCircle className="spinner" size={48} />

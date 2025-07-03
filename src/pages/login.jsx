@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "./../contexts/UserContext";
 
 function Login() {
-  const { setUserId } = useUser();
-  const [email, setEmail] = useState("");
+  const { setUserId, setEmail, setUserName, email } = useUser();
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -21,12 +20,12 @@ function Login() {
         credentials: "include", // gửi cookie session nếu dùng
         body: JSON.stringify({ email, password }),
       });
-
+      
       if (response.ok) {
         const data = await response.json();
-        console.log(data.role);
         setUserId(data.userId);
-
+        setEmail(data.email);
+        setUserName(data.name);
         if (data.role === "MEMBER") navigate("/dashboard");
         else if (data.role === "ADMIN") navigate("/admin/dashboard");
         else if (data.role === "COACH") navigate("/coach/dashboard");

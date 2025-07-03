@@ -182,6 +182,7 @@ function Coach() {
         <div className="coach-page-content">
           <header className="page-header">
             <h1>Nhờ sự giúp đỡ từ chuyên gia</h1>
+            <br></br>
             <p>
               Kết nối với các chuyên gia hàng đầu để nhận tư vấn và hỗ trợ cá
               nhân hóa
@@ -263,7 +264,7 @@ function Coach() {
                                 )}
                               </div>
                               <div>
-                                {s.slotLabel === "1" ? "Sáng" : "Chiều"}
+                                {s.slotLabel === "1" ? "08:00 - 10:00" : "14:00 - 16:00"}
                               </div>
                             </div>
                           ))}
