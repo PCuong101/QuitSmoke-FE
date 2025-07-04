@@ -48,15 +48,16 @@ function CoachDashboardPage() {
   const [activeTab, setActiveTab] = useState("schedule");
   const userId = useUserId();
 
-  const fetchCoachSchedules = useCallback(async () => {
+const fetchCoachSchedules = useCallback(async () => {
     if (!userId) {
       setLoading(false);
       return;
     }
     try {
       setLoading(true);
+      // GỌI ĐÚNG API MỚI DÀNH CHO COACH
       const response = await fetch(
-        `http://localhost:8080/api/bookings/coach/${userId}/schedule`
+        `http://localhost:8080/api/bookings/coach/${userId}/published-schedule`
       );
       if (!response.ok)
         throw new Error("Lỗi khi tải dữ liệu lịch hẹn của coach");
@@ -64,13 +65,13 @@ function CoachDashboardPage() {
       const sortedData = data.sort(
         (a, b) => new Date(a.date) - new Date(b.date)
       );
-      setSchedules(sortedData);
+      setSchedules(sortedData); // Dữ liệu này đã được lọc sẵn từ backend
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
     }
-  }, [userId]);
+}, [userId]);
 
   const handleFinishBooking = async (bookingId) => {
     if (!window.confirm("Bạn có chắc chắn muốn đánh dấu cuộc hẹn này là đã hoàn thành?")) {
@@ -101,9 +102,7 @@ const activeBookings = schedules.filter(
     dayjs(s.date).isSameOrAfter(today)
 );
 
-const schedulesUpcoming = schedules.filter(
-  (s) => dayjs(s.date).isSameOrAfter(today)
-  );
+const schedulesUpcoming = schedules.filter(s => dayjs(s.date).isSameOrAfter(today));
 
 
 const pastBookings = schedules.filter(
