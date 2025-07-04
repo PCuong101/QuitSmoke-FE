@@ -24,6 +24,7 @@ import CoachManagement from "./pages/adminPage/CoachManagement.jsx";
 import BlogManagement from "./pages/adminPage/BlogManagement.jsx";
 import CoachDetail from "./pages/adminPage/CoachDetail.jsx";
 import { NotificationProvider } from "./contexts/NotificationContext.jsx";
+import PaymentReturn from "./components/PaymentReturn/PaymentReturn.jsx";
 
 // ================== IMPORTS CHO CÁC TRANG CỦA COACH ==================
 import CoachDashboardPage from "./pages/coachPage/CoachDashboardPage.jsx";
@@ -49,6 +50,8 @@ function App() {
           <Route path="/test" element={<DashboardWebsocket />} />
 
           {/* === CÁC ROUTE CHO MEMBER === */}
+          <Route path="/payment-return" element={<PaymentReturn />} />
+
           <Route
             path="/dashboard"
             element={
