@@ -3,12 +3,15 @@ import NavBar from "../../components/NavBar/NavBar";
 import Footer from "../../components/Footer/Footer";
 import "./ServicePackage.css";
 import { useUser } from "../../contexts/UserContext";
+import * as icon from "lucide-react";
+import ToastNotification from "../../components/ToastNotification/ToastNotification.jsx";
 
 function ServicePackage() {
   const [showModal, setShowModal] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [plans, setPlans] = useState([]);
-  const { email, userId } = useUser();
+  const { email, userId, role } = useUser();
+  const [toastVisible, setToastVisible] = useState(false);
 
   // Gọi API lấy danh sách gói dịch vụ
   useEffect(() => {
@@ -35,8 +38,10 @@ function ServicePackage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          memberId: userId,
+          planId: plan.planID,
           amount: plan.price,
-          email: email,
+          email: email
         }),
       });
 
@@ -85,13 +90,23 @@ function ServicePackage() {
                   </button>
                 ) : (
                   <button
+                    style={{
+                      opacity: role === 'MEMBER_VIP1' ? 0.5 : 1,
+                      cursor: role === 'MEMBER_VIP1' ? 'not-allowed' : 'pointer',
+                    }}
                     className="card-button btn-secondary"
                     onClick={() => {
-                      setSelectedPlan(plan);
-                      setShowModal(true);
+                      if (role === "MEMBER_VIP1") {
+                        setToastVisible(true);
+                        setTimeout(() => setToastVisible(false), 3000);
+                      } else {
+                        setSelectedPlan(plan);
+                        setShowModal(true);
+                      }
+
                     }}
                   >
-                    Mua ngay
+                    {role === "MEMBER_VIP1" ? "Gói hiện tại của bạn" : "Đăng ký gói"}
                   </button>
                 )}
               </div>
@@ -136,6 +151,12 @@ function ServicePackage() {
           </div>
         )}
       </div>
+      <ToastNotification
+        icon={icon.XCircle}
+        message="Bạn đã đăng ký gói dịch vụ này."
+        show={toastVisible}
+        color="red"
+      />
     </>
   );
 }

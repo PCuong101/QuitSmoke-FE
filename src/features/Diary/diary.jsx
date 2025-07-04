@@ -2,6 +2,7 @@ import NavBar from "../../components/NavBar/NavBar"
 import { useState, useEffect } from "react";
 import './diary.css'
 import Footer from "../../components/Footer/Footer"
+import { useUser } from "../../contexts/UserContext";
 // Một icon 'X' đơn giản bằng SVG để đóng modal
 const CloseIcon = () => (
   <svg
@@ -49,25 +50,15 @@ function Diary() {
     cigarettesSmoked: 0,
     spentMoneyOnCigarettes: 0
   });
-  const [userId, setUserId] = useState("");
+  const { userId } = useUser(); // Sử dụng context để lấy userId
 
   useEffect(() => {
     const fetchDiaryEntries = async () => {
       try {
-        const user = await fetch("http://localhost:8080/api/auth/get-session-user", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          credentials: "include" // gửi cookie (session) nếu dùng Spring Boot hoặc Express session
-        });
-        if (!user) {
+        if (!userId) {
           console.error("Không tìm thấy user");
           return;
         } else {
-          const userData = await user.json();
-          const userId = userData.userId; // Lấy ID người dùng từ dữ liệu trả về
-          setUserId(userId); // Lưu ID người dùng vào state
           const response = await fetch(`http://localhost:8080/api/user-daily-logs/get-daily-logs/${userId}`);
           if (!response.ok) throw new Error("Lỗi khi tải dữ liệu nhật ký");
 

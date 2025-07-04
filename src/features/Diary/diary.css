@@ -138,6 +138,12 @@
             from { opacity: 0; }
             to { opacity: 1; }
           }
+
+          .dry-modal-content::-webkit-scrollbar {
+            display: none; /* Ẩn thanh cuộn */
+          }
+
+
           .dry-modal-content {
             background-color: #ffffff;
             padding: 2rem;

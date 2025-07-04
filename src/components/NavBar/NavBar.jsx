@@ -5,6 +5,7 @@ import * as icon from 'lucide-react';
 import useLogout from '../../hooks/useLogout';
 import { useNotifications } from '../../contexts/NotificationContext.jsx';
 import { useUser } from '../../contexts/UserContext.jsx';
+import ToastNotification from '../ToastNotification/ToastNotification.jsx';
 
 export default function NavBar(){
   const logout = useLogout();
@@ -14,26 +15,6 @@ export default function NavBar(){
   const { notifications, setNotifications } = useNotifications();
 
   const popupRef = useRef();
-
-  
-
-  // --- LOGIC MỚI: TỰ ĐỘNG THÊM THÔNG BÁO NHIỆM VỤ ---
-  // useEffect(() => {
-  //   // Tạo thông báo từ danh sách nhiệm vụ hôm nay
-  //   const missionNotifications = mockTodayMissionList.map((mission, index) => ({
-  //     id: 100 + mission.templateId, // Tạo ID duy nhất để không trùng lặp
-  //     type: 'mission',
-  //     title: `Nhiệm vụ mới: ${mission.title}`,
-  //     description: 'Hãy hoàn thành mục tiêu hôm nay để tiến gần hơn đến thành công!',
-  //     time: 'Sáng nay',
-  //     read: false, // Mặc định là chưa đọc
-  //     link: '/missions',
-  //   }));
-
-  //   // Thêm thông báo nhiệm vụ vào đầu danh sách
-  //   setNotifications(prev => [...missionNotifications, ...prev]);
-  // }, []); // Chỉ chạy một lần khi component được mount
-
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
@@ -82,8 +63,9 @@ export default function NavBar(){
     WebkitBackdropFilter: isActive(path) ? 'blur(6px)' : 'none',
     transition: 'all 0.2s ease-in-out',
   });
+  const [toastVisible, setToastVisible] = useState(false);
 
-  const {userName} = useUser();
+  const {userName, role} = useUser();
 
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef();
@@ -118,7 +100,24 @@ export default function NavBar(){
       <h4 style={navItemStyle('/ranking')} onClick={() => navigate('/ranking')}>Bảng xếp hạng</h4>
       <h4 style={navItemStyle('/Achievement')} onClick={() => navigate('/Achievement')}>Thành tựu</h4>
       <h4 style={navItemStyle('/service-package')} onClick={() => navigate('/service-package')}>Gói dịch vụ</h4>
-      <h4 style={navItemStyle('/coach')} onClick={() => navigate('/coach')}>Chuyên gia</h4>
+      <h4
+        style={{
+          ...navItemStyle('/coach'),
+          opacity: role === 'MEMBER' ? 0.5 : 1,
+          cursor: role === 'MEMBER' ? 'not-allowed' : 'pointer',
+        }}
+        onClick={() => {
+          if (role === 'MEMBER') {
+            setToastVisible(true);
+            setTimeout(() => setToastVisible(false), 3000);
+          } else {
+            navigate('/coach');
+        }
+      }}
+      >
+        Chuyên gia
+      </h4>
+
       <h4 style={navItemStyle('/blog')} onClick={() => navigate('/blog')}>Bài viết</h4>
       <div style={{ position: 'relative', marginLeft: 'auto' }} ref={userMenuRef}>
         <div
@@ -302,6 +301,14 @@ export default function NavBar(){
         )}
       </div>
       <icon.MessageCircle style={{ marginLeft: 15 }} />
+
+      <ToastNotification
+        icon={icon.XCircle}
+        message="Bạn cần nâng cấp gói dịch vụ để truy cập tính năng này"
+        show={toastVisible}
+        color="red"
+      />
+
     </div>
   );
 }

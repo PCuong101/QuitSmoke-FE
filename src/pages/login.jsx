@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "./../contexts/UserContext";
 
 function Login() {
-  const { setUserId, setEmail, setUserName, email } = useUser();
+  const { setUserId, setEmail, setUserName, email, role, setRole } = useUser();
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -26,9 +26,10 @@ function Login() {
         setUserId(data.userId);
         setEmail(data.email);
         setUserName(data.name);
-        if (data.role === "MEMBER" || data.role === "MEMBER_VIP1") navigate("/dashboard");
-        else if (data.role === "ADMIN") navigate("/admin/dashboard");
-        else if (data.role === "COACH") navigate("/coach/dashboard");
+        setRole(data.role);
+        if (role === "MEMBER" || role === "MEMBER_VIP1") navigate("/dashboard");
+        else if (role === "ADMIN") navigate("/admin/dashboard");
+        else if (role === "COACH") navigate("/coach/dashboard");
       } else {
         setError("Email hoặc mật khẩu không đúng");
       }
@@ -68,6 +69,13 @@ function Login() {
             Đăng nhập
           </button>
         </form>
+
+        <p style={styles.footerText}>
+          Quên mật khẩu?{" "}
+          <a href="/forgot-password" style={styles.link}>
+            Đặt lại mật khẩu
+          </a>
+        </p>
 
         <p style={styles.footerText}>
           Chưa có tài khoản?{" "}

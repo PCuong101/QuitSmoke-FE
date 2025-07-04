@@ -34,6 +34,7 @@ import CoachBlogManagementPage from "./pages/CoachBlogManagementPage.jsx";
 // ================== IMPORTS THÊM TỪ FILE CỦA BẠN ==================
 import DashboardWebsocket from "./features/Dashboard/dashBoard.jsx";
 import Profile from "./features/Profile/Profile.jsx";
+import PublicRoute from "./routes/PublicRoute.jsx";
 // ===================================================================
 
 function App() {
@@ -42,20 +43,36 @@ function App() {
       <BrowserRouter>
         <Routes>
           {/* === CÁC ROUTE CÔNG KHAI === */}
-          <Route path="/survey" element={<Survey />} />
-          <Route path="/" element={<HomePage />} />
-          <Route path="login" element={<Login />} />
+          <Route path="/survey" element={
+            <PublicRoute>
+                <Survey />
+            </PublicRoute>
+            } />
+          <Route path="/" element={
+            <PublicRoute>
+                <HomePage />
+            </PublicRoute>
+          } />
+          <Route path="login" element={
+            <PublicRoute>
+                <Login />
+            </PublicRoute>
+          } />
           
           {/* === ROUTE TEST (từ file của bạn) === */}
           <Route path="/test" element={<DashboardWebsocket />} />
 
           {/* === CÁC ROUTE CHO MEMBER === */}
-          <Route path="/payment-return" element={<PaymentReturn />} />
+          <Route path="/payment-return" element={
+            <PrivateRoute allowedRoles={["MEMBER", "MEMBER_VIP1"]}>
+                <PaymentReturn />
+            </PrivateRoute>
+          } />
 
           <Route
             path="/dashboard"
             element={
-              <PrivateRoute>
+              <PrivateRoute allowedRoles={["MEMBER", "MEMBER_VIP1"]}>
                 <DashBoard />
               </PrivateRoute>
             }
@@ -63,7 +80,7 @@ function App() {
           <Route
             path="diary"
             element={
-              <PrivateRoute>
+              <PrivateRoute allowedRoles={["MEMBER", "MEMBER_VIP1"]}>
                 <Diary />
               </PrivateRoute>
             }
@@ -71,7 +88,7 @@ function App() {
           <Route
             path="missions"
             element={
-              <PrivateRoute>
+              <PrivateRoute allowedRoles={["MEMBER", "MEMBER_VIP1"]}>
                 <Missions />
               </PrivateRoute>
             }
@@ -79,7 +96,7 @@ function App() {
           <Route
             path="ranking"
             element={
-              <PrivateRoute>
+              <PrivateRoute allowedRoles={["MEMBER", "MEMBER_VIP1"]}> 
                 <Ranking />
               </PrivateRoute>
             }
@@ -87,7 +104,7 @@ function App() {
           <Route
             path="achievement"
             element={
-              <PrivateRoute>
+              <PrivateRoute allowedRoles={["MEMBER", "MEMBER_VIP1"]}>
                 <Achievement />
               </PrivateRoute>
             }
@@ -95,7 +112,7 @@ function App() {
           <Route
             path="service-package"
             element={
-              <PrivateRoute>
+              <PrivateRoute allowedRoles={["MEMBER", "MEMBER_VIP1"]}>
                 <ServicePackage />
               </PrivateRoute>
             }
@@ -103,7 +120,7 @@ function App() {
           <Route
             path="coach"
             element={
-              <PrivateRoute>
+              <PrivateRoute allowedRoles={["MEMBER_VIP1"]}>
                 <Coach />
               </PrivateRoute>
             }
@@ -111,7 +128,7 @@ function App() {
           <Route
             path="profile"
             element={
-              <PrivateRoute>
+              <PrivateRoute allowedRoles={["MEMBER", "MEMBER_VIP1"]}>
                 <Profile />
               </PrivateRoute>
             }
@@ -121,7 +138,7 @@ function App() {
           <Route
             path="blog"
             element={
-              <PrivateRoute>
+              <PrivateRoute allowedRoles={["MEMBER", "MEMBER_VIP1"]}>
                 <Blog />
               </PrivateRoute>
             }
@@ -130,7 +147,7 @@ function App() {
           <Route
             path="blog/:id"
             element={
-              <PrivateRoute>
+              <PrivateRoute allowedRoles={["MEMBER", "MEMBER_VIP1"]}>
                 <ArticleDetail />
               </PrivateRoute>
             }
@@ -138,7 +155,7 @@ function App() {
           <Route
             path="blog/:id"
             element={
-              <PrivateRoute>
+              <PrivateRoute allowedRoles={["MEMBER", "MEMBER_VIP1"]}>
                 <ArticleDetail />
               </PrivateRoute>
             }
@@ -148,7 +165,7 @@ function App() {
           <Route
             path="/coach/dashboard"
             element={
-              <PrivateRoute>
+              <PrivateRoute allowedRoles={["COACH"]}>
                 <CoachDashboardPage />
               </PrivateRoute>
             }
@@ -156,7 +173,7 @@ function App() {
           <Route
             path="/coach/blog"
             element={
-              <PrivateRoute>
+              <PrivateRoute allowedRoles={["COACH"]}>
                 <CoachBlogManagementPage />
               </PrivateRoute>
             }
@@ -166,7 +183,7 @@ function App() {
           <Route
             path="/admin"
             element={
-              <PrivateRoute>
+              <PrivateRoute allowedRoles={["ADMIN"]}>
                 <AdminPanel />
               </PrivateRoute>
             }
@@ -175,7 +192,7 @@ function App() {
             <Route
               path="dashboard"
               element={
-                <PrivateRoute>
+                <PrivateRoute allowedRoles={["ADMIN"]}>
                   <DashboardAdmin />
                 </PrivateRoute>
               }
@@ -183,7 +200,7 @@ function App() {
             <Route
               path="users"
               element={
-                <PrivateRoute>
+                <PrivateRoute allowedRoles={["ADMIN"]}>
                   <UserManagement />
                 </PrivateRoute>
               }
@@ -191,7 +208,7 @@ function App() {
             <Route
               path="coaches"
               element={
-                <PrivateRoute>
+                <PrivateRoute allowedRoles={["ADMIN"]}>
                   <CoachManagement />
                 </PrivateRoute>
               }
@@ -199,7 +216,7 @@ function App() {
             <Route
               path="posts"
               element={
-                <PrivateRoute>
+                <PrivateRoute allowedRoles={["ADMIN"]}>
                   <BlogManagement />
                 </PrivateRoute>
               }
@@ -207,7 +224,7 @@ function App() {
             <Route
               path="create-coach"
               element={
-                <PrivateRoute>
+                <PrivateRoute allowedRoles={["ADMIN"]}>
                   <CreateCoachPage />
                 </PrivateRoute>
               }
@@ -215,7 +232,7 @@ function App() {
             <Route
               path="coach/:id"
               element={
-                <PrivateRoute>
+                <PrivateRoute allowedRoles={["ADMIN"]}>
                   <CoachDetail />
                 </PrivateRoute>
               }

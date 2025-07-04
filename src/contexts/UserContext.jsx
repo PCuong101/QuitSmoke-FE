@@ -6,6 +6,7 @@ export function UserProvider({ children }) {
   const [userId, setUserIdState] = useState(null);
   const [email, setEmailState] = useState(null);
   const [userName, setUserNameState] = useState(null);
+  const [role, setRoleState] = useState(null);
 
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
@@ -19,6 +20,10 @@ export function UserProvider({ children }) {
     const storedEmail = localStorage.getItem("email");
     if (storedEmail) {
       setEmailState(String(storedEmail));
+    }
+    const storedRole = localStorage.getItem("role");
+    if (storedRole) {
+      setRole(String(storedRole));
     }
   }, []);
 
@@ -37,6 +42,11 @@ export function UserProvider({ children }) {
     setEmailState(String(email));
   };
 
+  const setRole = (role) => {
+    localStorage.setItem("role", String(role));
+    setRoleState(String(role));
+  }
+
   const clearUserId = () => {
     localStorage.removeItem("userId");
     setUserIdState(null);
@@ -52,6 +62,8 @@ export function UserProvider({ children }) {
         setUserName,
         email,
         setEmail,
+        role,
+        setRole
       }}
     >
       {children}

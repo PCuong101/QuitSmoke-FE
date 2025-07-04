@@ -682,44 +682,7 @@ Footer {
 
 
 
-/* --- CSS CHO TOAST NOTIFICATION BẰNG CSS THUẦN --- */
-.toast-notification {
-  /* Vị trí cố định ở góc trên bên phải */
-  position: fixed;
-  top: 80px; /* Cách đỉnh một khoảng để không bị NavBar che */
-  right: 24px;
 
-  /* Thiết kế */
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background-color: #2d3748; /* Màu nền tối */
-  color: #fff; /* Chữ trắng */
-  padding: 12px 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-
-  /* Hiệu ứng và Trạng thái */
-  z-index: 9999; /* Luôn nổi trên cùng */
-  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-
-  /* Trạng thái ẩn mặc định */
-  opacity: 0;
-  transform: translateY(-20px);
-}
-
-/* Trạng thái hiển thị */
-.toast-notification.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-#root .toast-notification p {
-  margin: 0;
-  font-size: 15px;
-  color: #fff; /* Ghi đè để đảm bảo chữ trắng */
-}
-/* Mission END HERE */
 #savedMoney
 /* Container */
 .savings-container {

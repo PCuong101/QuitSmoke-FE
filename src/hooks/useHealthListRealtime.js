@@ -19,7 +19,6 @@ function useHealthList() {
       setLoading(false);
       return;
     }
-    console.log("Gọi API health-milestones với userId:", userId);
     setLoading(true); // Bắt đầu loading khi có userId mới
     axios
       .get(`http://localhost:8080/api/health-milestones/progress/${userId}`)

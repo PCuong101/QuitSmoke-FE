@@ -3,10 +3,10 @@ import NavBar from "../../components/NavBar/NavBar"
 import { Check, LoaderCircle, History } from 'lucide-react';
 import ToastNotification from '../../components/ToastNotification/ToastNotification'; // <-- IMPORT COMPONENT MỚI
 import Footer from "../../components/Footer/Footer";
-import useUserId from "../../hooks/useUserId";
 import { getIconByTemplateId } from './mock-missions-icon';
 import './Missions.css';
 import { useNotifications } from "../../contexts/NotificationContext";
+import { useUser } from "../../contexts/UserContext";
 
 // --- COMPONENT CON: MissionItem giữ nguyên như cũ ---
 function MissionItem({ mission, isCompleted, onComplete }) {
@@ -48,9 +48,8 @@ function Missions() {
     const [notification, setNotification] = useState({ show: false, message: '' });
     // Dùng useRef để quản lý các bộ đếm thời gian
     const notificationTimer = useRef(null);
-    const userId = useUserId();
+    const { userId } = useUser(); // Sử dụng context để lấy userId
     const { addMissionCompletionNotification } = useNotifications();
-    console.log("User ID:", userId); // Kiểm tra xem userId có được lấy đúng không
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -132,8 +131,10 @@ function Missions() {
 
             {/* Đặt component thông báo ở đây, bên ngoài layout chính */}
             <ToastNotification
+                icon={Check}
                 show={notification.show}
                 message={notification.message}
+                color="#16a34a" // Màu xanh lá cây
             />
                 {isLoading ? (
                     <div className="loading-container">
