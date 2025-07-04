@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import * as icon from 'lucide-react';
 import useLogout from '../../hooks/useLogout';
 import { useNotifications } from '../../contexts/NotificationContext.jsx';
+import { useUser } from '../../contexts/UserContext.jsx';
 
 export default function NavBar(){
   const logout = useLogout();
@@ -82,31 +83,7 @@ export default function NavBar(){
     transition: 'all 0.2s ease-in-out',
   });
 
-  const [userName, setUserName] = useState("");
-
-  useEffect(() => {
-    const fetchUserEntries = async () => {
-      try {
-        const user = await fetch("http://localhost:8080/api/auth/get-session-user", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          credentials: "include" // gửi cookie (session) nếu dùng Spring Boot hoặc Express session
-        });
-        if (!user) {
-          console.error("Không tìm thấy user");
-          return;
-        } else {
-          const userData = await user.json();
-          setUserName(userData.name)
-        }
-      } catch (error) {
-        console.error("Fetch diary entries error:", error);
-      }
-    };
-    fetchUserEntries();
-  }, []);
+  const {userName} = useUser();
 
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef();

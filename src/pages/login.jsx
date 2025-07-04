@@ -26,7 +26,7 @@ function Login() {
         setUserId(data.userId);
         setEmail(data.email);
         setUserName(data.name);
-        if (data.role === "MEMBER") navigate("/dashboard");
+        if (data.role === "MEMBER" || data.role === "MEMBER_VIP1") navigate("/dashboard");
         else if (data.role === "ADMIN") navigate("/admin/dashboard");
         else if (data.role === "COACH") navigate("/coach/dashboard");
       } else {

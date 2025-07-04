@@ -1,4 +1,3 @@
-// contexts/UserContext.js
 import { createContext, useContext, useState, useEffect } from "react";
 
 const UserContext = createContext();
@@ -15,11 +14,11 @@ export function UserProvider({ children }) {
     }
     const storedUserName = localStorage.getItem("userName");
     if (storedUserName) {
-      setUserIdState(String(storedUserName));
+      setUserNameState(String(storedUserName));
     }
     const storedEmail = localStorage.getItem("email");
     if (storedEmail) {
-      setUserIdState(String(storedEmail));
+      setEmailState(String(storedEmail));
     }
   }, []);
 
@@ -31,7 +30,7 @@ export function UserProvider({ children }) {
   const setUserName = (name) => {
     localStorage.setItem("userName", String(name));
     setUserNameState(String(name));
-  }
+  };
 
   const setEmail = (email) => {
     localStorage.setItem("email", String(email));
@@ -44,7 +43,17 @@ export function UserProvider({ children }) {
   };
 
   return (
-    <UserContext.Provider value={{ userId, setUserId, clearUserId, userName, email, setEmail, setUserName }}>
+    <UserContext.Provider
+      value={{
+        userId,
+        setUserId,
+        clearUserId,
+        userName,
+        setUserName,
+        email,
+        setEmail,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

@@ -25,8 +25,10 @@ function PrivateRoute({ children }) {
         // Điều hướng theo role
         if (user.role === "ADMIN") {
           navigate("/admin/dashboard");
-        } else if (user.role === "MEMBER") {
+        } else if (user.role === "MEMBER" || user.role === "MEMBER_VIP1") {
           navigate("/dashboard");
+        } else if (user.role === "COACH") {
+          navigate("/coach/dashboard");
         }
       } else {
         setIsAuthenticated(false);
