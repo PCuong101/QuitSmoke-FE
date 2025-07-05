@@ -124,6 +124,26 @@ export default function NavBar(){
           style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
           onClick={() => setUserMenuOpen(prev => !prev)}
         >
+          {role !== 'MEMBER' && (
+            <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                backgroundColor: '#fffbeb',
+                color: '#b45309',
+                padding: '2px 8px',
+                borderRadius: '12px',
+                marginLeft: '8px',
+                fontSize: '18px',
+                fontWeight: '600',
+                lineHeight: '1',
+                border: '1px solid #fde68a'
+            }}>
+                <icon.Crown size={14} style={{ marginRight: '4px' }} />
+                <span>Premium</span>
+            </div>
+          )}
+
+          
           <icon.User />
           <h4 style={{ marginLeft: 5 }}>{userName}</h4>
         </div>

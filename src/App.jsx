@@ -23,6 +23,7 @@ import UserManagement from "./pages/adminPage/UserManagement.jsx";
 import CoachManagement from "./pages/adminPage/CoachManagement.jsx";
 import BlogManagement from "./pages/adminPage/BlogManagement.jsx";
 import CoachDetail from "./pages/adminPage/CoachDetail.jsx";
+import CreateBlog from './pages/adminPage/CreateBlog.jsx';
 import { NotificationProvider } from "./contexts/NotificationContext.jsx";
 import PaymentReturn from "./components/PaymentReturn/PaymentReturn.jsx";
 
@@ -234,6 +235,14 @@ function App() {
               element={
                 <PrivateRoute allowedRoles={["ADMIN"]}>
                   <CoachDetail />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="create-blog"
+              element={
+                <PrivateRoute allowedRoles={["ADMIN"]}>
+                  <CreateBlog />
                 </PrivateRoute>
               }
             />

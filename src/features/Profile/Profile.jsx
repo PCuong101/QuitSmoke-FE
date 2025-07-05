@@ -1,37 +1,33 @@
-// Profile.js (ĐÃ NÂNG CẤP VỚI API MỚI)
+// Profile.js (ĐÃ NÂNG CẤP VỚI API MỚI VÀ LUCIDE-REACT ICONS)
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Profile.css";
+// --- 1. THAY ĐỔI IMPORT: Chuyển từ react-icons sang lucide-react ---
 import {
-  FaCamera,
-  FaCrown,
-  FaPencilAlt,
-  FaPiggyBank,
-  FaTrophy,
-  FaLeaf,
-} from "react-icons/fa";
+  Camera,
+  Crown,
+  Pencil,
+  PiggyBank,
+  Trophy,
+} from "lucide-react";
+// ----------------------------------------------------------------
+
 import NavBar from "../../components/NavBar/NavBar";
 import Footer from "../../components/Footer/Footer";
 
 const Profile = () => {
   const [sessionUser, setSessionUser] = useState(null);
-
-  // --- 1. THÊM STATE MỚI CHO DỮ LIỆU THỐNG KÊ ---
   const [achievementsCount, setAchievementsCount] = useState(0);
   const [moneySaved, setMoneySaved] = useState(0);
-  // Bạn có thể thêm state cho smokeFreeDays nếu có API tương ứng
-
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // --- 2. CẬP NHẬT LOGIC FETCH DỮ LIỆU ---
   useEffect(() => {
     const fetchAllProfileData = async () => {
       try {
-        // BƯỚC A: LẤY THÔNG TIN USER CƠ BẢN VÀ USER ID
         const userResponse = await fetch(
           "http://localhost:8080/api/auth/get-session-user",
           {
@@ -45,18 +41,15 @@ const Profile = () => {
           throw new Error(`Lỗi xác thực: ${userResponse.status}`);
         }
         const userData = await userResponse.json();
-        console.log("Dữ liệu người dùng nhận được từ API:", userData);
         setSessionUser(userData);
         setFormData({
           fullName: userData.name,
           email: userData.email,
         });
 
-        // BƯỚC B: DÙNG USER ID ĐỂ GỌI CÁC API CÒN LẠI ĐỒNG THỜI
         if (userData && userData.userId) {
           const userId = userData.userId;
 
-          // Tạo các promise cho các cuộc gọi API
           const achievementsPromise = fetch(
             `http://localhost:8080/api/achievements/${userId}`
           );
@@ -64,24 +57,19 @@ const Profile = () => {
             `http://localhost:8080/api/quit-plan/${userId}/savings`
           );
 
-          // Dùng Promise.all để thực thi đồng thời
           const [achievementsResponse, savingsResponse] = await Promise.all([
             achievementsPromise,
             savingsPromise,
           ]);
 
-          // Xử lý kết quả achievements
           if (achievementsResponse.ok) {
             const achievementsData = await achievementsResponse.json();
-            // Giả sử API trả về một mảng, chúng ta lấy độ dài của nó
             setAchievementsCount(achievementsData.length || 0);
           }
 
-          // Xử lý kết quả savings
           if (savingsResponse.ok) {
             const savingsData = await savingsResponse.json();
-            // Giả sử API trả về object { amount: 1500000 }
-            setMoneySaved(savingsData.amount || 0);
+            setMoneySaved(savingsData.totalSavings || 0);
           }
         }
       } catch (err) {
@@ -93,9 +81,8 @@ const Profile = () => {
     };
 
     fetchAllProfileData();
-  }, []); // Chỉ chạy một lần
+  }, []);
 
-  // Các hàm xử lý (handleEditClick, etc.) không thay đổi
   const handleEditClick = () => setIsEditing(true);
   const handleCancelClick = () => {
     if (sessionUser) {
@@ -103,6 +90,7 @@ const Profile = () => {
     }
     setIsEditing(false);
   };
+
   const handleSaveClick = () => {
     if (!sessionUser || !sessionUser.userId) {
       setError("Không thể xác định người dùng để cập nhật.");
@@ -115,26 +103,23 @@ const Profile = () => {
       name: formData.fullName,
       email: formData.email,
       userId: sessionUser.userId,
-      password: sessionUser.password, // Bắt buộc vì backend báo lỗi thiếu trường này
+      password: sessionUser.password,
       role: sessionUser.role,
       registrationDate: sessionUser.registrationDate,
       profilePicture: sessionUser.profilePicture,
       addictionLevel: sessionUser.addictionLevel,
     };
-    console.log("Dữ liệu gửi đi để cập nhật:", dataToSend);
+    
     axios
       .put(updateUrl, dataToSend, { withCredentials: true })
       .then((res) => {
-        // Cập nhật thành công, làm mới state
         const updatedUser = res.data;
         setSessionUser((prevUser) => ({ ...prevUser, ...updatedUser }));
         setFormData({ fullName: updatedUser.name, email: updatedUser.email });
         setIsEditing(false);
-        setError(null); // Xóa lỗi cũ nếu có
-        console.log("Cập nhật thành công:", updatedUser);
+        setError(null);
       })
       .catch((err) => {
-        // Xử lý lỗi
         console.error("Lỗi khi cập nhật:", err.response || err);
         setError(
           "Cập nhật thất bại. Vui lòng thử lại. Lỗi: " +
@@ -142,6 +127,7 @@ const Profile = () => {
         );
       });
   };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -184,45 +170,47 @@ const Profile = () => {
               <div className="avatar"></div>
               {isEditing && (
                 <div className="camera-icon">
-                  <FaCamera />
+                  {/* --- 2. THAY THẾ ICON --- */}
+                  <Camera size={18} />
                 </div>
               )}
             </div>
-            <div className="premium-badge">
-              <FaCrown /> Premium
-            </div>
+            {sessionUser.role !== "MEMBER" && (
+              <div className="premium-badge">
+                {/* --- 2. THAY THẾ ICON --- */}
+                <Crown size={16} style={{ marginRight: "4px" }} /> Premium
+              </div>
+            )}
           </div>
 
-          {/* --- 3. CẬP NHẬT JSX ĐỂ DÙNG STATE MỚI --- */}
           <div className="stats-grid">
-            <div className="stat-item">
+            <div className="stat-item" style={{ backgroundColor: "#e0f2fe" }}>
               <div
                 className="stat-icon-wrapper"
                 style={{ backgroundColor: "#e0f2fe" }}
               >
-                <FaPiggyBank style={{ color: "#0ea5e9" }} />
+                {/* --- 2. THAY THẾ ICON --- */}
+                <PiggyBank size={22} style={{ color: "#0ea5e9" }} />
               </div>
               <div className="stat-text">
-                {/* Sử dụng state 'moneySaved' */}
                 <h3>{moneySaved.toLocaleString("vi-VN") || 0} đ</h3>
                 <p>Tiền tiết kiệm</p>
               </div>
             </div>
-            <div className="stat-item">
+            <div className="stat-item" style={{ backgroundColor: "#fefce8" }}>
               <div
                 className="stat-icon-wrapper"
                 style={{ backgroundColor: "#fefce8" }}
               >
-                <FaTrophy style={{ color: "#eab308" }} />
+                {/* --- 2. THAY THẾ ICON --- */}
+                <Trophy size={22} style={{ color: "#eab308" }} />
               </div>
               <div className="stat-text">
-                {/* Sử dụng state 'achievementsCount' */}
                 <h3>{achievementsCount || 0}</h3>
                 <p>Thành tựu đạt được</p>
               </div>
             </div>
           </div>
-          {/* --- KẾT THÚC CẬP NHẬT JSX --- */}
           <div className="profile-form-section">
             <h2 className="form-section-title">Chi tiết tài khoản</h2>
             <div className="profile-form">
@@ -239,9 +227,7 @@ const Profile = () => {
                       onChange={handleInputChange}
                     />
                   ) : (
-                    <>
-                      <p className="info-text">{formData.fullName}</p>
-                    </>
+                    <p className="info-text">{formData.fullName}</p>
                   )}
                 </div>
               </div>
@@ -259,9 +245,7 @@ const Profile = () => {
                       onChange={handleInputChange}
                     />
                   ) : (
-                    <>
-                      <p className="info-text">{formData.email}</p>
-                    </>
+                    <p className="info-text">{formData.email}</p>
                   )}
                 </div>
               </div>
@@ -283,7 +267,8 @@ const Profile = () => {
                   </>
                 ) : (
                   <button className="btn btn-dark" onClick={handleEditClick}>
-                    <FaPencilAlt style={{ marginRight: "8px" }} />
+                    {/* --- 2. THAY THẾ ICON --- */}
+                    <Pencil size={16} style={{ marginRight: "8px" }} />
                     Cập nhật thông tin
                   </button>
                 )}

@@ -1,0 +1,379 @@
+/* --- BIẾN MÀU SẮC VÀ KÍCH THƯỚC --- */
+:root {
+    --background-page: #f9fafb;
+    --background-card: #ffffff;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --border-color: #e5e7eb;
+    --primary-color: #4f46e5;
+    --primary-color-hover: #4338ca;
+    --danger-color: #ef4444;
+    --danger-color-hover: #dc2626;
+    --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+/* --- BỐ CỤC CHUNG --- */
+.user-management-page {
+    background-color: var(--background-page);
+    padding: 24px;
+    min-height: 100vh;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.page-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.card {
+    background-color: var(--background-card);
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    padding: 24px;
+}
+
+/* --- THANH TÌM KIẾM & LỌC --- */
+.search-filter-bar {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.input-with-icon {
+    position: relative;
+    flex-grow: 1;
+}
+
+.input-with-icon .input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    pointer-events: none;
+}
+
+.input-with-icon input {
+    width: 100%;
+    padding: 10px 14px 10px 44px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-with-icon input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+/* --- CÁC LOẠI NÚT --- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-color-hover);
+}
+
+.btn-secondary {
+    background-color: var(--background-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background-color: #f9fafb;
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: var(--danger-color-hover);
+}
+
+
+/* --- BẢNG DỮ LIỆU --- */
+.data-table-container {
+    overflow-x: auto;
+    /* Cho phép cuộn ngang trên màn hình nhỏ */
+}
+
+.data-table {
+    width: 100%;
+    min-width: 800px;
+    /* Đảm bảo bảng có chiều rộng tối thiểu */
+    border-collapse: collapse;
+}
+
+.table-header {
+    display: flex;
+    background-color: #f9fafb;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.table-header .table-cell {
+    padding: 12px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.table-row {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s;
+}
+
+.table-row:last-child {
+    border-bottom: none;
+}
+
+.table-row:hover {
+    background-color: #f9fafb;
+}
+
+.table-cell {
+    flex: 1;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+    
+}
+
+.table-cell.user-info {
+    flex: 2;
+    /* Cho cột tên rộng hơn */
+    gap: 20px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-name {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.user-email {
+    font-size: 13px;
+}
+
+/* --- HUY HIỆU (BADGES) --- */
+.badge {
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.level-high {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.level-medium {
+    background-color: #ffedd5;
+    color: #c2410c;
+}
+
+.level-low {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.role-vip {
+    background-color: #fef9c3;
+    color: #854d0e;
+}
+
+.role-member {
+    background-color: #e0e7ff;
+    color: #3730a3;
+}
+
+
+/* --- NÚT HÀNH ĐỘNG TRONG BẢNG --- */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: transparent;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    color: var(--text-secondary);
+}
+
+.btn-icon:hover {
+    background-color: #f3f4f6;
+}
+
+.btn-icon-danger {
+    color: var(--danger-color);
+}
+
+.btn-icon-danger:hover {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+/* --- MODAL XÁC NHẬN --- */
+/* (Giữ lại CSS cho modal từ câu trả lời trước, đã rất tốt) */
+.confirmation-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, .6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px)
+}
+
+.confirmation-modal {
+    background-color: #fff;
+    padding: 24px 32px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    animation: fadeIn .3s ease-out
+}
+
+.confirmation-modal h3 {
+    margin-top: 0;
+    font-size: 20px;
+    color: #1f2937
+}
+
+.confirmation-modal p {
+    margin-bottom: 24px;
+    color: #4b5563;
+    font-size: 16px
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px
+}
+
+.modal-buttons .btn {
+    padding: 10px 20px;
+    font-weight: 600
+}
+
+/* --- THÊM PHẦN NÀY VÀO CUỐI FILE CSS CỦA BẠN --- */
+
+/* --- THANH TIẾN TRÌNH (PROGRESS BAR) --- */
+.progress-bar-container {
+width: 120px;       /* 1. Đặt một chiều rộng cố định (bạn có thể điều chỉnh số này) */
+  margin: 0 auto;
+  width: 100%;
+  height: 20px;
+  background-color: var(--border-color); /* Màu nền của thanh */
+  border-radius: 10px;
+  overflow: hidden; /* Đảm bảo phần fill không tràn ra ngoài */
+}
+
+.progress-bar-fill {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  transition: width 0.5s ease-in-out; /* Hiệu ứng chuyển động mượt mà */
+  color: white;
+}
+
+.progress-bar-text {
+  font-size: 11px;
+  font-weight: 700;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.2); /* Đổ bóng cho chữ dễ đọc */
+  padding: 0 8px;
+  white-space: nowrap;
+}
+
+
+/* --- CẬP NHẬT LẠI CSS CHO HUY HIỆU MỨC ĐỘ --- */
+/* Thay vì background-color và color cho text, giờ ta chỉ cần định nghĩa màu cho thanh tiến trình */
+
+.progress-bar-fill.level-high {
+  background-color: #ef4444; /* Màu đỏ */
+}
+
+.progress-bar-fill.level-medium {
+  background-color: #f97316; /* Màu cam */
+}
+
+.progress-bar-fill.level-low {
+  background-color: #22c55e; /* Màu xanh lá */
+}
+
+
+/* --- XÓA HOẶC BÌNH LUẬN LẠI CSS CŨ CHO BADGE MỨC ĐỘ --- */
+/* Bạn có thể xóa hoặc bình luận lại các dòng này nếu chúng còn tồn tại */
+/*
+.level-high { background-color: #fee2e2; color: #b91c1c; }
+.level-medium { background-color: #ffedd5; color: #c2410c; }
+.level-low { background-color: #dcfce7; color: #166534; }
+*/
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(.95)
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1)
+    }
+}

@@ -1,9 +1,88 @@
-import React from 'react';
-import { Users, FileText, Activity, DollarSign } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Users, FileText, Activity, DollarSign, AlertCircle } from 'lucide-react';
 
 const DashboardAdmin = () => {
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    blogPosts: 0, // Giá trị ban đầu là 0
+    activeUsers: 0,
+    monthlyRevenue: 0,
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        // 1. TẠO CÁC PROMISE CHO CÁC CUỘC GỌI API
+        const usersPromise = fetch('http://localhost:8080/api/users', {
+          method: 'GET',
+        });
+        const blogPostsPromise = fetch('http://localhost:8080/api/blog/all', {
+          method: 'GET',
+        });
+
+        // 2. SỬ DỤNG PROMISE.ALL ĐỂ THỰC THI ĐỒNG THỜI
+        const [usersResponse, blogPostsResponse] = await Promise.all([
+          usersPromise,
+          blogPostsPromise,
+        ]);
+
+        // 3. XỬ LÝ KẾT QUẢ CỦA TỪNG API
+        
+        // Xử lý users và tính doanh thu
+        if (!usersResponse.ok) {
+          throw new Error('Không thể tải dữ liệu người dùng từ server.');
+        }
+        const users = await usersResponse.json();
+        const regularUsersCount = users.filter(user => user.role !== 'ADMIN').length;
+        const vipUsersCount = users.filter(user => user.role === 'MEMBER_VIP1').length;
+        const pricePerVip = 199000;
+        const calculatedRevenue = vipUsersCount * pricePerVip;
+
+        // Xử lý blog posts
+        if (!blogPostsResponse.ok) {
+          throw new Error('Không thể tải dữ liệu bài viết từ server.');
+        }
+        const blogPosts = await blogPostsResponse.json();
+        // Giả sử API trả về một mảng, chúng ta lấy độ dài của nó
+        const blogPostsCount = blogPosts.length;
+
+        // 4. CẬP NHẬT STATE VỚI TẤT CẢ DỮ LIỆU MỚI
+        setStats(prevStats => ({
+          ...prevStats,
+          totalUsers: regularUsersCount,
+          monthlyRevenue: calculatedRevenue,
+          blogPosts: blogPostsCount, // Cập nhật số lượng bài viết
+        }));
+
+      } catch (err) {
+        console.error("Lỗi khi tải dữ liệu dashboard:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+  if (error) {
+    return (
+      <div className="dashboard-page">
+         <div className="page-header">
+            <h2>Bảng điều khiển</h2>
+         </div>
+         <div className="error-message-container">
+            <AlertCircle color="red" size={48} />
+            <h3>Đã xảy ra lỗi</h3>
+            <p>{error}</p>
+         </div>
+      </div>
+    )
+  }
+
   return (
-    // Bọc toàn bộ trang trong div với class "dashboard-page"
     <div className="dashboard-page">
       <div className="page-header">
         <h2>Bảng điều khiển</h2>
@@ -15,7 +94,7 @@ const DashboardAdmin = () => {
             <p>Tổng số người dùng</p>
             <Users className="stat-icon" size={22} strokeWidth={1.5} />
           </div>
-          <h3>1,234</h3>
+          <h3>{loading ? '...' : stats.totalUsers.toLocaleString('vi-VN')}</h3>
           <span className="increase">+12% so với tháng trước</span>
         </div>
         <div className="card stat-card">
@@ -23,28 +102,25 @@ const DashboardAdmin = () => {
             <p>Số bài đăng blog</p>
             <FileText className="stat-icon" size={22} strokeWidth={1.5} />
           </div>
-          <h3>89</h3>
+          {/* 5. CẬP NHẬT JSX ĐỂ HIỂN THỊ DỮ LIỆU ĐỘNG */}
+          <h3>{loading ? '...' : stats.blogPosts.toLocaleString('vi-VN')}</h3>
           <span className="increase">+5% so với tháng trước</span>
         </div>
-        <div className="card stat-card">
-          <div className="stat-header">
-            <p>Người dùng hoạt động (7 ngày)</p>
-            <Activity className="stat-icon" size={22} strokeWidth={1.5} />
-          </div>
-          <h3>456</h3>
-          <span className="increase">+8% so với tháng trước</span>
-        </div>
+        
         <div className="card stat-card">
           <div className="stat-header">
             <p>Doanh thu tháng này</p>
             <DollarSign className="stat-icon" size={22} strokeWidth={1.5} />
           </div>
-          <h3>₫12,500,000</h3>
+          <h3>
+            {loading ? 'Đang tính...' : `${stats.monthlyRevenue.toLocaleString('vi-VN')} đ`}
+          </h3>
           <span className="increase">+15% so với tháng trước</span>
         </div>
       </div>
 
       <div className="dashboard-panels">
+        {/* Các panel khác giữ nguyên */}
         <div className="card recent-activity">
           <h3>Hoạt động gần đây</h3>
           <ul>
