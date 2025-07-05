@@ -1,5 +1,5 @@
 /* --- BIẾN MÀU SẮC VÀ KÍCH THƯỚC --- */
-:root {
+:body {
     --background-page: #f9fafb;
     --background-card: #ffffff;
     --text-primary: #111827;
@@ -111,10 +111,11 @@
 .btn-danger {
     background-color: var(--danger-color);
     color: white;
+    border: 1px solid var(--border-color);
 }
 
 .btn-danger:hover {
-    background-color: var(--danger-color-hover);
+    background-color: red;
 }
 
 
@@ -135,6 +136,7 @@
     display: flex;
     background-color: #f9fafb;
     border-bottom: 1px solid var(--border-color);
+    justify-content: space-between;
 }
 
 .table-header .table-cell {
@@ -150,6 +152,8 @@
     display: flex;
     border-bottom: 1px solid var(--border-color);
     transition: background-color 0.2s;
+    justify-content: space-between;
+    min-height: 64px;
 }
 
 .table-row:last-child {
@@ -167,20 +171,28 @@
     align-items: center;
     font-size: 14px;
     color: var(--text-secondary);
-    
 }
-
 .table-cell.user-info {
-    flex: 2;
+    flex: 3;
     /* Cho cột tên rộng hơn */
     gap: 20px;
 }
 
+.table-cell.level,
+.table-cell.role,
+.table-cell.actions {
+  flex: 1;
+  justify-content: center;
+}
+
 .user-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
+    display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f4f6;
+  font-weight: 600;
+  color: #374151;
+  font-size: 14px;
 }
 
 .user-name {
@@ -194,11 +206,8 @@
 
 /* --- HUY HIỆU (BADGES) --- */
 .badge {
-    padding: 4px 10px;
-    border-radius: 9999px;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: capitalize;
+    min-width: 60px;
+  text-align: center;
 }
 
 .level-high {
@@ -310,10 +319,8 @@
     font-weight: 600
 }
 
-/* --- THÊM PHẦN NÀY VÀO CUỐI FILE CSS CỦA BẠN --- */
 
-/* --- THANH TIẾN TRÌNH (PROGRESS BAR) --- */
-.progress-bar-container {
+.progress-bar-container-admin {
 width: 120px;       /* 1. Đặt một chiều rộng cố định (bạn có thể điều chỉnh số này) */
   margin: 0 auto;
   width: 100%;

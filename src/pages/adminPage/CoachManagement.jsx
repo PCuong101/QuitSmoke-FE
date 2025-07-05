@@ -53,7 +53,7 @@ const CoachManagement = () => {
   return (
     <div className="coach-management-page">
       <div className="page-header">
-        <h2>Huấn luyện viên</h2>
+        <h2>Chuyên gia</h2>
         <button className="btn btn-primary" onClick={handleAddCoach}>
           <Plus size={18} strokeWidth={2.5} />
           <span>Thêm chuyên gia</span>

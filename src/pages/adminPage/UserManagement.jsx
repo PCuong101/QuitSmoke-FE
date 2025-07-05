@@ -113,7 +113,7 @@ const UserManagement = () => {
 
                 {/* THAY ĐỔI Ở ĐÂY: Thay thế huy hiệu bằng thanh tiến trình */}
                 <div className="table-cell">
-                  <div className="progress-bar-container">
+                  <div className="progress-bar-container-admin">
                     <div 
                       className={`progress-bar-fill ${getLevelClass(user.addictionLevel)}`}
                       style={{ width: getProgressWidth(user.addictionLevel) }}

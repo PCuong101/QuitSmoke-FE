@@ -26,7 +26,7 @@ import "dayjs/locale/vi";
  
 
 // Tái sử dụng CSS từ trang quản lý blog của Coach
-import "../CoachBlogManagementPage"; 
+import "../coachPage/CoachBlogManagementPage.css"; 
 
 const MenuBar = ({ editor }) => {
   if (!editor) {

@@ -19,6 +19,11 @@ body {
   min-height: 100vh;
 }
 
+.logout-section {
+  margin-top: auto;
+  padding: 20px;
+}
+
 .sidebar {
   width: 270px;
   background-color: #16a34a;
@@ -465,10 +470,6 @@ body {
   color: #e7f5ec;
 }
 
-.status-pending {
-  background-color:   #fb8c00;
-  color: #fff3e0;
-}
 
 .status-rejected {
   background-color: #fdecea;
@@ -610,6 +611,7 @@ body {
   transition: background-color 0.2s;
 }
 
+
 .user-management-page .btn-secondary:hover {
   background-color: #f8f9fa;
 }
@@ -625,14 +627,14 @@ body {
   width: 100%;
 }
 
+
 .user-management-page .table-header,
 .user-management-page .table-row {
   display: grid;
-  grid-template-columns: 1.5fr 2fr 1.2fr 1.5fr 1fr 1.2fr 1fr;
+  grid-template-columns: 2.5fr 1.5fr 1.2fr 1.2fr 0.8fr;
   align-items: center;
   padding: 12px 15px;
   border-bottom: 1px solid #e9ecef;
-  gap: 15px;
 }
 
 .user-management-page .table-header {
@@ -745,7 +747,7 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #28a745;
+  background-color: --primary-color !important; /* Sử dụng biến màu chính */
   /* Màu xanh lá cây như trong hình */
   color: white;
   padding: 11px 16px;
@@ -816,7 +818,7 @@ body {
 .coach-management-page .table-row {
   display: grid;
   /* Cấu trúc cột cho bảng này */
-  grid-template-columns: 2fr 1.5fr 2.5fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1.5fr 1.5fr 1.2fr;
   align-items: center;
   padding: 15px 10px;
   border-bottom: 1px solid #f1f3f5;
@@ -980,6 +982,7 @@ body {
   font-size: 1rem;
   outline: none;
   transition: border 0.2s ease;
+  color: black;
 }
 
 .form input:focus {
@@ -1003,12 +1006,6 @@ body {
   font-weight: 500;
 }
 
-.btn-primary {
-  background-color: #007bff;
-  color: white;
-  border: none;
-}
-
 .btn-primary:hover {
   background-color: #0069d9;
 }
@@ -1024,13 +1021,13 @@ body {
 }
 
 .btn-outline {
-  background-color: transparent;
-  color: #007bff;
+  background-color: #007bff;
+  color: white;
   border: 1px solid #007bff;
 }
 
 .btn-outline:hover {
-  background-color: #007bff;
+  background-color: blue;
   color: white;
 }
 
@@ -1050,6 +1047,7 @@ body {
 
 .logout-btn {
   background-color: red;
+  color: white;
 }
 
 .logout-btn:hover {
@@ -1102,6 +1100,7 @@ body {
 .modal-buttons .btn {
   padding: 10px 20px;
   font-weight: 600;
+  height: 100%;
 }
 
 /* Thêm style cho nút Danger */

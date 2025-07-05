@@ -27,7 +27,7 @@ const CreateCoachPage = () => {
     setError("");
     setSuccess("");
     try {
-      await axios.post("http://localhost:8080/api/users", formData);
+      await axios.post("http://localhost:8080/api/admin/create-coach", formData);
       setSuccess("Coach created successfully!");
       setTimeout(() => navigate("/admin/coaches"), 1500);
     } catch (err) {

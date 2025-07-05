@@ -1,6 +1,3 @@
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities; */
 
 #root {
   margin: 0 auto;
@@ -193,8 +190,8 @@ Footer {
 }
 
 #root .btn-primary {
-  background-color: white;
-  color: #16a34a;
+  background-color: var(--primary-color); /* Sử dụng biến màu chính */
+  color: white;
   border: none;
   padding: 10px 20px;
   font-weight: bold;
@@ -204,7 +201,7 @@ Footer {
 }
 
 #root .btn-primary:hover {
-  background-color: #f0fdf4;
+  background-color: var(--primary-hover); /* Màu nền khi hover */
 }
 
 #root .hero-input {
@@ -986,3 +983,4 @@ Footer {
 .coach-nav-link:hover {
     background-color: #f1f5f9;
 }
+

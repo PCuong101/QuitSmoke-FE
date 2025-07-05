@@ -61,7 +61,7 @@ const AdminPanel = () => {
             onClick={() => navigate("/admin/coaches")}
           >
             <GraduationCap size={20} strokeWidth={1.5} />
-            <span className="nav-item-text">Huấn luyện viên</span>
+            <span className="nav-item-text">Chuyên gia</span>
           </li>
           <li
             className={isActive("/admin/posts") ? "active" : ""}
@@ -74,11 +74,12 @@ const AdminPanel = () => {
         {/* Nút đăng xuất */}
 <div className="logout-section">
   <button
-    className="logout-btn"
-    onClick={useLogout()}
-  >
-    <span className="nav-item-text">Đăng xuất</span>
-  </button>
+  className="logout-btn"
+  onClick={useLogout()}
+  style={{ marginTop: "auto", marginBottom: "0" }}  // Đây là chìa khóa để đẩy xuống đáy
+>
+  <span className="nav-item-text">Đăng xuất</span>
+</button>
 </div>
       </nav>
 

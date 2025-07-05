@@ -2,9 +2,9 @@
 
 // ... (giữ nguyên tất cả các import và các component)
 import { useState, useEffect } from "react";
-import CoachNavBar from "../components/NavBar/CoachNavBar";
-import Footer from "../components/Footer/Footer";
-import useUserId from "../hooks/useUserId";
+import CoachNavBar from "../../components/NavBar/CoachNavBar";
+import Footer from "../../components/Footer/Footer";
+import useUserId from "../../hooks/useUserId";
 import { useEditor, EditorContent } from "@tiptap/react";
 import Image from "@tiptap/extension-image";
 import StarterKit from "@tiptap/starter-kit";
@@ -24,7 +24,7 @@ import {
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
 
-import "./CoachBlogManagementPage.css";
+import "./CoachDashboardPage.css"; // Giữ nguyên CSS từ trang quản lý blog của Coach
 
 dayjs.locale("vi");
 

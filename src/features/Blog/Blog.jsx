@@ -15,7 +15,7 @@ function ArticleCard({ article }) {
 
   return (
     <Link to={`/blog/${article.id}`} className="article-card">
-      <img src={`https://picsum.photos/seed/${article.id}/800/400`} alt={article.title} className="card-image" />
+      {/* <img src={`https://picsum.photos/seed/${article.id}/800/400`} alt={article.title} className="card-image" /> */}
       <div className="card-content">
         <h3 className="card-title">{article.title}</h3>
         <p className="card-excerpt">{createExcerpt(article.content)}</p>

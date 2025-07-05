@@ -7,7 +7,7 @@ import { useUser } from "../../contexts/UserContext.jsx"; // Giả sử bạn c�
 
 function Survey() {
 
-    const { setUserId, setEmail, setUserName } = useUser();
+    const { setUserId, setEmail, setUserName, setRole } = useUser();
 
     const [showRegisterModal, setShowRegisterModal] = useState(false);
 
@@ -88,6 +88,7 @@ function Survey() {
                 setUserId(data.userId);
                 setEmail(data.email);
                 setUserName(data.name);
+                setRole(data.role);
                 navigate("/dashboard");
             } else {
                 alert("Gửi thất bại.");

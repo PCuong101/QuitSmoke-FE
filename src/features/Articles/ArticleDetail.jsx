@@ -50,7 +50,7 @@ function ArticleDetail() {
             <span>•</span>
             <span>{dayjs(article.createdAt).format("DD/MM/YYYY")}</span>
           </div>
-          <img src={`https://picsum.photos/seed/${article.id}/1200/600`} alt={article.title} className="article-detail-image" />
+          {/* <img src={`https://picsum.photos/seed/${article.id}/1200/600`} alt={article.title} className="article-detail-image" /> */}
           <div
             className="article-body"
             dangerouslySetInnerHTML={{ __html: article.content }}

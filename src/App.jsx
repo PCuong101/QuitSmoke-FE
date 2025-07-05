@@ -29,7 +29,7 @@ import PaymentReturn from "./components/PaymentReturn/PaymentReturn.jsx";
 
 // ================== IMPORTS CHO CÁC TRANG CỦA COACH ==================
 import CoachDashboardPage from "./pages/coachPage/CoachDashboardPage.jsx";
-import CoachBlogManagementPage from "./pages/CoachBlogManagementPage.jsx";
+import CoachBlogManagementPage from "./pages/coachPage/CoachBlogManagementPage.jsx";
 // =====================================================================
 
 // ================== IMPORTS THÊM TỪ FILE CỦA BẠN ==================

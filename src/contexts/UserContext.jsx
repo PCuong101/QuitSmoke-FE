@@ -50,6 +50,13 @@ export function UserProvider({ children }) {
   const clearUserId = () => {
     localStorage.removeItem("userId");
     setUserIdState(null);
+    localStorage.removeItem("userName");
+    setUserNameState(null);
+    localStorage.removeItem("email");
+    setEmailState(null);
+    localStorage.removeItem("role");
+    setRoleState(null);
+    
   };
 
   return (
