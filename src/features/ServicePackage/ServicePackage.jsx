@@ -7,11 +7,14 @@ import * as icon from "lucide-react";
 import ToastNotification from "../../components/ToastNotification/ToastNotification.jsx";
 
 function ServicePackage() {
-  const [showModal, setShowModal] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [plans, setPlans] = useState([]);
   const { email, userId, role } = useUser();
   const [toastVisible, setToastVisible] = useState(false);
+  const [showMonthlyModal, setShowMonthlyModal] = useState(false);
+  const [showYearlyModal, setShowYearlyModal] = useState(false);
+  const [durationMonths, setDurationMonths] = useState(1);
+  const [userPlan, setUserPlan] = useState(null);
 
   // Gọi API lấy danh sách gói dịch vụ
   useEffect(() => {
@@ -28,9 +31,23 @@ function ServicePackage() {
       }
     }
     fetchPlans();
+    async function fetchUserPlan() {
+      try {
+        const response = await fetch(`http://localhost:8080/api/subscriptions/member/${userId}`);
+        if (!response.ok) {
+          throw new Error("Không thể tải gói dịch vụ của người dùng");
+        }
+        const data = await response.json();
+        setUserPlan(data[0].plan); // Giả sử data[0] là gói dịch vụ hiện tại của người dùng
+        // console.log("Gói dịch vụ của người dùng:", data[0].plan);
+      } catch (error) {
+        console.error("Lỗi tải gói dịch vụ của người dùng:", error);
+      }
+    }
+    fetchUserPlan();
   }, []);
 
-  async function handleVnpayPayment(plan) {
+  async function handleVnpayPayment(plan, durationMonths) {
     try {
       const response = await fetch("http://localhost:8080/api/payment/vnpay/create-payment", {
         method: "POST",
@@ -40,8 +57,9 @@ function ServicePackage() {
         body: JSON.stringify({
           memberId: userId,
           planId: plan.planID,
-          amount: plan.price,
-          email: email
+          amount: plan.price * durationMonths,
+          email: email,
+          durationMonths: durationMonths
         }),
       });
 
@@ -101,12 +119,15 @@ function ServicePackage() {
                         setTimeout(() => setToastVisible(false), 3000);
                       } else {
                         setSelectedPlan(plan);
-                        setShowModal(true);
+                        if (plan.planName === "Gói Tháng") {
+                          setShowMonthlyModal(true);
+                        } else if (plan.planName === "Gói Năm") {
+                          setShowYearlyModal(true);
+                        }
                       }
-
                     }}
                   >
-                    {role === "MEMBER_VIP1" ? "Gói hiện tại của bạn" : "Đăng ký gói"}
+                    {plan.planName === userPlan.planName ? "Gói hiện tại của bạn" : "Đăng ký gói"}
                   </button>
                 )}
               </div>
@@ -119,19 +140,40 @@ function ServicePackage() {
         </div>
         <Footer />
 
-        {showModal && selectedPlan && (
+        {showMonthlyModal && selectedPlan && (
           <div className="modal-overlay">
             <div className="modal-content">
-              <h2>Thanh toán qua VNPay</h2>
+              <h2>Chọn thời hạn sử dụng</h2>
               <p>
-                Bạn đang chọn <strong>{selectedPlan.planName}</strong> với số tiền{" "}
-                <strong>{selectedPlan.price.toLocaleString()}đ</strong>
+                Bạn đang chọn <strong>{selectedPlan.planName}</strong> giá{" "}
+                <strong>{selectedPlan.price.toLocaleString()}đ / tháng</strong>
+              </p>
+              <div style={{ marginBottom: "1rem" }}>
+                <label>
+                  Số tháng:
+                  <select
+                    value={durationMonths}
+                    onChange={(e) => setDurationMonths(parseInt(e.target.value))}
+                    style={{ marginLeft: "10px", padding: "5px" }}
+                  >
+                    <option value={1}>1 tháng</option>
+                    <option value={3}>3 tháng</option>
+                    <option value={6}>6 tháng</option>
+                    <option value={9}>9 tháng</option>
+                  </select>
+                </label>
+              </div>
+              <p>
+                Tổng tiền:{" "}
+                <strong>
+                  {(selectedPlan.price * durationMonths).toLocaleString()}đ
+                </strong>
               </p>
               <form
                 onSubmit={async (e) => {
                   e.preventDefault();
-                  await handleVnpayPayment(selectedPlan);
-                  setShowModal(false);
+                  await handleVnpayPayment(selectedPlan, durationMonths);
+                  setShowMonthlyModal(false);
                 }}
               >
                 <div className="modal-buttons">
@@ -141,7 +183,7 @@ function ServicePackage() {
                   <button
                     type="button"
                     className="btn-secondary"
-                    onClick={() => setShowModal(false)}
+                    onClick={() => setShowMonthlyModal(false)}
                   >
                     Đóng
                   </button>
@@ -150,6 +192,38 @@ function ServicePackage() {
             </div>
           </div>
         )}
+        {showYearlyModal && selectedPlan && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h2>Xác nhận thanh toán</h2>
+              <p>
+                Bạn đang chọn <strong>{selectedPlan.planName}</strong> với số tiền{" "}
+                <strong>{selectedPlan.price.toLocaleString()}đ</strong>
+              </p>
+              <form
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  await handleVnpayPayment(selectedPlan, 1); // duration = 1
+                  setShowYearlyModal(false);
+                }}
+              >
+                <div className="modal-buttons">
+                  <button type="submit" className="btn-secondary">
+                    Xác nhận thanh toán
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-secondary"
+                    onClick={() => setShowYearlyModal(false)}
+                  >
+                    Đóng
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
       </div>
       <ToastNotification
         icon={icon.XCircle}
