@@ -12,7 +12,12 @@ const CoachManagement = () => {
   useEffect(() => {
     axios
       .get("http://localhost:8080/api/admin/coaches")
-      .then((res) => setCoaches(res.data))
+      .then((res) => {
+        // In ra console để xem dữ liệu trả về trông như thế nào
+        console.log("Dữ liệu coaches từ API:", res.data); 
+        setCoaches(res.data);
+      })
+      
       .catch((err) => console.error("Error loading coaches:", err));
   }, []);
 
@@ -29,14 +34,14 @@ const CoachManagement = () => {
     if (!coachToDelete) return;
 
     try {
-      // Giả sử API để xóa coach là /api/admin/coaches/{id}
+      
       await axios.delete(
-        `http://localhost:8080/api/admin/coaches/${coachToDelete.id}`
+        `http://localhost:8080/api/users/${coachToDelete.id}` // <<< SỬA Ở ĐÂY
       );
 
       // Cập nhật UI ngay lập tức
       setCoaches((prevCoaches) =>
-        prevCoaches.filter((coach) => coach.id !== coachToDelete.id)
+        prevCoaches.filter((coach) => coach.id !== coachToDelete.id) // <<< CŨNG SỬA Ở ĐÂY
       );
 
       handleCloseDeleteModal();
@@ -45,7 +50,7 @@ const CoachManagement = () => {
       alert("Đã xảy ra lỗi khi xóa chuyên gia. Vui lòng thử lại.");
       handleCloseDeleteModal();
     }
-  };
+};
 
   const handleRowClick = (coachId) => navigate(`/admin/coach/${coachId}`);
   const handleAddCoach = () => navigate("/admin/create-coach");
