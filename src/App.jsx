@@ -26,7 +26,8 @@ import CoachDetail from "./pages/adminPage/CoachDetail.jsx";
 import CreateBlog from "./pages/adminPage/CreateBlog.jsx";
 import { NotificationProvider } from "./contexts/NotificationContext.jsx";
 import PaymentReturn from "./components/PaymentReturn/PaymentReturn.jsx";
-import AdminAchievementManager from "./pages/adminPage/AdminAchievementManager.jsx"; // <-- Thêm 
+import AdminAchievementManager from "./pages/adminPage/AdminAchievementManager.jsx";
+import ServicePackageAdmin from "./pages/adminPage/ServicePackagesAdmin.jsx";
 
 // ================== IMPORTS CHO CÁC TRANG CỦA COACH ==================
 import CoachDashboardPage from "./pages/coachPage/CoachDashboardPage.jsx";
@@ -266,6 +267,14 @@ function App() {
               element={
                 <PrivateRoute allowedRoles={["ADMIN"]}>
                   <CreateBlog />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="ServicePackagesAdmin"
+              element={
+                <PrivateRoute allowedRoles={["ADMIN"]}>
+                  <ServicePackageAdmin />
                 </PrivateRoute>
               }
             />

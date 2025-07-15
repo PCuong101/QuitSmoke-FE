@@ -47,7 +47,7 @@ function Diary() {
     cravingLevel: 0,
     stressLevel: 0,
     mood: "neutral",
-    cigarettesSmoked: 0,
+    cigarettesSmoked: 1,
     spentMoneyOnCigarettes: 0
   });
   const { userId } = useUser(); // Sử dụng context để lấy userId
@@ -92,11 +92,13 @@ function Diary() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formData.smokedToday === "false") {
+      formData.cigarettesSmoked = 0; // Nếu không hút thuốc, đặt số điếu hút là 0
+    }
     const dataToSend = {
       userId,
       ...formData,
     };
-    console.log(dataToSend);
     try {
       const response = await fetch('http://localhost:8080/api/user-daily-logs/create-daily-logs', {
         method: 'POST',
@@ -125,7 +127,7 @@ function Diary() {
         cravingLevel: 0,
         stressLevel: 0,
         mood: "neutral",
-        cigarettesSmoked: 0,
+        cigarettesSmoked: 1,
         spentMoneyOnCigarettes: 0
       });
     } catch (error) {
@@ -311,7 +313,7 @@ function Diary() {
                   id="cigarettesSmoked"
                   type="number"
                   name="cigarettesSmoked"
-                  min="0"
+                  min="1"
                   value={formData.cigarettesSmoked}
                   onChange={handleInputChange}
                   className="dry-modal-input"

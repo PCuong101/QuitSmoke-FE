@@ -8,8 +8,9 @@ import {
   FileText,
   ChevronsLeft,
   ChevronsRight,
-  Award, // <--- 1. THÊM IMPORT CHO ICON THÀNH TỰU
-  LogOut, // <--- Thêm icon cho nút đăng xuất
+  Award,
+  LogOut,
+  Package,
 } from "lucide-react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import "./AdminPage.css";
@@ -55,26 +56,22 @@ const AdminPanel = () => {
             onClick={() => navigate("/admin/users")}
           >
             <Users size={20} strokeWidth={1.5} />
-            <span className="nav-item-text">Người dùng</span>
+            <span className="nav-item-text">Quản lý Người dùng</span>
           </li>
           <li
             className={isActive("/admin/coaches") ? "active" : ""}
             onClick={() => navigate("/admin/coaches")}
           >
             <GraduationCap size={20} strokeWidth={1.5} />
-            <span className="nav-item-text">Chuyên gia</span>
+            <span className="nav-item-text">Quản lý Chuyên gia</span>
           </li>
           <li
             className={isActive("/admin/posts") ? "active" : ""}
             onClick={() => navigate("/admin/posts")}
           >
             <FileText size={20} strokeWidth={1.5} />
-            <span className="nav-item-text">Quản lý bài đăng</span>
+            <span className="nav-item-text">Quản lý Bài đăng</span>
           </li>
-
-          {/* ================================================= */}
-          {/* === 3. THÊM MỤC THÀNH TỰU BỊ THIẾU VÀO ĐÂY === */}
-          {/* ================================================= */}
           <li
             className={isActive("/admin/achievements") ? "active" : ""}
             onClick={() => navigate("/admin/achievements")}
@@ -82,8 +79,14 @@ const AdminPanel = () => {
             <Award size={20} strokeWidth={1.5} />
             <span className="nav-item-text">Quản lý Thành tựu</span>
           </li>
-          {/* ================================================= */}
 
+          <li
+            className={isActive("/admin/ServicePackagesAdmin") ? "active" : ""}
+            onClick={() => navigate("/admin/ServicePackagesAdmin")}
+          >
+            <Package size={20} strokeWidth={1.5} />
+            <span className="nav-item-text">Quản lý Gói thành viên</span>
+          </li>
         </ul>
         
         <div className="logout-section">

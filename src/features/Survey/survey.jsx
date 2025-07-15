@@ -30,6 +30,7 @@ function Survey() {
         packPrice: "",
         firstSmokeTime: "",
         dateStart:  todayStr,
+        reason: [],
     });
 
     // State cho đăng ký
@@ -48,6 +49,17 @@ function Survey() {
         const { name, value } = e.target;
         setRegisterData((prev) => ({ ...prev, [name]: value }));
     };
+    
+    const handleReasonChange = (e) => {
+    const { value, checked } = e.target;
+    setSurveyData((prev) => {
+        const newReasons = checked
+            ? [...prev.reason, value] // Thêm mới
+            : prev.reason.filter((r) => r !== value); // Bỏ đi
+        return { ...prev, reason: newReasons };
+    });
+};
+
 
     const handleSurveySubmit = (e) => {
         e.preventDefault();
@@ -143,7 +155,20 @@ function Survey() {
                         <input type="radio" name="firstSmokeTime" value="don't smoke" onChange={handleSurveyChange} />
                         <label>Tôi không hút vào buổi sáng</label><br />
                     </div>
+                    <h2>Lý do bạn muốn ngừng hút thuốc:</h2>
+                    <div style={{ textAlign: 'left' }}>
+                        <input type="checkbox" name="reason" value="health" onChange={handleReasonChange} required />
+                        <label>Vì sức khỏe</label><br />
+                        <input type="checkbox" name="reason" value="family" onChange={handleReasonChange} />
+                        <label>Vì gia đình</label><br />
+                        <input type="checkbox" name="reason" value="financial" onChange={handleReasonChange} />
+                        <label>Vì tài chính</label><br />
+                        <input type="checkbox" name="reason" value="social" onChange={handleReasonChange} />
+                        <label>Vì xã hội</label><br />
+                        <input type="checkbox" name="reason" value="other" onChange={handleReasonChange} />
+                        <label>Khác</label><br />
 
+                        </div>
                     <h2>Ngày bạn muốn bắt đầu?</h2>
                     <input className="input-class-date" type="datetime-local" name="dateStart" required value={todayStr} readOnly /> <br></br>
                     <div className="button-container">
