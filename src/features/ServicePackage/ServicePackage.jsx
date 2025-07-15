@@ -39,7 +39,7 @@ function ServicePackage() {
         }
         const data = await response.json();
         setUserPlan(data[0].plan); // Giả sử data[0] là gói dịch vụ hiện tại của người dùng
-        // console.log("Gói dịch vụ của người dùng:", data[0].plan);
+        console.log("Gói dịch vụ của người dùng:", data[0].plan);
       } catch (error) {
         console.error("Lỗi tải gói dịch vụ của người dùng:", error);
       }
@@ -127,7 +127,7 @@ function ServicePackage() {
                       }
                     }}
                   >
-                    {plan.planName === userPlan.planName ? "Gói hiện tại của bạn" : "Đăng ký gói"}
+                    {userPlan && plan.planName === userPlan.planName ? "Gói hiện tại của bạn" : "Đăng ký gói"}
                   </button>
                 )}
               </div>
