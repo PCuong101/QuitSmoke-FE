@@ -23,9 +23,10 @@ import UserManagement from "./pages/adminPage/UserManagement.jsx";
 import CoachManagement from "./pages/adminPage/CoachManagement.jsx";
 import BlogManagement from "./pages/adminPage/BlogManagement.jsx";
 import CoachDetail from "./pages/adminPage/CoachDetail.jsx";
-import CreateBlog from './pages/adminPage/CreateBlog.jsx';
+import CreateBlog from "./pages/adminPage/CreateBlog.jsx";
 import { NotificationProvider } from "./contexts/NotificationContext.jsx";
 import PaymentReturn from "./components/PaymentReturn/PaymentReturn.jsx";
+import AdminAchievementManager from "./pages/adminPage/AdminAchievementManager.jsx"; // <-- Thêm 
 
 // ================== IMPORTS CHO CÁC TRANG CỦA COACH ==================
 import CoachDashboardPage from "./pages/coachPage/CoachDashboardPage.jsx";
@@ -44,31 +45,43 @@ function App() {
       <BrowserRouter>
         <Routes>
           {/* === CÁC ROUTE CÔNG KHAI === */}
-          <Route path="/survey" element={
-            <PublicRoute>
+          <Route
+            path="/survey"
+            element={
+              <PublicRoute>
                 <Survey />
-            </PublicRoute>
-            } />
-          <Route path="/" element={
-            <PublicRoute>
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/"
+            element={
+              <PublicRoute>
                 <HomePage />
-            </PublicRoute>
-          } />
-          <Route path="login" element={
-            <PublicRoute>
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="login"
+            element={
+              <PublicRoute>
                 <Login />
-            </PublicRoute>
-          } />
-          
+              </PublicRoute>
+            }
+          />
+
           {/* === ROUTE TEST (từ file của bạn) === */}
           <Route path="/test" element={<DashboardWebsocket />} />
 
           {/* === CÁC ROUTE CHO MEMBER === */}
-          <Route path="/payment-return" element={
-            <PrivateRoute allowedRoles={["MEMBER", "MEMBER_VIP1"]}>
+          <Route
+            path="/payment-return"
+            element={
+              <PrivateRoute allowedRoles={["MEMBER", "MEMBER_VIP1"]}>
                 <PaymentReturn />
-            </PrivateRoute>
-          } />
+              </PrivateRoute>
+            }
+          />
 
           <Route
             path="/dashboard"
@@ -97,7 +110,7 @@ function App() {
           <Route
             path="ranking"
             element={
-              <PrivateRoute allowedRoles={["MEMBER", "MEMBER_VIP1"]}> 
+              <PrivateRoute allowedRoles={["MEMBER", "MEMBER_VIP1"]}>
                 <Ranking />
               </PrivateRoute>
             }
@@ -198,6 +211,16 @@ function App() {
                 </PrivateRoute>
               }
             />
+            {/* === THÊM ROUTE MỚI TẠI ĐÂY === */}
+            <Route
+              path="achievements"
+              element={
+                <PrivateRoute allowedRoles={["ADMIN"]}>
+                  <AdminAchievementManager />
+                </PrivateRoute>
+              }
+            />
+            {/* ============================= */}
             <Route
               path="users"
               element={

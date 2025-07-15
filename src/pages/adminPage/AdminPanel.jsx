@@ -1,3 +1,5 @@
+// src/pages/adminPage/AdminPanel.jsx (PHIÊN BẢN ĐÃ SỬA LỖI HOÀN CHỈNH)
+
 import React from "react";
 import {
   LayoutDashboard,
@@ -6,44 +8,43 @@ import {
   FileText,
   ChevronsLeft,
   ChevronsRight,
+  Award, // <--- 1. THÊM IMPORT CHO ICON THÀNH TỰU
+  LogOut, // <--- Thêm icon cho nút đăng xuất
 } from "lucide-react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import "./AdminPage.css";
-import useLogout from "../../hooks/useLogout";
+import useLogout from "../../hooks/useLogout"; // Hook đăng xuất
 
 const AdminPanel = () => {
   const [isCollapsed, setIsCollapsed] = React.useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isActive = (path) => location.pathname.includes(path);
+  // 2. GỌI HOOK Ở ĐÂY, KHÔNG GỌI TRONG onClick
+  const handleLogout = useLogout(); 
 
+  const isActive = (path) => location.pathname.startsWith(path);
 
   return (
     <div className="admin-panel-container">
       <nav className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
         <div className="sidebar-header">
-          <span className="logo-text">QuitSmoking Admin</span>
+          <span className="logo-text">QuitSmoke Admin</span>
           <button
             className="toggle-btn"
             onClick={() => setIsCollapsed(!isCollapsed)}
           >
-            {isCollapsed ? (
-              <ChevronsRight size={20} />
-            ) : (
-              <ChevronsLeft size={20} />
-            )}
+            {isCollapsed ? <ChevronsRight size={20} /> : <ChevronsLeft size={20} />}
           </button>
         </div>
 
-        {/* Section Header */}
         <div className="nav-separator">
           <span className="nav-separator-text">Quản lý</span>
         </div>
 
         <ul className="nav-menu">
           <li
-            className={isActive("/admin/dashboard") ? "active" : ""}
+            className={location.pathname === "/admin" || location.pathname === "/admin/dashboard" ? "active" : ""}
             onClick={() => navigate("/admin/dashboard")}
           >
             <LayoutDashboard size={20} strokeWidth={1.5} />
@@ -70,21 +71,32 @@ const AdminPanel = () => {
             <FileText size={20} strokeWidth={1.5} />
             <span className="nav-item-text">Quản lý bài đăng</span>
           </li>
+
+          {/* ================================================= */}
+          {/* === 3. THÊM MỤC THÀNH TỰU BỊ THIẾU VÀO ĐÂY === */}
+          {/* ================================================= */}
+          <li
+            className={isActive("/admin/achievements") ? "active" : ""}
+            onClick={() => navigate("/admin/achievements")}
+          >
+            <Award size={20} strokeWidth={1.5} />
+            <span className="nav-item-text">Quản lý Thành tựu</span>
+          </li>
+          {/* ================================================= */}
+
         </ul>
-        {/* Nút đăng xuất */}
-<div className="logout-section">
-  <button
-  className="logout-btn"
-  onClick={useLogout()}
-  style={{ marginTop: "auto", marginBottom: "0" }}  // Đây là chìa khóa để đẩy xuống đáy
->
-  <span className="nav-item-text">Đăng xuất</span>
-</button>
-</div>
+        
+        <div className="logout-section">
+          {/* 4. SỬA LẠI onClick CHO ĐÚNG */}
+          <button className="logout-btn" onClick={handleLogout}>
+            <LogOut size={20} strokeWidth={1.5} />
+            <span className="nav-item-text">Đăng xuất</span>
+          </button>
+        </div>
       </nav>
 
       <main className={`main-content ${isCollapsed ? "collapsed" : ""}`}>
-        <Outlet /> {/* This renders nested admin pages */}
+        <Outlet />
       </main>
     </div>
   );
