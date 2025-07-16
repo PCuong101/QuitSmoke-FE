@@ -46,7 +46,7 @@ function Coach() {
   const userId = useUserId();
   const [userBookings, setUserBookings] = useState([]);
   const [activeMeetingLinks, setActiveMeetingLinks] = useState(new Map());
-
+// Gọi API lấy danh sách coach và lịch rảnh
   const fetchCoaches = async () => {
     try {
       const response = await fetch(
@@ -59,7 +59,7 @@ function Coach() {
       console.error("Fetch coaches error:", error);
     }
   };
-
+// Gọi API lấy lịch hẹn đã đặt của user, đồng thời trích meetingLink hợp lệ
   const fetchBookings = useCallback(async () => {
     if (!userId) {
       setUserBookings([]);
@@ -78,7 +78,7 @@ function Coach() {
 
       const activeLinksMap = new Map();
       data.forEach((booking) => {
-        // LOGIC MỚI: Chỉ cần lịch hẹn đã được đặt và có link là sẽ hiển thị nút.
+        //  Chỉ cần lịch hẹn đã được đặt và có link là sẽ hiển thị nút.
         // Thêm kiểm tra booking.meetingLink !== "string" để phòng trường hợp dữ liệu rác.
         if (booking.status === "BOOKED" && booking.meetingLink && booking.meetingLink !== "string") {
           activeLinksMap.set(booking.coachId, booking.meetingLink);
@@ -99,11 +99,13 @@ function Coach() {
       fetchBookings();
     }
   }, [userId, fetchBookings]);
-
+// Mở modal khi chọn coach, reset triệu chứng và slot
   const openModal = (coach) => setSelected({ coach, symptom: "", slot: null });
+  // Đóng modal đặt lịch
   const closeModal = () =>
     setSelected({ coach: null, symptom: "", slot: null });
-
+// Gửi dữ liệu đặt lịch (userId, scheduleId, triệu chứng) đến server
+// Nếu thành công thì gọi context addBookingNotification để hiển thị toast
   const confirm = async () => {
     if (!selected.symptom || selected.slot === null) {
       setShowConfirmation(true);
@@ -154,7 +156,7 @@ function Coach() {
       setActiveTab("history");
     }
   };
-
+  // Gọi API PUT để hủy lịch theo bookingId
   const cancelBooking = async (bookingId) => {
     if (!window.confirm("Bạn có chắc muốn hủy lịch hẹn này?")) return;
     try {
@@ -188,7 +190,7 @@ function Coach() {
               nhân hóa
             </p>
           </header>
-
+          {/* Chuyển giữa 2 tab: Danh sách chuyên gia & Lịch sử booking */}
           <div className="tab-navigation">
             <div
               className={`tab-item ${activeTab === "list" ? "active" : ""}`}
@@ -241,6 +243,7 @@ function Coach() {
                           Khung giờ có sẵn:
                         </h4>
                         {/* 2. Grid các slot nằm riêng */}
+                        {/* Hiển thị danh sách các khung giờ có sẵn của coach */}
                         <div className="coach-slot-grid">
                           {c.schedules.map((s) => (
                             <div
@@ -298,6 +301,7 @@ function Coach() {
                 })}
               </div>
             )}
+            {/* Modal hiển thị khi user chọn coach để đặt lịch mới */}
             {selected.coach && (
               <div className="modal-overlay">
                 <div className="modal-content">
@@ -355,7 +359,7 @@ function Coach() {
                 </div>
               </div>
             )}
-
+            {/* Hiển thị danh sách các lịch hẹn đã đặt bởi user */}
             {activeTab === "history" && (
               <div className="booking-history-container">
                 <div className="booking-history-header">
@@ -374,7 +378,7 @@ function Coach() {
                     const now = dayjs();
                     let meetingStatusLabel = "";
                     let isJoinEnabled = false;
-
+                  // Tính trạng thái của mỗi booking (đã hủy, đã hoàn thành, có thể tham gia,...)
                     if (b.status === "CANCELED") {
                       meetingStatusLabel = "Đã hủy";
                     } else if (b.status === "FINISHED") {
@@ -409,6 +413,7 @@ function Coach() {
                           </p>
                         </div>
                         <div className="booking-actions">
+                          {/* Nếu buổi họp đang hoạt động, hiện nút “Vào buổi gặp” */}
                           {isJoinEnabled ? (
                             <a
                               href={b.meetingLink}
@@ -441,7 +446,7 @@ function Coach() {
           </div>
         </div>
 
-        {/* --- PHẦN JSX CHO MODAL ĐÃ ĐƯỢC ĐIỀN ĐẦY ĐỦ --- */}
+        {/* --- PHẦN JSX CHO MODAL --- */}
         {selected.coach && (
           <div className="modal-overlay">
             <div className="modal-content">

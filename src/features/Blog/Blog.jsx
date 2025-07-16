@@ -5,17 +5,21 @@ import { Link } from 'react-router-dom';
 import NavBar from "../../components/NavBar/NavBar";
 import dayjs from "dayjs";
 
-// Component con giữ nguyên cấu trúc, nhưng sẽ nhận props từ API
+//nhận props từ API
+// Hiển thị từng bài viết dưới dạng "thẻ"
+// Nhận 1 object article từ props
 function ArticleCard({ article }) {
   // Hàm tạo excerpt ngắn gọn
+   // Tạo đoạn trích ngắn từ nội dung HTML
+  // Sử dụng DOMParser để loại bỏ thẻ HTML và chỉ lấy text
   const createExcerpt = (htmlContent) => {
     const doc = new DOMParser().parseFromString(htmlContent, 'text/html');
     return doc.body.textContent.slice(0, 150) + '...' || "";
   }
 
   return (
+    // Link chuyển tới trang chi tiết bài viết khi click
     <Link to={`/blog/${article.id}`} className="article-card">
-      {/* <img src={`https://picsum.photos/seed/${article.id}/800/400`} alt={article.title} className="card-image" /> */}
       <div className="card-content">
         <h3 className="card-title">{article.title}</h3>
         <p className="card-excerpt">{createExcerpt(article.content)}</p>
