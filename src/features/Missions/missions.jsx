@@ -1,14 +1,14 @@
 import { useState, useEffect, useRef, use } from "react";
 import NavBar from "../../components/NavBar/NavBar"
 import { Check, LoaderCircle, History } from 'lucide-react';
-import ToastNotification from '../../components/ToastNotification/ToastNotification'; // <-- IMPORT COMPONENT MỚI
+import ToastNotification from '../../components/ToastNotification/ToastNotification'; 
 import Footer from "../../components/Footer/Footer";
 import { getIconByTemplateId } from './mock-missions-icon';
 import './Missions.css';
 import { useNotifications } from "../../contexts/NotificationContext";
 import { useUser } from "../../contexts/UserContext";
 
-// --- COMPONENT CON: MissionItem giữ nguyên như cũ ---
+// --- COMPONENT CON: MissionItem  ---
 function MissionItem({ mission, isCompleted, onComplete }) {
     const Icon = mission.icon;
     return (
@@ -37,19 +37,18 @@ function MissionItem({ mission, isCompleted, onComplete }) {
         </div>
     );
 }
-
+//quản lý nhiệm vụ mỗi ngày
 function Missions() {
     const [todayMissions, setTodayMissions] = useState([]);
     const [completionsMap, setCompletionsMap] = useState({});
     const [totalCompleted, setTotalCompleted] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
-
-    // --- STATE MỚI ĐỂ ĐIỀU KHIỂN THÔNG BÁO ---
     const [notification, setNotification] = useState({ show: false, message: '' });
     // Dùng useRef để quản lý các bộ đếm thời gian
     const notificationTimer = useRef(null);
     const { userId } = useUser(); // Sử dụng context để lấy userId
     const { addMissionCompletionNotification } = useNotifications();
+        // --- Fetch nhiệm vụ hàng ngày ---
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -58,13 +57,14 @@ function Missions() {
                 const data = await response.json();
 
                 setTodayMissions(data);
+                 // Tạo map: templateID -> completed (true/false)
                 const initialCompletions = {};
                 data.forEach(mission => {
                     initialCompletions[mission.templateID] = mission.completed;
                 });
 
                 setCompletionsMap(initialCompletions);
-
+                // Tính tổng số nhiệm vụ đã hoàn thành
                 const completedCount = data.filter(m => m.completed).length;
                 setTotalCompleted(completedCount);
             } catch (error) {
@@ -75,14 +75,15 @@ function Missions() {
         };
 
         fetchData();
-
+        // Cleanup: xóa timer thông báo nếu component bị huỷ
         return () => {
             if (notificationTimer.current) clearTimeout(notificationTimer.current);
         };
     }, [userId]); // Thêm userId vào dependency array để fetch lại khi userId thay đổi
 
-
+// Gọi API hoàn thành nhiệm vụ
     const handleCompleteMission = async (templateID) => {
+           // Tránh xử lý nếu nhiệm vụ đã hoàn thành
         if (completionsMap[templateID]) return;
 
         try {
@@ -95,15 +96,17 @@ function Missions() {
             // Cập nhật UI
             setCompletionsMap(prev => ({ ...prev, [templateID]: true }));
             setTotalCompleted(prev => prev + 1);
-
+            // Lấy nhiệm vụ tương ứng
             const mission = todayMissions.find(m => m.templateID === templateID);
             if (mission) {
+                // Hiện thông báo hoàn thành
                 if (notificationTimer.current) clearTimeout(notificationTimer.current);
                 setNotification({ show: true, message: `Hoàn thành: "${mission.title}"` });
-
+                // Tự ẩn sau 3 giây
                 notificationTimer.current = setTimeout(() => {
                     setNotification({ show: false, message: '' });
                 }, 3000);
+                // Gửi vào hệ thống notification toàn app
                 addMissionCompletionNotification(mission);
             }
         } catch (error) {
@@ -116,14 +119,14 @@ function Missions() {
     };
 
 
-
+    // Tính toán số nhiệm vụ đã hoàn thành hôm nay và tỷ lệ tiến độ
     const completedTodayCount = Object.values(completionsMap).filter(Boolean).length;
     const progressPercentage = todayMissions.length > 0 ? (completedTodayCount / todayMissions.length) * 100 : 0;
 
     return (
         <>
             
-            {/* Component NavBar của bạn */}
+            {/* --- Thanh điều hướng --- */}
             <NavBar />
             {/* --- Phần layout chính của trang --- */}
             <div className={`missions-page ${isLoading ? 'loading' : ''}`}>
