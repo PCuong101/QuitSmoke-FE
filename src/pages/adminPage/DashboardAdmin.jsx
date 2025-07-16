@@ -37,7 +37,7 @@ const DashboardAdmin = () => {
         const users = await usersResponse.json();
         const regularUsersCount = users.filter(user => user.role !== 'ADMIN').length;
         const vipUsersCount = users.filter(user => user.role === 'MEMBER_VIP1').length;
-        const pricePerVip = 199000;
+        const pricePerVip = 299000;
         const calculatedRevenue = vipUsersCount * pricePerVip;
 
         // Xử lý blog posts
@@ -95,16 +95,15 @@ const DashboardAdmin = () => {
             <Users className="stat-icon" size={22} strokeWidth={1.5} />
           </div>
           <h3>{loading ? '...' : stats.totalUsers.toLocaleString('vi-VN')}</h3>
-          <span className="increase">+12% so với tháng trước</span>
+          {/* <span className="increase">+12% so với tháng trước</span> */}
         </div>
         <div className="card stat-card">
           <div className="stat-header">
             <p>Số bài đăng blog</p>
             <FileText className="stat-icon" size={22} strokeWidth={1.5} />
           </div>
-          {/* 5. CẬP NHẬT JSX ĐỂ HIỂN THỊ DỮ LIỆU ĐỘNG */}
           <h3>{loading ? '...' : stats.blogPosts.toLocaleString('vi-VN')}</h3>
-          <span className="increase">+5% so với tháng trước</span>
+          {/* <span className="increase">+5% so với tháng trước</span> */}
         </div>
         
         <div className="card stat-card">
@@ -115,21 +114,20 @@ const DashboardAdmin = () => {
           <h3>
             {loading ? 'Đang tính...' : `${stats.monthlyRevenue.toLocaleString('vi-VN')} đ`}
           </h3>
-          <span className="increase">+15% so với tháng trước</span>
+          {/* <span className="increase">+15% so với tháng trước</span> */}
         </div>
       </div>
 
       <div className="dashboard-panels">
-        {/* Các panel khác giữ nguyên */}
-        <div className="card recent-activity">
+        {/* <div className="card recent-activity">
           <h3>Hoạt động gần đây</h3>
           <ul>
             <li><span className="dot green"></span><div><p>Người dùng mới đăng ký</p><small>5 phút trước</small></div></li>
             <li><span className="dot blue"></span><div><p>Bài đăng mới được xuất bản</p><small>1 giờ trước</small></div></li>
             <li><span className="dot orange"></span><div><p>Phản hồi mới từ người dùng</p><small>2 giờ trước</small></div></li>
           </ul>
-        </div>
-        <div className="card weekly-stats">
+        </div> */}
+        {/* <div className="card weekly-stats">
           <h3>Thống kê tuần này</h3>
           <ul>
             <li><span>Người dùng mới</span><span>+45</span></li>
@@ -137,7 +135,7 @@ const DashboardAdmin = () => {
             <li><span>Phản hồi đã giải quyết</span><span>28</span></li>
             <li><span>Tỷ lệ thành công bỏ thuốc</span><span className="percentage">68%</span></li>
           </ul>
-        </div>
+        </div> */}
       </div>
     </div>
   );

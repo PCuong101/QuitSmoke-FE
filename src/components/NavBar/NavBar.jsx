@@ -320,7 +320,7 @@ export default function NavBar(){
           </div>
         )}
       </div>
-      <icon.MessageCircle style={{ marginLeft: 15 }} />
+      {/* <icon.MessageCircle style={{ marginLeft: 15 }} /> */}
 
       <ToastNotification
         icon={icon.XCircle}

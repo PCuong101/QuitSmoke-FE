@@ -1165,6 +1165,7 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap; /* Đảm bảo chữ không bị xuống dòng */ /* Màu icon đỏ (red-500) */
+  margin: auto;
 }
 
 .btn-icon-delete:hover {

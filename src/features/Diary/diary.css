@@ -16,7 +16,7 @@
             flex-direction: column;
           }
           .dry-content {
-            width: 65vw;
+            width: 75vw;
             margin: 0 auto;
             padding: 2rem 1rem;
             flex: 1;
@@ -56,6 +56,7 @@
             border: 1px solid var(--border-color);
             border-radius: 12px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+            width: 100%;
           }
           .dry-subtitle {
             font-size: 1.25rem;

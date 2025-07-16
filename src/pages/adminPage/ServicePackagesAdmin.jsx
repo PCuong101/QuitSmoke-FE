@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Loader2, Trash2, Edit } from "lucide-react";
-import "./ServicePackagesAdmin.css"; // Import CSS styles for the component
+import "./ServicePackagesAdmin.css";
 
 function ServicePackageAdmin() {
     const [plan, setPlan] = useState([]);

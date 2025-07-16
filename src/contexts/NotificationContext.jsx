@@ -81,6 +81,11 @@ export const NotificationProvider = ({ children }) => {
     setNotifications(prev => [newNotification, ...prev]);
   };
 
+  const clearNotifications = () => {
+  setNotifications([]);
+};
+
+
 
 
   // Giá trị cung cấp cho Context (không đổi)
@@ -89,7 +94,8 @@ export const NotificationProvider = ({ children }) => {
     setNotifications,
     addBookingNotification,
     addAchievementNotification,
-    addMissionCompletionNotification
+    addMissionCompletionNotification,
+    clearNotifications
   };
 
   return (

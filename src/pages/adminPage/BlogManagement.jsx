@@ -236,12 +236,12 @@ const BlogManagement = () => {
                       </button>
                     </>
                   )}
-                  <button
+                  {/* <button
                     className="btn-icon"
                     title="Chỉnh sửa (tính năng tương lai)"
                   >
                     <FilePenLine size={18} strokeWidth={1.5} />
-                  </button>
+                  </button> */}
                   <button className="btn btn-icon-delete" >
                     <Trash2 size={18} strokeWidth={1.5} />
                     Xóa
