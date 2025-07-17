@@ -25,9 +25,7 @@ function formatDateWithWeekday(dateStr) {
   });
 }
 
-// =======================================================================
-// ================== SỬA LOGIC CỦA HÀM NÀY ================================
-// Hàm này sẽ chuyển đổi label của slot thành chuỗi thời gian cụ thể
+// Hàm này sẽ trả về khoảng thời gian tương ứng với nhãn slot
 const getSlotTimeRange = (slotLabel) => {
     // Kiểm tra xem chuỗi có chứa "sáng" hoặc "chiều" không (không phân biệt hoa thường)
     if (slotLabel.toLowerCase().includes('sáng')) {
@@ -55,7 +53,9 @@ const fetchCoachSchedules = useCallback(async () => {
     }
     try {
       setLoading(true);
-      // GỌI ĐÚNG API MỚI DÀNH CHO COACH
+      // Gọi API để lấy lịch hẹn đã được xuất bản của coach
+      // Dữ liệu này đã được lọc sẵn từ backend, chỉ lấy lịch hẹn có trạng thái BOOKED hoặc EMPTY
+      // và đã được sắp xếp theo ngày
       const response = await fetch(
         `http://localhost:8080/api/bookings/coach/${userId}/published-schedule`
       );
@@ -72,7 +72,7 @@ const fetchCoachSchedules = useCallback(async () => {
       setLoading(false);
     }
 }, [userId]);
-
+      
   const handleFinishBooking = async (bookingId) => {
     if (!window.confirm("Bạn có chắc chắn muốn đánh dấu cuộc hẹn này là đã hoàn thành?")) {
       return;
