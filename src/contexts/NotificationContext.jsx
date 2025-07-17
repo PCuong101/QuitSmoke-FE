@@ -1,101 +1,158 @@
-// src/contexts/NotificationContext.jsx
+// src/contexts/NotificationContext.jsx (PHIÊN BẢN API-DRIVEN)
 
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+} from "react";
+import { useUser } from "./UserContext"; // Import useUser để lấy userId
 
-// Tạo Context (không đổi)
+// Context và Hook không đổi
 const NotificationContext = createContext();
+export const useNotifications = () => useContext(NotificationContext);
 
-// Hook tùy chỉnh (không đổi)
-export const useNotifications = () => {
-  return useContext(NotificationContext);
-};
-
-// --- COMPONENT PROVIDER ĐÃ ĐƯỢC NÂNG CẤP ---
 export const NotificationProvider = ({ children }) => {
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const { userId } = useUser(); // Lấy userId từ UserContext
 
-  // BƯỚC 1: KHỞI TẠO STATE TỪ LOCALSTORAGE
-  // useState sẽ chỉ chạy hàm này một lần duy nhất khi component được tạo ra.
-  const [notifications, setNotifications] = useState(() => {
-    try {
-      // Thử lấy danh sách thông báo đã lưu từ localStorage
-      const storedNotifications = localStorage.getItem('app_notifications');
-      // Nếu có, parse nó từ chuỗi JSON về lại mảng. Nếu không, trả về mảng rỗng.
-      return storedNotifications ? JSON.parse(storedNotifications) : [];
-    } catch (error) {
-      console.error("Lỗi khi đọc thông báo từ localStorage:", error);
-      return []; // Nếu có lỗi (ví dụ JSON không hợp lệ), trả về mảng rỗng
+  // --- LOGIC MỚI: FETCH THÔNG BÁO TỪ SERVER ---
+  const fetchNotifications = useCallback(async () => {
+    if (!userId) {
+      setNotifications([]); // Nếu không có user, dọn dẹp danh sách
+      return;
     }
-  });
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/notifications/user/${userId}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        // Chuyển đổi DTO từ backend thành format của frontend nếu cần
+        const formattedData = data.map((item) => ({
+          id: item.id,
+          title: item.title,
+          description: item.content, // Đổi tên trường content -> description
+          time: new Date(item.createdAt).toLocaleString("vi-VN"), // Format lại thời gian
+          read: item.read,
+          type: item.title.toLowerCase().includes("nhiệm vụ")
+            ? "mission"
+            : item.title.toLowerCase().includes("thành tựu")
+            ? "achievement"
+            : "reminder",
+        }));
+        setNotifications(formattedData);
+      }
+    } catch (error) {
+      console.error("Lỗi khi tải thông báo:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [userId]);
 
-  // BƯỚC 2: TỰ ĐỘNG LƯU VÀO LOCALSTORAGE MỖI KHI STATE THAY ĐỔI
-  // useEffect sẽ chạy mỗi khi `notifications` thay đổi.
+  // Tự động fetch khi userId thay đổi
   useEffect(() => {
-    try {
-      // Chuyển mảng notifications thành chuỗi JSON và lưu lại
-      localStorage.setItem('app_notifications', JSON.stringify(notifications));
-    } catch (error) {
-      console.error("Lỗi khi lưu thông báo vào localStorage:", error);
-    }
-  }, [notifications]); // Dependency array: chỉ chạy lại khi `notifications` thay đổi
+    fetchNotifications();
+  }, [fetchNotifications]);
 
-  
-  // Các hàm thêm thông báo vẫn giữ nguyên, không cần thay đổi
+  // --- CÁC HÀM CẬP NHẬT TRẠNG THÁI ---
+  const markAsRead = async (notificationId) => {
+    // Cập nhật trạng thái ở frontend ngay lập tức để có phản hồi nhanh
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === notificationId ? { ...n, read: true } : n))
+    );
+    // Gửi yêu cầu lên server
+    try {
+      await fetch(
+        `http://localhost:8080/api/notifications/${notificationId}/read`,
+        {
+          method: "POST",
+        }
+      );
+    } catch (error) {
+      console.error("Lỗi khi đánh dấu đã đọc:", error);
+      // Có thể thêm logic để revert lại trạng thái nếu API lỗi
+    }
+  };
+
+  const markAllAsRead = () => {
+    const unreadNotifications = notifications.filter((n) => !n.read);
+    // Cập nhật ở frontend
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    // Gửi nhiều yêu cầu lên server
+    unreadNotifications.forEach((n) => markAsRead(n.id));
+  };
+
+  // Lưu ý: Backend chưa có API xóa, nên hàm này chỉ xóa ở frontend
+  const deleteNotification = (notificationId) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
+    // Khi có API DELETE, sẽ gọi ở đây
+  };
+
+  // Các hàm tạo thông báo tạm thời ở client
   const addBookingNotification = (coachName, bookedSlot, formatDateFunc) => {
     const newNotification = {
       id: Date.now(),
-      type: 'appointment',
-      title: 'Đặt lịch hẹn thành công!',
-      description: `Bạn đã đặt lịch thành công với chuyên gia ${coachName} vào ${formatDateFunc(bookedSlot.date)} (${bookedSlot.slotLabel === "1" ? "Sáng" : "Chiều"}).`,
-      time: 'Vừa xong',
+      type: "appointment",
+      title: "Đặt lịch hẹn thành công!",
+      description: `Bạn đã đặt lịch thành công với chuyên gia ${coachName} vào ${formatDateFunc(
+        bookedSlot.date
+      )} (${bookedSlot.slotLabel === "1" ? "Sáng" : "Chiều"}).`,
+      time: "Vừa xong",
       read: false,
-      link: '/coach',
+      link: "/coach",
     };
-    setNotifications(prev => [newNotification, ...prev]);
+    setNotifications((prev) => [newNotification, ...prev]);
   };
 
   const addAchievementNotification = (achievement) => {
     const newNotification = {
       id: `ach-${Date.now()}-${achievement.customLogicKey}`,
-      type: 'achievement',
-      title: 'Thành tựu mới được mở khóa!',
+      type: "achievement",
+      title: "Thành tựu mới được mở khóa!",
       description: `Chúc mừng! Bạn đã đạt được: "${achievement.title}"`,
-      time: 'Vừa xong',
+      time: "Vừa xong",
       read: false,
-      link: '/achievement',
+      link: "/achievement",
     };
-    setNotifications(prev => [newNotification, ...prev]);
+    setNotifications((prev) => [newNotification, ...prev]);
   };
 
   const addMissionCompletionNotification = (mission) => {
     const newNotification = {
       // Sử dụng ID của mission để tránh tạo thông báo trùng lặp nếu người dùng click nhanh
       id: `mission-complete-${mission.templateID}-${new Date().toISOString()}`,
-      type: 'mission_complete', // Một loại mới để phân biệt với "nhiệm vụ mới"
-      title: 'Nhiệm vụ hoàn thành!',
+      type: "mission_complete", // Một loại mới để phân biệt với "nhiệm vụ mới"
+      title: "Nhiệm vụ hoàn thành!",
       description: `Chúc mừng! Bạn đã hoàn thành: "${mission.title}"`,
-      time: 'Vừa xong',
+      time: "Vừa xong",
       read: false, // Mặc định là chưa đọc
-      link: '/missions', // Link về trang nhiệm vụ
+      link: "/missions", // Link về trang nhiệm vụ
     };
     // Thêm vào đầu danh sách
-    setNotifications(prev => [newNotification, ...prev]);
+    setNotifications((prev) => [newNotification, ...prev]);
   };
 
   const clearNotifications = () => {
-  setNotifications([]);
-};
+    setNotifications([]);
+  };
 
-
-
-
-  // Giá trị cung cấp cho Context (không đổi)
   const value = {
     notifications,
+    loading,
+    fetchNotifications,
+    markAsRead,
+    markAllAsRead,
+    deleteNotification,
+    // Các hàm cũ vẫn giữ lại để tương thích
     setNotifications,
     addBookingNotification,
     addAchievementNotification,
     addMissionCompletionNotification,
-    clearNotifications
+    clearNotifications,
   };
 
   return (
