@@ -8,11 +8,10 @@ import timezone from "dayjs/plugin/timezone";
 import "./Coach.css";
 import { useNotifications } from "../../contexts/NotificationContext.jsx";
 import { Video } from 'lucide-react';
-
+// Sử dụng dayjs để xử lý thời gian và timezone
 dayjs.extend(utc);
 dayjs.extend(timezone);
-
-// symptoms và formatDateWithWeekday được giữ nguyên
+// Danh sách các triệu chứng để user lựa chọn khi đặt lịch
 const symptoms = [
   "Thèm thuốc nhiều",
   "Bức rứt khi không hút",
@@ -32,7 +31,7 @@ function formatDateWithWeekday(dateStr) {
 }
 
 function Coach() {
-  // --- STATE VÀ HÀM CỦA BẠN ĐƯỢC GIỮ NGUYÊN HOÀN TOÀN ---
+  // Sử dụng context để lấy thông tin người dùng
   const { addBookingNotification } = useNotifications();
   const [activeTab, setActiveTab] = useState("list");
   const [coaches, setCoaches] = useState([]);
@@ -46,7 +45,7 @@ function Coach() {
   const userId = useUserId();
   const [userBookings, setUserBookings] = useState([]);
   const [activeMeetingLinks, setActiveMeetingLinks] = useState(new Map());
-
+// Gọi API lấy danh sách coach và lịch rảnh
   const fetchCoaches = async () => {
     try {
       const response = await fetch(
@@ -59,6 +58,9 @@ function Coach() {
       console.error("Fetch coaches error:", error);
     }
   };
+// Gọi API lấy lịch hẹn đã đặt của user, đồng thời trích meetingLink hợp lệ
+// Gọi API để lấy danh sách lịch hẹn đã đặt của user hiện tại
+// - Gộp luôn việc kiểm tra meetingLink để hiển thị nút "Vào buổi gặp" ở tab "Lịch sử booking"
 
   const fetchBookings = useCallback(async () => {
     if (!userId) {
@@ -78,7 +80,7 @@ function Coach() {
 
       const activeLinksMap = new Map();
       data.forEach((booking) => {
-        // LOGIC MỚI: Chỉ cần lịch hẹn đã được đặt và có link là sẽ hiển thị nút.
+        //  Chỉ cần lịch hẹn đã được đặt và có link là sẽ hiển thị nút.
         // Thêm kiểm tra booking.meetingLink !== "string" để phòng trường hợp dữ liệu rác.
         if (booking.status === "BOOKED" && booking.meetingLink && booking.meetingLink !== "string") {
           activeLinksMap.set(booking.coachId, booking.meetingLink);
@@ -92,17 +94,26 @@ function Coach() {
       setActiveMeetingLinks(new Map());
     }
   }, [userId]);
-
+// Khi component mount hoặc userId thay đổi:
+// - Gọi API để lấy danh sách chuyên gia và lịch rảnh
+// - Gọi API để lấy danh sách các lịch hẹn đã đặt của user
   useEffect(() => {
     fetchCoaches();
     if (userId) {
       fetchBookings();
     }
   }, [userId, fetchBookings]);
-
+// Mở modal khi chọn coach, reset triệu chứng và slot
   const openModal = (coach) => setSelected({ coach, symptom: "", slot: null });
+  // Đóng modal đặt lịch
   const closeModal = () =>
     setSelected({ coach: null, symptom: "", slot: null });
+// Gửi dữ liệu đặt lịch (userId, scheduleId, triệu chứng) đến server
+// Gửi yêu cầu đặt lịch đến server, nếu thành công:
+// - Gọi ToastContext để hiển thị thông báo
+// - Lưu lại slot đã đặt để đánh dấu trên giao diện
+// - Làm mới lại danh sách coach và lịch
+// - Mở modal xác nhận đặt lịch thành công
 
   const confirm = async () => {
     if (!selected.symptom || selected.slot === null) {
@@ -154,7 +165,7 @@ function Coach() {
       setActiveTab("history");
     }
   };
-
+  // Gọi API PUT để hủy lịch theo bookingId
   const cancelBooking = async (bookingId) => {
     if (!window.confirm("Bạn có chắc muốn hủy lịch hẹn này?")) return;
     try {
@@ -188,7 +199,7 @@ function Coach() {
               nhân hóa
             </p>
           </header>
-
+          {/* Chuyển giữa 2 tab: Danh sách chuyên gia & Lịch sử booking */}
           <div className="tab-navigation">
             <div
               className={`tab-item ${activeTab === "list" ? "active" : ""}`}
@@ -211,7 +222,8 @@ function Coach() {
                   const meetingLink = activeMeetingLinks.get(c.id);
                   return (
                     <div key={c.id} className="coach-card-detailed">
-
+                      {/* Mỗi coach hiển thị avatar, tên, email và khung giờ có sẵn 
+                      Nếu slot đã được đặt thì disable, còn nếu được chọn thì highlight*/ }
                       <div className="coach-main-info">
                         <img
                           src={c.avatar}
@@ -235,12 +247,13 @@ function Coach() {
 
                       <div className="coach-availability-section">
                         {" "}
-                        {/* Container cha mới */}
-                        {/* 1. Nhãn nằm riêng */}
+                        {/* 1. Khung giờ có sẵn nằm trong phần này */}
+                        {/* Hiển thị khung giờ có sẵn của coach */}
                         <h4 className="availability-label">
                           Khung giờ có sẵn:
                         </h4>
                         {/* 2. Grid các slot nằm riêng */}
+                        {/* Hiển thị danh sách các khung giờ có sẵn của coach */}
                         <div className="coach-slot-grid">
                           {c.schedules.map((s) => (
                             <div
@@ -256,7 +269,7 @@ function Coach() {
                                   : ""
                               }`}
                             >
-                              {/* Để có 2 dòng, chúng ta dùng thẻ p hoặc div */}
+                              {/* Hiển thị ngày và giờ của slot */}
                               <div>
                                 {formatDateWithWeekday(s.date).replace(
                                   " ",
@@ -271,7 +284,7 @@ function Coach() {
                         </div>
                       </div>
 
-                      {/* Nút Booking vẫn nằm ngoài như cũ */}
+                     
                       <div className="coach-card-actions">
                         {/* Nút vào buổi gặp sẽ chỉ hiển thị nếu có link */}
                         {/* {meetingLink && (
@@ -298,6 +311,7 @@ function Coach() {
                 })}
               </div>
             )}
+            {/* Modal hiển thị khi user chọn coach để đặt lịch mới */}
             {selected.coach && (
               <div className="modal-overlay">
                 <div className="modal-content">
@@ -355,7 +369,7 @@ function Coach() {
                 </div>
               </div>
             )}
-
+            {/* Hiển thị danh sách các lịch hẹn đã đặt bởi user */}
             {activeTab === "history" && (
               <div className="booking-history-container">
                 <div className="booking-history-header">
@@ -374,7 +388,7 @@ function Coach() {
                     const now = dayjs();
                     let meetingStatusLabel = "";
                     let isJoinEnabled = false;
-
+                  // Tính trạng thái của mỗi booking (đã hủy, đã hoàn thành, có thể tham gia,...)
                     if (b.status === "CANCELED") {
                       meetingStatusLabel = "Đã hủy";
                     } else if (b.status === "FINISHED") {
@@ -409,6 +423,7 @@ function Coach() {
                           </p>
                         </div>
                         <div className="booking-actions">
+                          {/* Nếu buổi họp đang hoạt động, hiện nút “Vào buổi gặp” */}
                           {isJoinEnabled ? (
                             <a
                               href={b.meetingLink}
@@ -441,7 +456,7 @@ function Coach() {
           </div>
         </div>
 
-        {/* --- PHẦN JSX CHO MODAL ĐÃ ĐƯỢC ĐIỀN ĐẦY ĐỦ --- */}
+        {/* --- PHẦN JSX CHO MODAL --- */}
         {selected.coach && (
           <div className="modal-overlay">
             <div className="modal-content">

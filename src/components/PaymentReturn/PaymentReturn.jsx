@@ -16,7 +16,7 @@ function PaymentReturn() {
 
     if (orderInfo) {
         const parts = orderInfo.split("-");
-        if (parts.length === 3 && parts[0] === "GoiDichVu") {
+        if (parts.length >= 2 && parts[0] === "GoiDichVu") {
             planId = parts[1];
         }
     }

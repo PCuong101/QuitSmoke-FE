@@ -60,11 +60,6 @@ const MenuBar = ({ editor }) => {
     return null;
   }
 
-  // ================== SỬA LỖI HIỂN THỊ ICON TỪ GỐC ==================
-  // Chúng ta sẽ truyền trực tiếp `strokeWidth` vào các icon.
-  // Đây là thuộc tính bắt buộc để lucide-react hiển thị đúng.
-  // Việc này đáng tin cậy hơn nhiều so với việc chỉ dựa vào CSS.
-  // =================================================================
 
   return (
     <div className="editor-toolbar">
@@ -176,10 +171,9 @@ function CoachBlogManagementPage() {
     },
     editorProps: {
       attributes: {
-        // ================== SỬA LỖI CĂN GIỮA ==================
-        // Bỏ class 'prose' đi vì nó gây ra việc căn giữa khối text
+        
         class: "tiptap-editor-content",
-        // ========================================================
+        
       },
     },
   });
