@@ -79,7 +79,7 @@ function ServicePackageAdmin() {
     return (
         <div className="admin-achievement-manager">
             <div className="page-header">
-                <h2>Quản lý Thành tựu</h2>
+                <h2>Quản lý Gói thành viên</h2>
             </div>
             <div className="card">
                 {isLoading ? (
