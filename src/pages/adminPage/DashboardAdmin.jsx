@@ -95,7 +95,7 @@ const DashboardAdmin = () => {
             <Users className="stat-icon" size={22} strokeWidth={1.5} />
           </div>
           <h3>{loading ? '...' : stats.totalUsers.toLocaleString('vi-VN')}</h3>
-          <span className="increase">+12% so với tháng trước</span>
+          {/* <span className="increase">+12% so với tháng trước</span> */}
         </div>
         <div className="card stat-card">
           <div className="stat-header">
@@ -104,7 +104,7 @@ const DashboardAdmin = () => {
           </div>
           {/* 5. CẬP NHẬT JSX ĐỂ HIỂN THỊ DỮ LIỆU ĐỘNG */}
           <h3>{loading ? '...' : stats.blogPosts.toLocaleString('vi-VN')}</h3>
-          <span className="increase">+5% so với tháng trước</span>
+          {/* <span className="increase">+5% so với tháng trước</span> */}
         </div>
         
         <div className="card stat-card">
@@ -115,7 +115,7 @@ const DashboardAdmin = () => {
           <h3>
             {loading ? 'Đang tính...' : `${stats.monthlyRevenue.toLocaleString('vi-VN')} đ`}
           </h3>
-          <span className="increase">+15% so với tháng trước</span>
+          {/* <span className="increase">+15% so với tháng trước</span> */}
         </div>
       </div>
 
