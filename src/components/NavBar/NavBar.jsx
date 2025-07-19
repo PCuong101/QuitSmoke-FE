@@ -13,6 +13,7 @@ export default function NavBar() {
   const location = useLocation();
   const navigate = useNavigate();
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+const { userName, role } = useUser();
 
   // === SỬA Ở ĐÂY: Lấy các hàm mới từ Context ===
   const { notifications, markAsRead, markAllAsRead, deleteNotification } =
@@ -70,7 +71,6 @@ export default function NavBar() {
     transition: "all 0.2s ease-in-out",
   });
 
-  const { userName, role } = useUser();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef();
   const [toastVisible, setToastVisible] = useState(false);

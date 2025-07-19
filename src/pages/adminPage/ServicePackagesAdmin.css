@@ -1,91 +1,150 @@
-/* Overlay làm tối nền */
-.admin-package-manager .modal-overlay {
+/* ============================================= */
+/* == CSS CHO MODAL CHỈNH SỬA GÓI THÀNH VIÊN == */
+/* ============================================= */
+
+/* Lớp phủ nền tối, làm mờ phần còn lại của trang */
+.modal-overlay {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(17, 24, 39, 0.6); /* Màu nền đen mờ */
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
-  animation: fadeIn 0.2s ease;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Khung modal */
-.admin-package-manager .modal-content {
-  background: #ffffff;
-  padding: 1.8rem 1.5rem;
-  border-radius: 10px;
-  width: 400px;
-  max-width: 90%;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-  animation: slideUp 0.3s ease;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+/* Khung nội dung chính của modal */
+.modal-content {
+  background-color: #ffffff;
+  padding: 24px 28px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 480px; /* Giới hạn chiều rộng tối đa */
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  animation: slideUp 0.4s ease-out;
 }
 
-/* Tiêu đề modal */
-.admin-package-manager .modal-content h3 {
-  margin: 0 0 1.2rem;
-  font-size: 1.4rem;
+/* Tiêu đề modal "Chỉnh sửa gói thành viên" */
+.modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 24px;
+  font-size: 1.5rem; /* 24px */
   font-weight: 600;
-  color: #16a34a;
+  color: #111827; /* Màu chữ đen đậm */
   text-align: center;
 }
 
-/* Dòng form label + input ngang hàng */
-.admin-package-manager .modal-content .form-row {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.85rem;
+/* Mỗi dòng trong form (chứa label và input) */
+.modal-content .form-row {
+  margin-bottom: 16px;
 }
 
-.admin-package-manager .modal-content .form-row label {
-  width: 100px;
-  font-size: 0.9rem;
-  color: #374151;
+/* Nhãn (label) của các ô nhập liệu */
+.modal-content .form-row label {
+  display: block; /* Giúp label chiếm một dòng riêng */
+  font-size: 0.875rem; /* 14px */
   font-weight: 500;
-  margin-right: 0.6rem;
+  color: #374151; /* Màu xám đậm */
+  margin-bottom: 6px; /* Khoảng cách từ label đến ô input */
 }
 
-/* Input và textarea mặc định trong modal */
-.admin-package-manager .modal-content input,
-.admin-package-manager .modal-content textarea {
+/* Style chung cho input và textarea */
+.modal-content input,
+.modal-content textarea {
   width: 100%;
-  padding: 0.65rem 0.75rem;
-  border: 1px solid #d1d5db;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db; /* Viền xám nhạt */
   border-radius: 6px;
   font-size: 0.95rem;
   color: #111827;
   background-color: #ffffff;
   transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box; /* Đảm bảo padding không làm tăng kích thước */
+}
+
+/* Style cho textarea để có thể thay đổi chiều cao */
+.modal-content textarea {
   resize: vertical;
-  box-sizing: border-box;
+  min-height: 80px; /* Chiều cao tối thiểu */
 }
 
-/* Input focus */
-.admin-package-manager .modal-content input:focus,
-.admin-package-manager .modal-content textarea:focus {
-  border-color: #16a34a;
-  box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.2);
+/* Hiệu ứng khi người dùng click vào (focus) ô input/textarea */
+.modal-content input:focus,
+.modal-content textarea:focus {
   outline: none;
+  border-color: #2563eb; /* Viền chuyển sang màu xanh dương */
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25); /* Tạo vầng sáng xung quanh */
 }
 
-/* Label */
-.admin-package-manager .modal-content .form-row label {
-  width: 100px;
+/* Style riêng cho ô input bị khóa (readOnly) */
+.modal-content input[readOnly] {
+  background-color: #f3f4f6; /* Nền xám nhạt */
+  color: #6b7280; /* Chữ màu xám */
+  cursor: not-allowed; /* Con trỏ chuột bị cấm */
+}
+
+.modal-content input[readOnly]:focus {
+  box-shadow: none; /* Bỏ hiệu ứng focus cho ô bị khóa */
+  border-color: #d1d5db;
+}
+
+
+/* Khu vực chứa các nút bấm "Lưu" và "Đóng" */
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end; /* Đẩy các nút về phía bên phải */
+  gap: 12px; /* Khoảng cách giữa các nút */
+  margin-top: 24px; /* Khoảng cách với form field cuối cùng */
+}
+
+/* Style chung cho các nút trong modal */
+.modal-buttons button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
   font-weight: 500;
-  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.modal-buttons button:active {
+    transform: scale(0.98); /* Hiệu ứng nhấn nút */
+}
+
+/* Nút "Lưu" - Nút hành động chính */
+.modal-buttons .save-btn {
+  background-color: #2563eb; /* Màu xanh dương */
+  color: white;
+}
+
+.modal-buttons .save-btn:hover {
+  background-color: #1d4ed8; /* Màu xanh đậm hơn khi di chuột qua */
+}
+
+/* Nút "Đóng" - Nút hành động phụ */
+.modal-buttons .cancel-btn {
+  background-color: #ffffff;
   color: #374151;
+  border: 1px solid #d1d5db; /* Có viền để phân biệt */
 }
 
-/* Input khi disabled */
-.admin-package-manager .modal-content input:disabled {
-  background-color: #f9fafb;
-  color: #9ca3af;
-  cursor: not-allowed;
+.modal-buttons .cancel-btn:hover {
+  background-color: #f9fafb; /* Hơi đổi màu khi di chuột qua */
 }
 
-/* Textarea rows=4 cao hơn */
-.admin-package-manager .modal-content textarea {
-  min-height: 80px;
+
+/* Animation cho modal xuất hiện */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }

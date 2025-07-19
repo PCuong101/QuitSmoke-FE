@@ -15,6 +15,7 @@ import {
 
 import NavBar from "../../components/NavBar/NavBar";
 import Footer from "../../components/Footer/Footer";
+import { useUser } from "../../contexts/UserContext";
 
 const Profile = () => {
   const [sessionUser, setSessionUser] = useState(null);
@@ -24,11 +25,28 @@ const Profile = () => {
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { userId, userName, email, setUserName, setEmail } = useUser();
+
+  // THAY THẾ TOÀN BỘ `useEffect` HIỆN TẠI BẰNG ĐOẠN CODE NÀY
 
   useEffect(() => {
-    const fetchAllProfileData = async () => {
+    // Nếu không có userId từ Context (chưa đăng nhập), hiển thị lỗi và dừng lại
+    if (!userId) {
+      setLoading(false);
+      setError("Không thể lấy thông tin người dùng. Vui lòng đăng nhập lại.");
+      return;
+    }
+
+    // Thiết lập dữ liệu form ban đầu ngay lập tức từ Context
+    // Điều này làm cho tên và email luôn đúng ngay khi bạn vào trang
+    setFormData({ fullName: userName, email: email });
+    setLoading(true); // Bắt đầu loading cho các dữ liệu bổ sung
+
+    const fetchAdditionalData = async () => {
       try {
-        const userResponse = await fetch(
+        // Chỉ fetch những dữ liệu mà Context không có
+        // get-session-user vẫn hữu ích để lấy vai trò (role) và ảnh đại diện
+        const userDetailsPromise = fetch(
           "http://localhost:8080/api/auth/get-session-user",
           {
             method: "POST",
@@ -36,58 +54,56 @@ const Profile = () => {
             credentials: "include",
           }
         );
+        const achievementsPromise = fetch(
+          `http://localhost:8080/api/achievements/${userId}`
+        );
+        const savingsPromise = fetch(
+          `http://localhost:8080/api/quit-plan/${userId}/savings`
+        );
 
-        if (!userResponse.ok) {
-          throw new Error(`Lỗi xác thực: ${userResponse.status}`);
+        const [
+          userDetailsResponse,
+          achievementsResponse,
+          savingsResponse,
+        ] = await Promise.all([
+          userDetailsPromise,
+          achievementsPromise,
+          savingsPromise,
+        ]);
+
+        if (userDetailsResponse.ok) {
+          const userData = await userDetailsResponse.json();
+          setSessionUser(userData); // Lưu đầy đủ dữ liệu user vào state này
+        } else {
+            throw new Error(`Lỗi xác thực: ${userDetailsResponse.status}`);
         }
-        const userData = await userResponse.json();
-        setSessionUser(userData);
-        setFormData({
-          fullName: userData.name,
-          email: userData.email,
-        });
 
-        if (userData && userData.userId) {
-          const userId = userData.userId;
+        if (achievementsResponse.ok) {
+          const achievementsData = await achievementsResponse.json();
+          setAchievementsCount(achievementsData.length || 0);
+        }
 
-          const achievementsPromise = fetch(
-            `http://localhost:8080/api/achievements/${userId}`
-          );
-          const savingsPromise = fetch(
-            `http://localhost:8080/api/quit-plan/${userId}/savings`
-          );
-
-          const [achievementsResponse, savingsResponse] = await Promise.all([
-            achievementsPromise,
-            savingsPromise,
-          ]);
-
-          if (achievementsResponse.ok) {
-            const achievementsData = await achievementsResponse.json();
-            setAchievementsCount(achievementsData.length || 0);
-          }
-
-          if (savingsResponse.ok) {
-            const savingsData = await savingsResponse.json();
-            setMoneySaved(savingsData.totalSavings || 0);
-          }
+        if (savingsResponse.ok) {
+          const savingsData = await savingsResponse.json();
+          setMoneySaved(savingsData.totalSavings || 0);
         }
       } catch (err) {
         console.error("Lỗi khi tải dữ liệu trang cá nhân:", err);
-        setError("Không thể lấy thông tin người dùng. Vui lòng đăng nhập lại.");
+        setError("Có lỗi xảy ra khi tải dữ liệu chi tiết.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAllProfileData();
-  }, []);
+    fetchAdditionalData();
+
+    // Cleanup function không cần thiết ở đây vì logic đã được xử lý ở đầu
+  }, [userId, userName, email]); // QUAN TRỌNG: useEffect sẽ chạy lại khi dữ liệu từ Context thay đổi
 
   const handleEditClick = () => setIsEditing(true);
   const handleCancelClick = () => {
-    if (sessionUser) {
-      setFormData({ fullName: sessionUser.name, email: sessionUser.email });
-    }
+    // Lấy lại dữ liệu chính xác từ Context, không phải từ state cục bộ sessionUser
+    setFormData({ fullName: userName, email: email });
     setIsEditing(false);
   };
 
@@ -116,6 +132,8 @@ const Profile = () => {
         const updatedUser = res.data;
         setSessionUser((prevUser) => ({ ...prevUser, ...updatedUser }));
         setFormData({ fullName: updatedUser.name, email: updatedUser.email });
+        setUserName(updatedUser.name);
+      setEmail(updatedUser.email);
         setIsEditing(false);
         setError(null);
       })

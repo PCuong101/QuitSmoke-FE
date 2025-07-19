@@ -159,16 +159,15 @@ function QuickActionsCard() {
 // --- MAIN DASHBOARD COMPONENT (Đã sửa logic) ---
 function DashBoard() {
   const { healthList, loading: healthLoading } = useHealthList(); // Custom hook đã được sửa
-  const { userId } = useUser();
+  const { userId, userName } = useUser();
 
-  const [userName, setUserName] = useState("");
+  
   const [dailyLogs, setDailyLogs] = useState([]);
   const [logsLoading, setLogsLoading] = useState(true);
 
   useEffect(() => {
     // Nếu không có userId (vừa logout), dọn dẹp tất cả state và dừng lại
     if (!userId) {
-      setUserName("");
       setDailyLogs([]);
       setLogsLoading(false); // Quan trọng: dừng trạng thái loading
       return;
@@ -177,15 +176,7 @@ function DashBoard() {
     // Khi có userId mới, bắt đầu fetch dữ liệu
     const fetchAllDashboardData = async () => {
       // 1. Lấy tên user
-      try {
-        const userRes = await fetch("http://localhost:8080/api/auth/get-session-user", {
-          method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include"
-        });
-        if (userRes.ok) {
-            const userData = await userRes.json();
-            setUserName(userData.name);
-        }
-      } catch (error) { console.error("Lỗi khi lấy user:", error); }
+      
       
       // 2. Lấy dữ liệu nhật ký
       setLogsLoading(true);
@@ -210,7 +201,6 @@ function DashBoard() {
 
     // Hàm cleanup: Chạy khi component unmount hoặc userId thay đổi
     return () => {
-        setUserName("");
         setDailyLogs([]);
     }
   }, [userId]); // Phụ thuộc duy nhất vào userId
