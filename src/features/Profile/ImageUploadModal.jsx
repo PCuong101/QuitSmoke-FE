@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { ImageUp, X, Upload } from 'lucide-react';
-import './ImageUploadModal.css'; // Chúng ta sẽ tạo file CSS này ngay sau đây
+import './ImageUploadModal.css'; 
 
 const ImageUploadModal = ({ isOpen, onClose, onImageSelect, currentImageUrl }) => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -25,7 +25,7 @@ const ImageUploadModal = ({ isOpen, onClose, onImageSelect, currentImageUrl }) =
   // Xử lý khi người dùng nhấn nút "Lưu thay đổi"
   const handleConfirmSelection = () => {
     if (selectedFile) {
-      onImageSelect(selectedFile); // Báo cho component cha về file đã chọn
+      onImageSelect(selectedFile); 
       onClose(); // Đóng modal
     }
   };

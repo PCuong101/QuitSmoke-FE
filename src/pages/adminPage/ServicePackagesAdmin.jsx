@@ -5,8 +5,8 @@ import "./ServicePackagesAdmin.css";
 function ServicePackageAdmin() {
     const [plan, setPlan] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [editingPlan, setEditingPlan] = useState(null); // kế hoạch đang chỉnh sửa
-    const [isModalOpen, setIsModalOpen] = useState(false); // modal mở hay không
+    const [editingPlan, setEditingPlan] = useState(null)
+    const [isModalOpen, setIsModalOpen] = useState(false); 
     const [formData, setFormData] = useState({
         planName: "",
         description: "",

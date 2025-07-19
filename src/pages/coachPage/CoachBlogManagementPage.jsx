@@ -1,6 +1,4 @@
-// src/pages/CoachBlogManagementPage.jsx (PHIÊN BẢN ĐÃ SỬA LỖI)
 
-// ... (giữ nguyên tất cả các import và các component)
 import { useState, useEffect } from "react";
 import CoachNavBar from "../../components/NavBar/CoachNavBar";
 import Footer from "../../components/Footer/Footer";
@@ -19,12 +17,12 @@ import {
   ListOrdered,
   Heading2,
   Quote,
-  Image as ImageIcon, // Đổi tên để tránh xung đột với extension Image
+  Image as ImageIcon, 
 } from "lucide-react";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
 
-import "./CoachDashboardPage.css"; // Giữ nguyên CSS từ trang quản lý blog của Coach
+import "./CoachDashboardPage.css"; 
 
 dayjs.locale("vi");
 

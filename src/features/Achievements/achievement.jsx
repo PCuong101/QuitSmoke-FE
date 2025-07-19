@@ -1,4 +1,4 @@
-// src/features/Achievements/achievement.jsx (PHIÊN BẢN SỬA LỖI LOGIC)
+// src/features/Achievements/achievement.jsx 
 
 import { useEffect, useState } from "react";
 import Footer from "../../components/Footer/Footer";
@@ -9,7 +9,7 @@ import './achievement.css';
 import { useNotifications } from '../../contexts/NotificationContext.jsx';
 import { mapApiToFeAchievement } from './achievement-mapper';
 
-// --- CÁC COMPONENT CON (KHÔNG ĐỔI) ---
+// --- CÁC COMPONENT   ---
 function formatAchievedDate(dateString) {
   if (!dateString) return '';
   return new Date(dateString).toLocaleDateString('vi-VN', {
@@ -71,15 +71,12 @@ function Achievement() {
 
         if (!templatesRes.ok || !unlockedRes.ok) throw new Error('Lỗi tải dữ liệu thành tựu');
 
-        // =========================================================
-        // === SỬA LỖI LOGIC GÁN BIẾN Ở ĐÂY ===
-        // =========================================================
+
         const templateDtos = await templatesRes.json(); // Lấy TẤT CẢ template từ templatesRes
         const unlockedDtos = await unlockedRes.json(); // Lấy các achievement ĐÃ MỞ KHÓA từ unlockedRes
-        // =========================================================
-        
+
         const feTemplates = templateDtos.map(mapApiToFeAchievement);
-        setAllAchievements(feTemplates); // State này giờ chứa tất cả các thành tựu có thể có
+        setAllAchievements(feTemplates); // State  chứa tất cả các thành tựu có thể có
 
         // Logic thông báo không đổi
         const knownAchievementsKey = `known_achievements_count_${userId}`;

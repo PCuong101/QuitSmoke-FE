@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Search, Filter, Eye, Trash2 } from "lucide-react";
-import "./UserManagement.css"; // Đảm bảo bạn đã import file CSS
+import "./UserManagement.css";
 
 const UserManagement = () => {
-  // ... (useState, useEffect, và các hàm xử lý xóa giữ nguyên)
   const [users, setUsers] = useState([]);
   const [keyword, setKeyword] = useState("");
   const [userToDelete, setUserToDelete] = useState(null);
@@ -37,14 +36,12 @@ const UserManagement = () => {
     return 'role-member';
   };
   
-  // Sửa đổi hàm này để trả về class cho thanh tiến trình
   const getLevelClass = (level) => {
     if (level === 'HIGH') return 'level-high';
     if (level === 'MEDIUM') return 'level-medium';
     return 'level-low';
   };
 
-  // HÀM MỚI: Tính độ rộng của thanh tiến trình
   const getProgressWidth = (level) => {
     if (level === 'HIGH') return '90%';
     if (level === 'MEDIUM') return '60%';
@@ -60,7 +57,7 @@ const UserManagement = () => {
 
   return (
     <div className="user-management-page">
-      {/* ... (Header và thanh tìm kiếm giữ nguyên) ... */}
+      
        <div className="page-header">
         <h2>Quản lý người dùng</h2>
         <button className="btn btn-primary">Xem xếp hạng</button>
@@ -95,7 +92,7 @@ const UserManagement = () => {
 
             {filteredUsers.map((user) => (
               <div className="table-row" key={user.userId}>
-                {/* ... (Các cột khác giữ nguyên) ... */}
+              
                  <div className="table-cell user-info">
                   <div class="table-avatar-img">
                   <img
@@ -113,7 +110,7 @@ const UserManagement = () => {
                   {new Date(user.registrationDate).toLocaleDateString("vi-VN")}
                 </div>
 
-                {/* THAY ĐỔI Ở ĐÂY: Thay thế huy hiệu bằng thanh tiến trình */}
+          
                 <div className="table-cell">
                   <div className="progress-bar-container-admin">
                     <div 
@@ -147,7 +144,7 @@ const UserManagement = () => {
         </div>
       </div>
       
-      {/* ... (Modal giữ nguyên) ... */}
+    
       {userToDelete && (
         <div className="confirmation-modal-overlay" onClick={handleCloseDeleteModal}>
           <div className="confirmation-modal" onClick={(e) => e.stopPropagation()}>

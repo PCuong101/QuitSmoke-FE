@@ -1,4 +1,4 @@
-// Profile.js (ĐÃ NÂNG CẤP VỚI API MỚI VÀ LUCIDE-REACT ICONS)
+// Profile.js 
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -27,26 +27,24 @@ const Profile = () => {
   const [profilePicturePreview, setProfilePicturePreview] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // THAY THẾ TOÀN BỘ `useEffect` HIỆN TẠI BẰNG ĐOẠN CODE NÀY
+  
 
   useEffect(() => {
-    // Nếu không có userId từ Context (chưa đăng nhập), hiển thị lỗi và dừng lại
+  
     if (!userId) {
       setLoading(false);
       setError("Không thể lấy thông tin người dùng. Vui lòng đăng nhập lại.");
       return;
     }
 
-    // Thiết lập dữ liệu form ban đầu ngay lập tức từ Context
-    // Điều này làm cho tên và email luôn đúng ngay khi bạn vào trang
+   
     setFormData({ fullName: userName, email: email });
     setProfilePicturePreview(userAvatar);
     setLoading(true); // Bắt đầu loading cho các dữ liệu bổ sung
 
     const fetchAdditionalData = async () => {
       try {
-        // Chỉ fetch những dữ liệu mà Context không có
-        // get-session-user vẫn hữu ích để lấy vai trò (role) và ảnh đại diện
+    
         const userDetailsPromise = fetch(
           "http://localhost:8080/api/auth/get-session-user",
           {
@@ -98,7 +96,7 @@ const Profile = () => {
 
     fetchAdditionalData();
 
-    // Cleanup function không cần thiết ở đây vì logic đã được xử lý ở đầu
+    
   }, [userId, userName, email, userAvatar]);
 
   const handleImageSelect = (file) => {
@@ -114,7 +112,7 @@ const Profile = () => {
     if (sessionUser) {
       setProfilePicturePreview(sessionUser.profilePicture);
     }
-    setProfilePictureFile(null); // Quan trọng: Hủy file đã chọn nhưng chưa lưu
+    setProfilePictureFile(null); 
   };
 
   const handleSaveClick = async () => {
@@ -163,12 +161,9 @@ const Profile = () => {
       setFormData({ fullName: updatedUser.name, email: updatedUser.email });
       setProfilePicturePreview(updatedUser.profilePicture);
 
-      // **GIẢI QUYẾT VẤN ĐỀ 1: CẬP NHẬT STATE TOÀN CỤC**
-      // (Giả sử bạn sẽ thêm setAvatar vào UserContext)
       setUserName(updatedUser.name);
       setEmail(updatedUser.email);
-      setUserAvatar(updatedUser.profilePicture); // --> Bạn sẽ cần thêm hàm này vào UserContext
-
+      setUserAvatar(updatedUser.profilePicture); 
       // Dọn dẹp và thoát chế độ chỉnh sửa
       setProfilePictureFile(null);
       setIsEditing(false);

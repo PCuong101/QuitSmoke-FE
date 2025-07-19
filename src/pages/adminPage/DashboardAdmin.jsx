@@ -4,7 +4,7 @@ import { Users, FileText, Activity, DollarSign, AlertCircle } from 'lucide-react
 const DashboardAdmin = () => {
   const [stats, setStats] = useState({
     totalUsers: 0,
-    blogPosts: 0, // Giá trị ban đầu là 0
+    blogPosts: 0, 
     activeUsers: 0,
     monthlyRevenue: 0,
   });

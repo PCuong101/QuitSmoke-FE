@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
-import useUserId from "../../hooks/useUserId"; // Hook để lấy ID admin
+import useUserId from "../../hooks/useUserId"; 
 import {
   Clock,
   CheckCircle,
@@ -18,26 +18,19 @@ import {
   ListOrdered,
   Heading2,
   Quote,
-  Image as ImageIcon, // Đổi tên để tránh xung đột với extension Image
+  Image as ImageIcon, 
 } from "lucide-react";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
 
  
 
-// Tái sử dụng CSS từ trang quản lý blog của Coach
 import "../coachPage/CoachBlogManagementPage.css"; 
 
 const MenuBar = ({ editor }) => {
   if (!editor) {
     return null;
   }
-
-  // ================== SỬA LỖI HIỂN THỊ ICON TỪ GỐC ==================
-  // Chúng ta sẽ truyền trực tiếp `strokeWidth` vào các icon.
-  // Đây là thuộc tính bắt buộc để lucide-react hiển thị đúng.
-  // Việc này đáng tin cậy hơn nhiều so với việc chỉ dựa vào CSS.
-  // =================================================================
 
   return (
     <div className="editor-toolbar">
@@ -134,7 +127,7 @@ const CreateBlog = () => {
   const [title, setTitle] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
-  const adminId = useUserId(); // Lấy ID của admin
+  const adminId = useUserId(); 
 
   const editor = useEditor({
     extensions: [StarterKit, Image],
@@ -160,20 +153,18 @@ const CreateBlog = () => {
     const newPostByAdmin = {
       title,
       content,
-      // Yêu cầu chính: status là 'APPROVED'
+      
       status: 'APPROVED', 
       // Gắn ID của admin làm tác giả
       authorId: adminId, 
     };
 
     try {
-      // Giả sử API của bạn có thể xử lý việc tạo bài viết
-      // và nhận authorId để biết ai là người tạo
+      
       await axios.post(`http://localhost:8080/api/blog/${adminId}`, newPostByAdmin);
       
       alert('Bài viết đã được tạo và xuất bản thành công!');
-      navigate('/admin/posts'); // Quay lại trang quản lý
-
+      navigate('/admin/posts'); 
     } catch (error) {
       console.error('Lỗi khi tạo bài viết:', error);
       alert('Đã có lỗi xảy ra. Vui lòng thử lại.');
@@ -182,7 +173,7 @@ const CreateBlog = () => {
     }
   };
 
-  // Dọn dẹp editor khi component bị unmount
+ 
   useEffect(() => {
     return () => {
       if (editor) {

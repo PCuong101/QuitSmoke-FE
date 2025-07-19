@@ -6,14 +6,14 @@ import { Plus, User, FilePenLine, Trash2 } from "lucide-react";
 const CoachManagement = () => {
   const [coaches, setCoaches] = useState([]);
   const navigate = useNavigate();
-  // 1. Thêm state để quản lý modal xóa
+  
   const [coachToDelete, setCoachToDelete] = useState(null);
 
   useEffect(() => {
     axios
       .get("http://localhost:8080/api/admin/coaches")
       .then((res) => {
-        // In ra console để xem dữ liệu trả về trông như thế nào
+        
         console.log("Dữ liệu coaches từ API:", res.data); 
         setCoaches(res.data);
       })
@@ -21,7 +21,7 @@ const CoachManagement = () => {
       .catch((err) => console.error("Error loading coaches:", err));
   }, []);
 
-  // 2. Thêm các hàm xử lý cho việc xóa
+ 
   const handleOpenDeleteModal = (coach) => {
     setCoachToDelete(coach);
   };
@@ -36,12 +36,11 @@ const CoachManagement = () => {
     try {
       
       await axios.delete(
-        `http://localhost:8080/api/users/${coachToDelete.id}` // <<< SỬA Ở ĐÂY
+        `http://localhost:8080/api/users/${coachToDelete.id}` 
       );
 
-      // Cập nhật UI ngay lập tức
       setCoaches((prevCoaches) =>
-        prevCoaches.filter((coach) => coach.id !== coachToDelete.id) // <<< CŨNG SỬA Ở ĐÂY
+        prevCoaches.filter((coach) => coach.id !== coachToDelete.id) 
       );
 
       handleCloseDeleteModal();
@@ -105,7 +104,7 @@ const CoachManagement = () => {
                 >
                   Tạo lịch
                 </button>
-                {/* 3. Gắn sự kiện xóa vào nút */}
+               
                 <button
                   className="btn btn-icon-delete"
                   onClick={() => handleOpenDeleteModal(coach)}
@@ -119,7 +118,7 @@ const CoachManagement = () => {
         </div>
       </div>
 
-      {/* 4. Thêm Modal xác nhận xóa */}
+     
       {coachToDelete && (
         <div
           className="confirmation-modal-overlay"

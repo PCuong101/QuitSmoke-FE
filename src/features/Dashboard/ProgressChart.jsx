@@ -1,4 +1,4 @@
-// src/features/Dashboard/ProgressChart.jsx
+
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
 import dayjs from 'dayjs';
@@ -17,7 +17,7 @@ function ProgressChart({ dailyLogs }) {
         borderColor: '#ef4444', // Màu đường line (đỏ)
         backgroundColor: 'rgba(239, 68, 68, 0.1)', // Màu nền dưới đường line
         fill: true,
-        tension: 0.2, // Làm cho đường cong mượt hơn
+        tension: 0.4, // Làm cho đường cong mượt hơn
         pointBackgroundColor: '#ef4444',
         pointBorderColor: '#fff',
         pointHoverRadius: 7,

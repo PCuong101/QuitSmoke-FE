@@ -12,7 +12,6 @@ import updateLocale from "dayjs/plugin/updateLocale";
 dayjs.extend(updateLocale);
 dayjs.locale("vi");
 
-// --- HELPER FUNCTIONS ---
 function formatDateWithWeekday(dateStr) {
   if (!dateStr) return "";
   const date = new Date(dateStr);
@@ -58,7 +57,7 @@ const fetchCoachSchedules = useCallback(async () => {
       const sortedData = data.sort(
         (a, b) => new Date(a.date) - new Date(b.date)
       );
-      setSchedules(sortedData); // Dữ liệu này đã được lọc sẵn từ backend
+      setSchedules(sortedData); 
     } catch (error) {
       console.error(error);
     } finally {

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import './diary.css'
 import Footer from "../../components/Footer/Footer"
 import { useUser } from "../../contexts/UserContext";
-// Một icon 'X' đơn giản bằng SVG để đóng modal
+
 const CloseIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"

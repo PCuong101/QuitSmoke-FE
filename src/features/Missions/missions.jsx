@@ -8,7 +8,7 @@ import './Missions.css';
 import { useNotifications } from "../../contexts/NotificationContext";
 import { useUser } from "../../contexts/UserContext";
 
-// --- COMPONENT CON: MissionItem  ---
+// --- COMPONENT : MissionItem  ---
 function MissionItem({ mission, isCompleted, onComplete }) {
     const Icon = mission.icon;
     return (

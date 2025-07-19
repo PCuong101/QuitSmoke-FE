@@ -8,10 +8,10 @@ import timezone from "dayjs/plugin/timezone";
 import "./Coach.css";
 import { useNotifications } from "../../contexts/NotificationContext.jsx";
 import { Video } from 'lucide-react';
-// Sử dụng dayjs để xử lý thời gian và timezone
+
 dayjs.extend(utc);
 dayjs.extend(timezone);
-// Danh sách các triệu chứng để user lựa chọn khi đặt lịch
+
 const symptoms = [
   "Thèm thuốc nhiều",
   "Bức rứt khi không hút",

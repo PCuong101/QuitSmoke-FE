@@ -45,9 +45,7 @@ const CoachDetail = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [selectedSlots, setSelectedSlots] = useState(new Set());
 
-    // ======================================================================
-    // === VIẾT LẠI HOÀN TOÀN HÀM FETCH DATA ĐỂ DEBUG VÀ ĐẢM BẢO ĐÚNG ===
-    // ======================================================================
+   
     const fetchData = async () => {
         setLoading(true);
         try {
@@ -125,7 +123,7 @@ const CoachDetail = () => {
         }, {});
     }, [schedules]);
 
-    // ... phần return JSX giữ nguyên ...
+    
     if (loading) return <p>Đang tải chi tiết chuyên gia...</p>;
     if (!coach) return <p>Không tìm thấy chuyên gia.</p>;
 
