@@ -14,7 +14,7 @@ export default function NavBar() {
   const location = useLocation();
   const navigate = useNavigate();
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  const { userName, role } = useUser();
+  const { userName, role ,userAvatar} = useUser();
 
   // === SỬA Ở ĐÂY: Lấy các hàm mới từ Context ===
   const { notifications, markAsRead, markAllAsRead, deleteNotification } =
@@ -146,7 +146,11 @@ export default function NavBar() {
           className="user-trigger"
           onClick={() => setUserMenuOpen((prev) => !prev)}
         >
-          <icon.User />
+          <img 
+                src={userAvatar || '/default-avatar.png'} 
+                alt="User Avatar" 
+                style={{ width: '32px', height: '32px', borderRadius: '50%', marginRight: '8px', objectFit: 'cover' }}
+            />
           <h4 className="user-name">{userName}</h4>
           {role !== "MEMBER" && (
             <div className="premium-icon">

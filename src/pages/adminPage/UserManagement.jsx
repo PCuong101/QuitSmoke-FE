@@ -97,11 +97,13 @@ const UserManagement = () => {
               <div className="table-row" key={user.userId}>
                 {/* ... (Các cột khác giữ nguyên) ... */}
                  <div className="table-cell user-info">
+                  <div class="table-avatar-img">
                   <img
                     src={user.profilePicture || `https://ui-avatars.com/api/?name=${user.name.replace(' ', '+')}&background=random`}
                     alt="avatar"
                     className="user-avatar"
                   />
+                  </div>
                   <div>
                     <div className="user-name">{user.name}</div>
                     <div className="user-email">{user.email}</div>

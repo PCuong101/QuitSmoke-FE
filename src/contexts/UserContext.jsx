@@ -7,7 +7,7 @@ export function UserProvider({ children }) {
   const [email, setEmailState] = useState(null);
   const [userName, setUserNameState] = useState(null);
   const [role, setRoleState] = useState(null);
-  
+  const [userAvatar, setUserAvatarState] = useState(null);
 
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
@@ -25,6 +25,10 @@ export function UserProvider({ children }) {
     const storedRole = localStorage.getItem("role");
     if (storedRole) {
       setRole(String(storedRole));
+    }
+    const storedAvatar = localStorage.getItem("userAvatar");
+    if (storedAvatar) {
+      setUserAvatarState(storedAvatar);
     }
   }, []);
 
@@ -48,6 +52,15 @@ export function UserProvider({ children }) {
     setRoleState(String(role));
   }
 
+  const setUserAvatar = (url) => {
+    if (url) {
+        localStorage.setItem("userAvatar", url);
+    } else {
+        localStorage.removeItem("userAvatar");
+    }
+    setUserAvatarState(url);
+  };
+
   const clearUserId = () => {
     localStorage.removeItem("userId");
     setUserIdState(null);
@@ -57,7 +70,8 @@ export function UserProvider({ children }) {
     setEmailState(null);
     localStorage.removeItem("role");
     setRoleState(null);
-    
+    localStorage.removeItem("userAvatar");
+    setUserAvatarState(null);
   };
 
   return (
@@ -71,7 +85,9 @@ export function UserProvider({ children }) {
         email,
         setEmail,
         role,
-        setRole
+        setRole,
+        userAvatar,
+        setUserAvatar,
       }}
     >
       {children}
