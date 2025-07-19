@@ -42,6 +42,7 @@ function Missions() {
     const [todayMissions, setTodayMissions] = useState([]);
     const [completionsMap, setCompletionsMap] = useState({});
     const [totalCompleted, setTotalCompleted] = useState(0);
+    const [totalMissionsCompleted, setTotalMissionsCompleted] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [notification, setNotification] = useState({ show: false, message: '' });
     // Dùng useRef để quản lý các bộ đếm thời gian
@@ -55,7 +56,9 @@ function Missions() {
                 setIsLoading(true);
                 const response = await fetch(`http://localhost:8080/api/tasks/${userId}`); // thay URL nếu khác
                 const data = await response.json();
-
+                const totalCount = await fetch(`http://localhost:8080/api/tasks/completed/${userId}`);
+                const totalData = await totalCount.json();
+                setTotalMissionsCompleted(totalData.length);
                 setTodayMissions(data);
                  // Tạo map: templateID -> completed (true/false)
                 const initialCompletions = {};
@@ -150,7 +153,7 @@ function Missions() {
                             <h1>Nhiệm Vụ Hàng Ngày</h1>
                             <div className="total-missions-counter">
                                 <History size={20} />
-                                <span>Tổng cộng: <strong>{totalCompleted}</strong></span>
+                                <span>Tổng cộng: <strong>{totalMissionsCompleted}</strong></span>
                             </div>
                         </header>
 

@@ -1,5 +1,3 @@
-// src/pages/adminPage/CoachDetail.jsx (PHIÊN BẢN SỬA LỖI FETCH DATA)
-
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";

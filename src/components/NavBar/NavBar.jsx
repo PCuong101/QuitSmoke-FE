@@ -111,9 +111,7 @@ export default function NavBar() {
         Thành tựu
       </h4>
       <h4
-        className={`nav-item ${isActive("/service-package") ? "active" : ""} ${
-          role === "MEMBER" ? "disabled" : ""
-        }`}
+        className={`nav-item ${isActive("/service-package") ? "active" : ""}`}
         onClick={() => navigate("/service-package")}
       >
         Gói dịch vụ

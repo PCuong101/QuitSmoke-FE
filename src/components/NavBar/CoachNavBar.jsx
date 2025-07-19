@@ -1,7 +1,5 @@
-// src/components/NavBar/CoachNavBar.jsx (PHIÊN BẢN ĐẦY ĐỦ - ĐÃ CẬP NHẬT)
-
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // <-- THÊM IMPORT "Link"
+import { useNavigate, Link } from 'react-router-dom';
 import * as icon from 'lucide-react';
 import useLogout from '../../hooks/useLogout';
 import { useUser } from '../../contexts/UserContext';
@@ -52,12 +50,10 @@ export default function CoachNavBar() {
           <strong>QuitSmoking - Coach Panel</strong>
       </h3>
       
-      {/* ================== THÊM CÁC LINK ĐIỀU HƯỚNG TẠI ĐÂY ================== */}
       <div className="coach-nav-links">
         <Link to="/coach/dashboard" className="coach-nav-link">Lịch hẹn</Link>
         <Link to="/coach/blog" className="coach-nav-link">Quản lý Blog</Link>
       </div>
-      {/* ====================================================================== */}
 
       <div style={{ position: 'relative', marginLeft: 'auto' }} ref={userMenuRef}>
         <div

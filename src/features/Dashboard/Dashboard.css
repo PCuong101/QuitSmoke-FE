@@ -3,7 +3,7 @@
 .dashboard-container {
     padding: 24px 10vw;
     background-color: #f8fafc;
-    min-height: calc(100vh - 160px); /* 100vh trừ đi chiều cao của nav và footer */
+    min-height: calc(100vh - 160px);
 }
 
 .dashboard-header {

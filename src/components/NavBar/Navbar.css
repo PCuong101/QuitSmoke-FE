@@ -1,10 +1,7 @@
-/* NavBar.css (Đã cập nhật) */
-
-/* --- Container chính của NavBar --- */
 .nav-bar {
   display: flex;
-  align-items: center; /* Căn chỉnh các item theo chiều dọc */
-  padding: 8px 24px; /* Giữ padding chung cho thanh nav */
+  align-items: center; 
+  padding: 8px 24px;
   background-color: #166534; /* MÀU XANH LÁ ĐẬM */
   color: white;
   position: relative;
@@ -13,22 +10,22 @@
 
 }
 
-/* === THAY ĐỔI 1: Logo "QuitSmoking" === */
+
 .nav-brand {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #ffffff; /* Đảm bảo màu trắng tinh */
+  color: #ffffff;
   margin: 0;
-  padding-right: 32px; /* Tạo khoảng cách với mục đầu tiên "Tổng quan" */
+  padding-right: 32px;
 }
 
-/* === THAY ĐỔI 2: Chữ của các mục điều hướng === */
+
 .nav-item {
-  margin: 0 4px; /* Giảm khoảng cách ngang một chút */
+  margin: 0 4px;
   padding: 8px 14px;
   cursor: pointer;
   font-size: 1rem;
-  font-weight: 600; /* TĂNG ĐỘ DÀY (từ 500 lên 600 - semibold) */
+  font-weight: 600;
   color: rgba(255, 255, 255, 0.9);
   background-color: transparent;
   border-radius: 8px;
@@ -56,13 +53,12 @@
 }
 
 
-/* === THAY ĐỔI 3: Bố cục khu vực User bên phải === */
+
 .user-section {
   position: relative;
-  margin-left: auto; /* !! QUAN TRỌNG: Đẩy mục này và các mục sau nó về bên phải */
+  margin-left: auto;
 }
 
-/* Các style còn lại giữ nguyên */
 .user-trigger {
   display: flex;
   align-items: center;
@@ -90,7 +86,7 @@
   color: #b45309;
   padding: 2px 8px;
   border-radius: 12px;
-  margin-left: 12px; /* Thêm khoảng cách với tên user */
+  margin-left: 12px;
   font-size: 0.8rem;
   font-weight: 600;
   border: 1px solid #fde68a;
@@ -136,19 +132,19 @@
   color: white;
 }
 .premium-icon {
-  display: inline-flex; /* Sử dụng inline-flex để căn chỉnh tốt hơn */
+  display: inline-flex;
   align-items: center;
-  gap: 6px; /* Khoảng cách giữa icon và chữ */
+  gap: 6px;
   
-  /* Dùng gradient vàng nhạt sang trọng */
+  
   background: linear-gradient(to right, #fef9c3, #fde68a);
   
-  color: #a16207; /* Chữ màu nâu vàng đậm để tương phản */
-  font-size: 0.8rem; /* 13px */
+  color: #a16207;
+  font-size: 0.8rem;
   font-weight: 600;
   
   padding: 4px 10px;
-  border-radius: 9999px; /* Tạo hình viên thuốc hoàn hảo */
+  border-radius: 9999px;
   
   /* Viền nhẹ để tăng độ sắc nét */
   border: 1px solid #facc15; 

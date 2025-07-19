@@ -1,5 +1,3 @@
-// src/pages/CoachDashboardPage.jsx (PHIÊN BẢN SỬA LỖI LOGIC)
-
 import { useState, useEffect, useCallback } from "react";
 import CoachNavBar from "../../components/NavBar/CoachNavBar";
 import Footer from "../../components/Footer/Footer";
@@ -37,8 +35,6 @@ const getSlotTimeRange = (slotLabel) => {
     // Trả về chính label nếu không khớp
     return slotLabel;
 };
-// =======================================================================
-// =======================================================================
 
 function CoachDashboardPage() {
   const [schedules, setSchedules] = useState([]);
@@ -53,9 +49,6 @@ const fetchCoachSchedules = useCallback(async () => {
     }
     try {
       setLoading(true);
-      // Gọi API để lấy lịch hẹn đã được xuất bản của coach
-      // Dữ liệu này đã được lọc sẵn từ backend, chỉ lấy lịch hẹn có trạng thái BOOKED hoặc EMPTY
-      // và đã được sắp xếp theo ngày
       const response = await fetch(
         `http://localhost:8080/api/bookings/coach/${userId}/published-schedule`
       );

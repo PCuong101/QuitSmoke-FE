@@ -1,5 +1,3 @@
-// src/features/Articles/ArticleDetail.jsx (Đã nâng cấp)
-
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import NavBar from "../../components/NavBar/NavBar";
