@@ -7,7 +7,6 @@ export function UserProvider({ children }) {
   const [email, setEmailState] = useState(null);
   const [userName, setUserNameState] = useState(null);
   const [role, setRoleState] = useState(null);
-  const [user, setUser] = useState(null);
   
 
   useEffect(() => {
@@ -72,8 +71,7 @@ export function UserProvider({ children }) {
         email,
         setEmail,
         role,
-        setRole,
-        user, setUser
+        setRole
       }}
     >
       {children}
