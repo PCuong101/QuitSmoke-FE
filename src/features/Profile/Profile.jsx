@@ -4,13 +4,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Profile.css";
 // --- 1. THAY ĐỔI IMPORT: Chuyển từ react-icons sang lucide-react ---
-import {
-  Camera,
-  Crown,
-  Pencil,
-  PiggyBank,
-  Trophy,
-} from "lucide-react";
+import { Crown, Pencil, PiggyBank, Trophy } from "lucide-react";
+// --- 2. THÊM IMPORT: Import Modal mới tạo ---
+import ImageUploadModal from "./ImageUploadModal";
 // ----------------------------------------------------------------
 
 import NavBar from "../../components/NavBar/NavBar";
@@ -25,7 +21,11 @@ const Profile = () => {
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { userId, userName, email, setUserName, setEmail } = useUser();
+  const { userId, userName, email,userAvatar, setUserName, setEmail, setUserAvatar } =
+    useUser();
+  const [profilePictureFile, setProfilePictureFile] = useState(null);
+  const [profilePicturePreview, setProfilePicturePreview] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // THAY THẾ TOÀN BỘ `useEffect` HIỆN TẠI BẰNG ĐOẠN CODE NÀY
 
@@ -40,6 +40,7 @@ const Profile = () => {
     // Thiết lập dữ liệu form ban đầu ngay lập tức từ Context
     // Điều này làm cho tên và email luôn đúng ngay khi bạn vào trang
     setFormData({ fullName: userName, email: email });
+    setProfilePicturePreview(userAvatar);
     setLoading(true); // Bắt đầu loading cho các dữ liệu bổ sung
 
     const fetchAdditionalData = async () => {
@@ -55,27 +56,27 @@ const Profile = () => {
           }
         );
         const achievementsPromise = fetch(
-          `http://localhost:8080/api/achievements/${userId}`
+          `http://localhost:8080/api/achievements/${userId}`,
+          { credentials: "include" } // <-- THÊM VÀO ĐÂY
         );
         const savingsPromise = fetch(
-          `http://localhost:8080/api/quit-plan/${userId}/savings`
+          `http://localhost:8080/api/quit-plan/${userId}/savings`,
+          { credentials: "include" } // <-- THÊM VÀO ĐÂY
         );
 
-        const [
-          userDetailsResponse,
-          achievementsResponse,
-          savingsResponse,
-        ] = await Promise.all([
-          userDetailsPromise,
-          achievementsPromise,
-          savingsPromise,
-        ]);
+        const [userDetailsResponse, achievementsResponse, savingsResponse] =
+          await Promise.all([
+            userDetailsPromise,
+            achievementsPromise,
+            savingsPromise,
+          ]);
 
         if (userDetailsResponse.ok) {
           const userData = await userDetailsResponse.json();
-          setSessionUser(userData); // Lưu đầy đủ dữ liệu user vào state này
+          setSessionUser(userData);
+          setProfilePicturePreview(prevPreview => prevPreview || userData.profilePicture);
         } else {
-            throw new Error(`Lỗi xác thực: ${userDetailsResponse.status}`);
+          throw new Error(`Lỗi xác thực: ${userDetailsResponse.status}`);
         }
 
         if (achievementsResponse.ok) {
@@ -98,52 +99,84 @@ const Profile = () => {
     fetchAdditionalData();
 
     // Cleanup function không cần thiết ở đây vì logic đã được xử lý ở đầu
-  }, [userId, userName, email]); // QUAN TRỌNG: useEffect sẽ chạy lại khi dữ liệu từ Context thay đổi
+  }, [userId, userName, email, userAvatar]);
+
+  const handleImageSelect = (file) => {
+    setProfilePictureFile(file); // Lưu file thật để chuẩn bị upload
+    setProfilePicturePreview(URL.createObjectURL(file)); // Cập nhật ảnh xem trước
+  };
 
   const handleEditClick = () => setIsEditing(true);
   const handleCancelClick = () => {
-    // Lấy lại dữ liệu chính xác từ Context, không phải từ state cục bộ sessionUser
-    setFormData({ fullName: userName, email: email });
     setIsEditing(false);
+    setFormData({ fullName: userName, email: email });
+    // Quay về ảnh cũ
+    if (sessionUser) {
+      setProfilePicturePreview(sessionUser.profilePicture);
+    }
+    setProfilePictureFile(null); // Quan trọng: Hủy file đã chọn nhưng chưa lưu
   };
 
-  const handleSaveClick = () => {
-    if (!sessionUser || !sessionUser.userId) {
+  const handleSaveClick = async () => {
+    if (!userId) {
       setError("Không thể xác định người dùng để cập nhật.");
       return;
     }
-    const updateUrl = `http://localhost:8080/api/users/${sessionUser.userId}`;
 
+    let finalPictureUrl = sessionUser.profilePicture;
+
+    // BƯỚC 1: Nếu có file ảnh mới đang chờ, tải nó lên trước
+    if (profilePictureFile) {
+      const pictureFormData = new FormData();
+      pictureFormData.append("file", profilePictureFile);
+
+      try {
+        const uploadResponse = await axios.post(
+          `http://localhost:8080/api/files/upload`,
+          pictureFormData,
+          { withCredentials: true }
+        );
+        finalPictureUrl = uploadResponse.data.url;
+      } catch (uploadErr) {
+        console.error("Lỗi khi tải ảnh lên:", uploadErr);
+        setError("Tải ảnh đại diện thất bại. Vui lòng thử lại.");
+        return;
+      }
+    }
+
+    // BƯỚC 2: Cập nhật tất cả thông tin người dùng (tên, email, và URL ảnh)
+    const updateUrl = `http://localhost:8080/api/users/${userId}`;
     const dataToSend = {
-      id: sessionUser.userId,
       name: formData.fullName,
       email: formData.email,
-      userId: sessionUser.userId,
-      password: sessionUser.password,
-      role: sessionUser.role,
-      registrationDate: sessionUser.registrationDate,
-      profilePicture: sessionUser.profilePicture,
-      addictionLevel: sessionUser.addictionLevel,
+      profilePicture: finalPictureUrl, // Gửi URL ảnh mới hoặc cũ
     };
-    
-    axios
-      .put(updateUrl, dataToSend, { withCredentials: true })
-      .then((res) => {
-        const updatedUser = res.data;
-        setSessionUser((prevUser) => ({ ...prevUser, ...updatedUser }));
-        setFormData({ fullName: updatedUser.name, email: updatedUser.email });
-        setUserName(updatedUser.name);
-      setEmail(updatedUser.email);
-        setIsEditing(false);
-        setError(null);
-      })
-      .catch((err) => {
-        console.error("Lỗi khi cập nhật:", err.response || err);
-        setError(
-          "Cập nhật thất bại. Vui lòng thử lại. Lỗi: " +
-            (err.response?.data?.message || err.message)
-        );
+
+    try {
+      const res = await axios.put(updateUrl, dataToSend, {
+        withCredentials: true,
       });
+      const updatedUser = res.data;
+
+      // Cập nhật tất cả các state cần thiết
+      setSessionUser((prev) => ({ ...prev, ...updatedUser }));
+      setFormData({ fullName: updatedUser.name, email: updatedUser.email });
+      setProfilePicturePreview(updatedUser.profilePicture);
+
+      // **GIẢI QUYẾT VẤN ĐỀ 1: CẬP NHẬT STATE TOÀN CỤC**
+      // (Giả sử bạn sẽ thêm setAvatar vào UserContext)
+      setUserName(updatedUser.name);
+      setEmail(updatedUser.email);
+      setUserAvatar(updatedUser.profilePicture); // --> Bạn sẽ cần thêm hàm này vào UserContext
+
+      // Dọn dẹp và thoát chế độ chỉnh sửa
+      setProfilePictureFile(null);
+      setIsEditing(false);
+      setError(null);
+    } catch (err) {
+      console.error("Lỗi khi cập nhật thông tin:", err);
+      setError("Cập nhật thông tin thất bại.");
+    }
   };
 
   const handleInputChange = (e) => {
@@ -176,6 +209,12 @@ const Profile = () => {
   return (
     <>
       <NavBar />
+      <ImageUploadModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onImageSelect={handleImageSelect}
+        currentImageUrl={profilePicturePreview}
+      />
       <div className="profile-container">
         <div className="profile-card">
           <h1 className="profile-title">Thông tin cá nhân</h1>
@@ -184,15 +223,27 @@ const Profile = () => {
           </p>
 
           <div className="profile-header">
-            <div className="avatar-container">
-              <div className="avatar"></div>
+            <div
+              className="avatar-container"
+              onClick={() => isEditing && setIsModalOpen(true)}
+              style={{ cursor: isEditing ? "pointer" : "default" }}
+            >
+              <div
+                className="avatar"
+                style={{
+                  backgroundImage: `url(${
+                    profilePicturePreview || "/default-avatar.png"
+                  })`,
+                }}
+              ></div>
+              {/* Icon chỉ hiển thị khi ở chế độ chỉnh sửa và hover */}
               {isEditing && (
-                <div className="camera-icon">
-                  {/* --- 2. THAY THẾ ICON --- */}
-                  <Camera size={18} />
+                <div className="edit-avatar-icon">
+                  <Pencil size={32} />
                 </div>
               )}
             </div>
+
             {sessionUser.role !== "MEMBER" && (
               <div className="premium-badge">
                 {/* --- 2. THAY THẾ ICON --- */}

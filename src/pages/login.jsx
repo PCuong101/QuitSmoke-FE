@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "./../contexts/UserContext";
 
 function Login() {
-  const { setUserId, setEmail, setUserName, email, role, setRole } = useUser();
+  const { setUserId, setEmail, setUserName, email, role, setRole ,setUserAvatar} = useUser();
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -27,6 +27,7 @@ function Login() {
         setEmail(data.email);
         setUserName(data.name);
         setRole(data.role);
+        setUserAvatar(data.profilePicture);
         if (data.role === "MEMBER" || data.role === "MEMBER_VIP1") navigate("/dashboard");
         else if (data.role === "ADMIN") navigate("/admin/dashboard");
         else if (data.role === "COACH") navigate("/coach/dashboard");

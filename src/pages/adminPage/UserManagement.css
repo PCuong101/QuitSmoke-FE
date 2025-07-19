@@ -29,7 +29,7 @@
 .page-header h2 {
     font-size: 24px;
     font-weight: 700;
-    color: var(--text-primary);
+    color: #111827;
 }
 
 .card {
@@ -186,13 +186,11 @@
 }
 
 .user-avatar {
-    display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #f3f4f6;
-  font-weight: 600;
-  color: #374151;
-  font-size: 14px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover; /* Quan trọng nhất: Giữ tỷ lệ ảnh, không bị méo */
+    flex-shrink: 0;  
 }
 
 .user-name {
@@ -363,6 +361,7 @@ width: 120px;       /* 1. Đặt một chiều rộng cố định (bạn có th
 .progress-bar-fill.level-low {
   background-color: #22c55e; /* Màu xanh lá */
 }
+
 
 
 /* --- XÓA HOẶC BÌNH LUẬN LẠI CSS CŨ CHO BADGE MỨC ĐỘ --- */

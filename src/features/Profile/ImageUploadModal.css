@@ -1,0 +1,117 @@
+/* src/features/Profile/ImageUploadModal.css */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(17, 24, 39, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+    background-color: #1f2937; /* Màu nền tối như trong ảnh */
+    color: #d1d5db; /* Màu chữ sáng */
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid #374151;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #f9fafb;
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.modal-close-btn:hover {
+    background-color: #374151;
+    color: #f9fafb;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.upload-area {
+    width: 100%;
+    height: 300px;
+    border: 2px dashed #4b5563;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background-color: #374151;
+    transition: border-color 0.2s;
+    overflow: hidden; /* Quan trọng để ảnh preview không tràn ra ngoài */
+}
+
+.upload-area:hover {
+    border-color: #6b7280;
+}
+
+.upload-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    color: #9ca3af;
+    font-weight: 500;
+}
+
+.image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Hiển thị toàn bộ ảnh mà không bị cắt */
+}
+
+.modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #374151;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    background-color: #1f2937;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+/* Sử dụng lại các class button chung nếu có, hoặc định nghĩa riêng */
+
+.modal-footer .btn-primary[disabled] {
+    background-color: #4b5563;
+    cursor: not-allowed;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
