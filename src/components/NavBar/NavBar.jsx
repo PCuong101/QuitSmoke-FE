@@ -7,13 +7,14 @@ import useLogout from "../../hooks/useLogout";
 import { useNotifications } from "../../contexts/NotificationContext.jsx"; // Context đã nâng cấp
 import { useUser } from "../../contexts/UserContext.jsx";
 import ToastNotification from "../ToastNotification/ToastNotification.jsx";
+import "./NavBar.css";
 
 export default function NavBar() {
   const logout = useLogout();
   const location = useLocation();
   const navigate = useNavigate();
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-const { userName, role } = useUser();
+  const { userName, role } = useUser();
 
   // === SỬA Ở ĐÂY: Lấy các hàm mới từ Context ===
   const { notifications, markAsRead, markAllAsRead, deleteNotification } =
@@ -58,18 +59,6 @@ const { userName, role } = useUser();
   const isActive = (path) =>
     location.pathname === path ||
     (path === "/achievement" && location.pathname.startsWith("/achievement"));
-  const navItemStyle = (path) => ({
-    margin: "0 10px",
-    padding: "6px 12px",
-    cursor: "pointer",
-    color: isActive(path) ? "white" : "black",
-    fontWeight: isActive(path) ? "bold" : "normal",
-    background: isActive(path) ? "rgba(22, 163, 74, 0.6)" : "transparent",
-    borderRadius: "8px",
-    backdropFilter: isActive(path) ? "blur(6px)" : "none",
-    WebkitBackdropFilter: isActive(path) ? "blur(6px)" : "none",
-    transition: "all 0.2s ease-in-out",
-  });
 
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef();
@@ -86,55 +75,53 @@ const { userName, role } = useUser();
   }, []);
 
   return (
-    <div
-      className="nav-bar"
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        gap: "5px",
-        position: "relative",
-      }}
-    >
-      <h3>
-        <strong>QuitSmoking</strong>
-      </h3>
+    <div className="nav-bar">
+      {/* Phần bên trái */}
+      <h3 className="nav-brand">QuitSmoking</h3>
+
+      {/* Nhóm các link điều hướng */}
       <h4
-        style={navItemStyle("/dashboard")}
+        className={`nav-item ${isActive("/dashboard") ? "active" : ""}`}
         onClick={() => navigate("/dashboard")}
       >
         Tổng quan
       </h4>
-      <h4 style={navItemStyle("/diary")} onClick={() => navigate("/diary")}>
+      <h4
+        className={`nav-item ${isActive("/diary") ? "active" : ""}`}
+        onClick={() => navigate("/diary")}
+      >
         Nhật ký
       </h4>
       <h4
-        style={navItemStyle("/missions")}
+        className={`nav-item ${isActive("/missions") ? "active" : ""}`}
         onClick={() => navigate("/missions")}
       >
         Nhiệm vụ
       </h4>
-      <h4 style={navItemStyle("/ranking")} onClick={() => navigate("/ranking")}>
+      <h4
+        className={`nav-item ${isActive("/ranking") ? "active" : ""}`}
+        onClick={() => navigate("/ranking")}
+      >
         Bảng xếp hạng
       </h4>
       <h4
-        style={navItemStyle("/achievement")}
+        className={`nav-item ${isActive("/achievement") ? "active" : ""}`}
         onClick={() => navigate("/achievement")}
       >
         Thành tựu
       </h4>
       <h4
-        style={navItemStyle("/service-package")}
+        className={`nav-item ${isActive("/service-package") ? "active" : ""} ${
+          role === "MEMBER" ? "disabled" : ""
+        }`}
         onClick={() => navigate("/service-package")}
       >
         Gói dịch vụ
       </h4>
       <h4
-        style={{
-          ...navItemStyle("/coach"),
-          opacity: role === "MEMBER" ? 0.5 : 1,
-          cursor: role === "MEMBER" ? "not-allowed" : "pointer",
-        }}
+        className={`nav-item ${isActive("/coach") ? "active" : ""} ${
+          role === "MEMBER" ? "disabled" : ""
+        }`}
         onClick={() => {
           if (role === "MEMBER") {
             setToastVisible(true);
@@ -146,84 +133,44 @@ const { userName, role } = useUser();
       >
         Chuyên gia
       </h4>
-      <h4 style={navItemStyle("/blog")} onClick={() => navigate("/blog")}>
+      <h4
+        className={`nav-item ${isActive("/blog") ? "active" : ""}`}
+        onClick={() => navigate("/blog")}
+      >
         Bài viết
       </h4>
 
-      <div
-        style={{ position: "relative", marginLeft: "auto" }}
-        ref={userMenuRef}
-      >
+      {/* Phần bên phải - Bắt đầu bằng user-section có margin-left: auto */}
+      <div className="user-section" ref={userMenuRef}>
         <div
-          style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+          className="user-trigger"
           onClick={() => setUserMenuOpen((prev) => !prev)}
         >
+          <icon.User />
+          <h4 className="user-name">{userName}</h4>
           {role !== "MEMBER" && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                backgroundColor: "#fffbeb",
-                color: "#b45309",
-                padding: "2px 8px",
-                borderRadius: "12px",
-                marginLeft: "8px",
-                fontSize: "18px",
-                fontWeight: "600",
-                lineHeight: "1",
-                border: "1px solid #fde68a",
-              }}
-            >
-              <icon.Crown size={14} style={{ marginRight: "4px" }} />
+            <div className="premium-icon">
+              <icon.Crown size={14} className="crown-icon" />
               <span>Premium</span>
             </div>
           )}
-          <icon.User />
-          <h4 style={{ marginLeft: 5 }}>{userName}</h4>
         </div>
         {userMenuOpen && (
-          <div
-            style={{
-              position: "absolute",
-              top: "calc(100% + 10px)",
-              right: 0,
-              background: "#fff",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-              borderRadius: "8px",
-              zIndex: 1000,
-              minWidth: "160px",
-              padding: "8px 0",
-            }}
-          >
+          <div className="user-menu">
             <div
+              className="user-menu-item"
               onClick={() => navigate("/profile")}
-              style={{
-                padding: "10px 16px",
-                cursor: "pointer",
-                fontSize: "14px",
-                color: "#1f2937",
-                whiteSpace: "nowrap",
-              }}
             >
               Thông tin cá nhân
             </div>
-            <div
-              onClick={logout}
-              style={{
-                padding: "10px 16px",
-                cursor: "pointer",
-                fontSize: "14px",
-                color: "#ef4444",
-                whiteSpace: "nowrap",
-              }}
-            >
+            <div className="user-menu-item logout" onClick={logout}>
               Đăng xuất
             </div>
           </div>
         )}
       </div>
 
-      <div style={{ position: "relative", marginLeft: 15 }} ref={popupRef}>
+      <div className="notification-section" ref={popupRef}>
         <icon.Bell
           onClick={handleNotificationClick}
           style={{ cursor: "pointer" }}

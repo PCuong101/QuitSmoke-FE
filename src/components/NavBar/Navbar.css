@@ -1,0 +1,163 @@
+/* NavBar.css (Đã cập nhật) */
+
+/* --- Container chính của NavBar --- */
+.nav-bar {
+  display: flex;
+  align-items: center; /* Căn chỉnh các item theo chiều dọc */
+  padding: 8px 24px; /* Giữ padding chung cho thanh nav */
+  background-color: #166534; /* MÀU XANH LÁ ĐẬM */
+  color: white;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+
+}
+
+/* === THAY ĐỔI 1: Logo "QuitSmoking" === */
+.nav-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffffff; /* Đảm bảo màu trắng tinh */
+  margin: 0;
+  padding-right: 32px; /* Tạo khoảng cách với mục đầu tiên "Tổng quan" */
+}
+
+/* === THAY ĐỔI 2: Chữ của các mục điều hướng === */
+.nav-item {
+  margin: 0 4px; /* Giảm khoảng cách ngang một chút */
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600; /* TĂNG ĐỘ DÀY (từ 500 lên 600 - semibold) */
+  color: rgba(255, 255, 255, 0.9);
+  background-color: transparent;
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+  white-space: nowrap;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.nav-item.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-weight: 700;
+}
+
+.nav-item.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.nav-item.disabled:hover {
+  background-color: transparent;
+}
+
+
+/* === THAY ĐỔI 3: Bố cục khu vực User bên phải === */
+.user-section {
+  position: relative;
+  margin-left: auto; /* !! QUAN TRỌNG: Đẩy mục này và các mục sau nó về bên phải */
+}
+
+/* Các style còn lại giữ nguyên */
+.user-trigger {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.user-trigger:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.user-trigger .user-name {
+  margin-left: 8px;
+  font-weight: 500;
+  font-size: 1rem;
+  color: white;
+}
+
+.user-trigger .premium-badge {
+  display: flex;
+  align-items: center;
+  background-color: #fffbeb;
+  color: #b45309;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-left: 12px; /* Thêm khoảng cách với tên user */
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid #fde68a;
+}
+.user-trigger .premium-badge .crown-icon {
+  margin-right: 4px;
+}
+
+.user-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 1000;
+  min-width: 180px;
+  padding: 8px 0;
+  overflow: hidden;
+}
+
+.user-menu-item {
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #1f2937;
+  white-space: nowrap;
+  display: block;
+}
+.user-menu-item:hover {
+  background-color: #f3f4f6;
+}
+.user-menu-item.logout {
+  color: #ef4444;
+}
+
+.notification-section {
+  position: relative;
+  margin-left: 15px;
+}
+
+.nav-bar svg {
+  color: white;
+}
+.premium-icon {
+  display: inline-flex; /* Sử dụng inline-flex để căn chỉnh tốt hơn */
+  align-items: center;
+  gap: 6px; /* Khoảng cách giữa icon và chữ */
+  
+  /* Dùng gradient vàng nhạt sang trọng */
+  background: linear-gradient(to right, #fef9c3, #fde68a);
+  
+  color: #a16207; /* Chữ màu nâu vàng đậm để tương phản */
+  font-size: 0.8rem; /* 13px */
+  font-weight: 600;
+  
+  padding: 4px 10px;
+  border-radius: 9999px; /* Tạo hình viên thuốc hoàn hảo */
+  
+  /* Viền nhẹ để tăng độ sắc nét */
+  border: 1px solid #facc15; 
+  
+  /* Đổ bóng nhẹ để nổi bật khỏi nền */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  
+  /* Giúp icon có cùng màu với chữ */
+  .crown-icon {
+    color: #a16207; 
+  }
+}
