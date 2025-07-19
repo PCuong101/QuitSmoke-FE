@@ -1,6 +1,6 @@
-/* src/features/Profile/ImageUploadModal.css */
+/* src/features/Profile/ImageUploadModal.css (Đã cập nhật với hậu tố -upl) */
 
-.modal-overlay {
+.modal-overlay-upl {
     position: fixed;
     top: 0;
     left: 0;
@@ -12,21 +12,22 @@
     justify-content: center;
     z-index: 1000;
     backdrop-filter: blur(4px);
-    animation: fadeIn 0.3s ease-out;
+    animation: fadeIn-upl 0.3s ease-out;
 }
 
-.modal-content {
-    background-color: #1f2937; /* Màu nền tối như trong ảnh */
-    color: #d1d5db; /* Màu chữ sáng */
+.modal-content-upl {
+    background-color: #1f2937;
+    color: #d1d5db;
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
     width: 100%;
     max-width: 500px;
     display: flex;
     flex-direction: column;
+    animation: slideUp-upl 0.3s ease-out;
 }
 
-.modal-header {
+.modal-header-upl {
     padding: 16px 24px;
     border-bottom: 1px solid #374151;
     display: flex;
@@ -34,14 +35,14 @@
     align-items: center;
 }
 
-.modal-header h2 {
+.modal-header-upl h2 {
     margin: 0;
     font-size: 20px;
     font-weight: 600;
     color: #f9fafb;
 }
 
-.modal-close-btn {
+.modal-close-btn-upl {
     background: none;
     border: none;
     color: #9ca3af;
@@ -51,16 +52,16 @@
     transition: background-color 0.2s, color 0.2s;
 }
 
-.modal-close-btn:hover {
+.modal-close-btn-upl:hover {
     background-color: #374151;
     color: #f9fafb;
 }
 
-.modal-body {
+.modal-body-upl {
     padding: 24px;
 }
 
-.upload-area {
+.upload-area-upl {
     width: 100%;
     height: 300px;
     border: 2px dashed #4b5563;
@@ -71,14 +72,14 @@
     cursor: pointer;
     background-color: #374151;
     transition: border-color 0.2s;
-    overflow: hidden; /* Quan trọng để ảnh preview không tràn ra ngoài */
+    overflow: hidden;
 }
 
-.upload-area:hover {
+.upload-area-upl:hover {
     border-color: #6b7280;
 }
 
-.upload-placeholder {
+.upload-placeholder-upl {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -87,13 +88,13 @@
     font-weight: 500;
 }
 
-.image-preview {
+.image-preview-upl {
     width: 100%;
     height: 100%;
-    object-fit: contain; /* Hiển thị toàn bộ ảnh mà không bị cắt */
+    object-fit: contain;
 }
 
-.modal-footer {
+.modal-footer-upl {
     padding: 16px 24px;
     border-top: 1px solid #374151;
     display: flex;
@@ -104,14 +105,52 @@
     border-bottom-right-radius: 12px;
 }
 
-/* Sử dụng lại các class button chung nếu có, hoặc định nghĩa riêng */
+/* --- Style cho các nút bấm với hậu tố -upl --- */
+.btn-upl {
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
 
-.modal-footer .btn-primary[disabled] {
-    background-color: #4b5563;
+.btn-primary-upl {
+  background-color: #2563eb; /* Màu xanh dương */
+  color: white;
+  border-color: #2563eb;
+}
+.btn-primary-upl:hover {
+  background-color: #1d4ed8;
+}
+
+.btn-secondary-upl {
+  background-color: #4b5563; /* Màu xám */
+  color: #f9fafb;
+  border-color: #4b5563;
+}
+.btn-secondary-upl:hover {
+  background-color: #6b7280;
+}
+
+.btn-primary-upl[disabled] {
+    background-color: #374151;
+    border-color: #4b5563;
+    color: #9ca3af;
     cursor: not-allowed;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
+/* --- Animation --- */
+@keyframes fadeIn-upl {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp-upl {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }

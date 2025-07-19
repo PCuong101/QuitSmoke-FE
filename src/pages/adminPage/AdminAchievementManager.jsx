@@ -53,35 +53,35 @@ const AchievementForm = ({ isOpen, onClose, onSave, template, logicKeys }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay-acm" onClick={onClose}>
+            <div className="modal-content-acm" onClick={(e) => e.stopPropagation()}>
                 <form onSubmit={handleSubmit}>
-                    <div className="modal-header">
+                    <div className="modal-header-acm">
                         <h3>{template ? "Chỉnh sửa Thành tựu" : "Tạo Thành tựu mới"}</h3>
-                        <button type="button" onClick={onClose} className="btn-icon btn-close-modal"><X size={24}/></button>
+                        <button type="button" onClick={onClose} className="btn-icon-acm btn-close-modal-acm"><X size={24}/></button>
                     </div>
-                    <div className="modal-body">
-                        <div className="form-group">
+                    <div className="modal-body-acm">
+                        <div className="form-group-acm">
                             <label htmlFor="title">Tiêu đề</label>
                             <input id="title" name="title" value={formData.title || ''} onChange={handleChange} required />
                         </div>
-                        <div className="form-group">
+                        <div className="form-group-acm">
                             <label htmlFor="description">Mô tả</label>
                             <textarea id="description" name="description" value={formData.description || ''} onChange={handleChange} required rows="3"></textarea>
                         </div>
-                        <div className="form-grid">
-                            <div className="form-group">
+                        <div className="form-grid-acm">
+                            <div className="form-group-acm">
                                 <label htmlFor="category">Loại (Category)</label>
                                 <select id="category" name="category" value={formData.category || ''} onChange={handleChange} required>
                                     {CATEGORY_OPTIONS.map(cat => <option key={cat} value={cat}>{cat}</option>)}
                                 </select>
                             </div>
-                            <div className="form-group">
+                            <div className="form-group-acm">
                                 <label htmlFor="threshold">Ngưỡng (Threshold)</label>
                                 <input id="threshold" type="number" name="threshold" value={formData.threshold || 0} onChange={handleChange} required />
                             </div>
                         </div>
-                        <div className="form-group">
+                        <div className="form-group-acm">
                             <label htmlFor="customLogicKey">Logic kiểm tra</label>
                             <select id="customLogicKey" name="customLogicKey" value={formData.customLogicKey || ''} onChange={handleChange} required disabled={!logicKeys.length}>
                                 {logicKeys.length > 0 ? 
@@ -90,11 +90,11 @@ const AchievementForm = ({ isOpen, onClose, onSave, template, logicKeys }) => {
                                 }
                             </select>
                         </div>
-                        <div className="form-group">
+                        <div className="form-group-acm">
                             <label>Icon (Tùy chọn)</label>
-                            <div className="file-input-container">
-                                {previewUrl && <img src={previewUrl} alt="Preview" className="icon-preview"/>}
-                                <div className="file-input-wrapper">
+                            <div className="file-input-container-acm">
+                                {previewUrl && <img src={previewUrl} alt="Preview" className="icon-preview-acm"/>}
+                                <div className="file-input-wrapper-acm">
                                     <ImageIcon size={18}/>
                                     <span>{iconFile ? iconFile.name : 'Chọn file ảnh...'}</span>
                                     <input type="file" onChange={handleFileChange} accept="image/png, image/jpeg, image/svg+xml"/>
@@ -102,15 +102,16 @@ const AchievementForm = ({ isOpen, onClose, onSave, template, logicKeys }) => {
                             </div>
                         </div>
                     </div>
-                    <div className="modal-footer">
-                        <button type="button" onClick={onClose} className="btn btn-secondary">Hủy</button>
-                        <button type="submit" className="btn btn-primary">Lưu thay đổi</button>
+                    <div className="modal-footer-acm">
+                        <button type="button" onClick={onClose} className="btn-acm btn-secondary-acm">Hủy</button>
+                        <button type="submit" className="btn-acm btn-primary-acm">Lưu thay đổi</button>
                     </div>
                 </form>
             </div>
         </div>
     );
 };
+
 
 const AdminAchievementManager = () => {
     const [templates, setTemplates] = useState([]);
@@ -120,20 +121,41 @@ const AdminAchievementManager = () => {
     const [editingTemplate, setEditingTemplate] = useState(null);
 
     const fetchData = async () => {
-        setIsLoading(true);
-        try {
-            const [templatesRes, logicKeysRes] = await Promise.all([
-                axios.get(API_URL),
-                axios.get(`${API_URL}/list-logic`)
-            ]);
-            setTemplates(templatesRes.data);
-            setLogicKeys(logicKeysRes.data);
-        } catch (error) {
-            console.error("Lỗi khi tải dữ liệu:", error);
-        } finally {
-            setIsLoading(false);
+    setIsLoading(true);
+    try {
+        // Gửi yêu cầu lấy templates
+        console.log("Đang gửi yêu cầu GET tới:", API_URL);
+        const templatesRes = await axios.get(API_URL);
+        setTemplates(templatesRes.data);
+        console.log("Tải templates thành công:", templatesRes.data);
+
+        // Gửi yêu cầu lấy logic keys
+        const logicKeysUrl = `${API_URL}/list-logic`;
+        console.log("Đang gửi yêu cầu GET tới:", logicKeysUrl);
+        const logicKeysRes = await axios.get(logicKeysUrl);
+        setLogicKeys(logicKeysRes.data);
+        console.log("Tải logic keys thành công:", logicKeysRes.data);
+
+    } catch (error) {
+        // Log ra lỗi chi tiết hơn
+        if (error.response) {
+            // Lỗi đến từ server (4xx, 5xx)
+            console.error("Lỗi khi tải dữ liệu - Server đã phản hồi:", {
+                status: error.response.status,
+                data: error.response.data,
+                url: error.config.url, // URL nào đã gây ra lỗi
+            });
+        } else if (error.request) {
+            // Yêu cầu đã được gửi nhưng không nhận được phản hồi
+            console.error("Lỗi khi tải dữ liệu - Không nhận được phản hồi từ server:", error.request);
+        } else {
+            // Lỗi xảy ra khi thiết lập yêu cầu
+            console.error("Lỗi khi tải dữ liệu - Lỗi thiết lập yêu cầu:", error.message);
         }
-    };
+    } finally {
+        setIsLoading(false);
+    }
+};
 
     useEffect(() => { fetchData(); }, []);
 
@@ -180,16 +202,16 @@ const AdminAchievementManager = () => {
     };
 
     return (
-        <div className="admin-achievement-manager">
-            <div className="page-header">
+        <div className="admin-achievement-manager-acm">
+            <div className="page-header-acm">
                 <h2>Quản lý Thành tựu</h2>
-                <button className="btn btn-primary" onClick={handleOpenCreate}><Plus size={18}/> Tạo mới</button>
+                <button className="btn-acm btn-primary-acm" onClick={handleOpenCreate}><Plus size={18}/> Tạo mới</button>
             </div>
-            <div className="card">
+            <div className="card-acm">
                 {isLoading ? (
-                    <div className="loading-container"><Loader2 className="spinner"/></div>
+                    <div className="loading-container-acm"><Loader2 className="spinner-acm"/></div>
                 ) : (
-                    <table className="data-table">
+                    <table className="data-table-acm">
                         <thead>
                             <tr>
                                 <th>Tiêu đề</th>
@@ -207,9 +229,9 @@ const AdminAchievementManager = () => {
                                     <td>{template.customLogicKey}</td>
                                     <td>{template.threshold}</td>
                                     <td>
-                                        <div className="action-buttons">
-                                            <button className="btn-icon" onClick={() => handleOpenEdit(template)}><Edit size={16}/></button>
-                                            <button className="btn-icon btn-icon-delete" onClick={() => handleDelete(template.templateID)}><Trash2 size={16}/></button>
+                                        <div className="action-buttons-acm">
+                                            <button className="btn-icon-acm" onClick={() => handleOpenEdit(template)}><Edit size={16}/></button>
+                                            <button className="btn-icon-acm btn-icon-delete-acm" onClick={() => handleDelete(template.templateID)}><Trash2 size={16}/></button>
                                         </div>
                                     </td>
                                 </tr>

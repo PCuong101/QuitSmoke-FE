@@ -77,15 +77,15 @@ function ServicePackageAdmin() {
 
 
     return (
-        <div className="admin-achievement-manager">
-            <div className="page-header">
+        <div className="admin-achievement-manager-ser">
+            <div className="page-header-ser">
                 <h2>Quản lý Gói thành viên</h2>
             </div>
-            <div className="card">
+            <div className="card-ser">
                 {isLoading ? (
-                    <div className="loading-container"><Loader2 className="spinner" /></div>
+                    <div className="loading-container-ser"><Loader2 className="spinner-ser" /></div>
                 ) : (
-                    <table className="data-table">
+                    <table className="data-table-ser">
                         <thead>
                             <tr>
                                 <th>Tên gói</th>
@@ -96,21 +96,21 @@ function ServicePackageAdmin() {
                             </tr>
                         </thead>
                         <tbody>
-                            {plan.map(plan => (
-                                <tr key={plan.planID}>
-                                    <td>{plan.planName}</td>
-                                    <td>{plan.description}</td>
-                                    <td>{plan.features}</td>
+                            {plan.map(p => (
+                                <tr key={p.planID}>
+                                    <td>{p.planName}</td>
+                                    <td>{p.description}</td>
+                                    <td>{p.features}</td>
                                     <td>
-                                        {plan.price === 0 ? (
-                                            <span className="free-plan">Miễn phí</span>
+                                        {p.price === 0 ? (
+                                            <span className="free-plan-ser">Miễn phí</span>
                                         ) : (
-                                            <span className="paid-plan">{plan.price.toLocaleString()}đ</span>
+                                            <span className="paid-plan-ser">{p.price.toLocaleString()}đ</span>
                                         )}
                                     </td>
                                     <td>
-                                        <div className="action-buttons">
-                                            <button className="btn-icon" onClick={() => handleOpenEdit(plan)}>
+                                        <div className="action-buttons-ser">
+                                            <button className="btn-icon-ser" onClick={() => handleOpenEdit(p)}>
                                                 <Edit size={16} />
                                             </button>
                                         </div>
@@ -119,72 +119,57 @@ function ServicePackageAdmin() {
                             ))}
                         </tbody>
                     </table>
-
                 )}
                 {isModalOpen && (
-                    <div className="modal-overlay">
-                        <div className="modal-content">
+                    <div className="modal-overlay-ser">
+                        <div className="modal-content-ser">
                             <h3>Chỉnh sửa gói thành viên</h3>
-
-                            <div className="form-row">
+                            <div className="form-row-ser">
                                 <label>Tên gói:</label>
                                 <input
                                     type="text"
                                     name="planName"
-                                    placeholder="Tên gói"
                                     value={formData.planName}
                                     onChange={handleFormChange}
                                     readOnly
                                 />
                             </div>
-
-                            <div className="form-row">
+                            <div className="form-row-ser">
                                 <label>Mô tả:</label>
                                 <textarea
                                     name="description"
-                                    placeholder="Mô tả"
                                     value={formData.description}
                                     onChange={handleFormChange}
                                     rows="2"
                                 />
                             </div>
-
-                            <div className="form-row">
+                            <div className="form-row-ser">
                                 <label>Tính năng:</label>
                                 <textarea
                                     name="features"
-                                    placeholder="Tính năng"
                                     value={formData.features}
                                     onChange={handleFormChange}
-                                    rows="4"   // Để nó cao hơn
+                                    rows="4"
                                 />
                             </div>
-
-                            <div className="form-row">
+                            <div className="form-row-ser">
                                 <label>Giá tiền:</label>
                                 <input
                                     type="number"
                                     name="price"
-                                    placeholder="Giá"
                                     value={formData.price}
                                     onChange={handleFormChange}
                                 />
                             </div>
-
-                            <div className="modal-buttons">
-                                <button className="save-btn" onClick={handleSave}>Lưu</button>
-                                <button className="cancel-btn" onClick={() => setIsModalOpen(false)}>Đóng</button>
+                            <div className="modal-buttons-ser">
+                                <button className="save-btn-ser" onClick={handleSave}>Lưu</button>
+                                <button className="cancel-btn-ser" onClick={() => setIsModalOpen(false)}>Đóng</button>
                             </div>
                         </div>
                     </div>
                 )}
-
-
             </div>
-
-
         </div>
-
     );
 }
 

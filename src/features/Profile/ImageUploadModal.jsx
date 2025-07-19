@@ -39,16 +39,16 @@ const ImageUploadModal = ({ isOpen, onClose, onImageSelect, currentImageUrl }) =
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h2>Select an Image</h2>
-          <button className="modal-close-btn" onClick={onClose}>
+    <div className="modal-overlay-upl" onClick={onClose}>
+      <div className="modal-content-upl" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header-upl">
+          <h2>Chọn ảnh đại diện</h2>
+          <button className="modal-close-btn-upl" onClick={onClose}>
             <X size={24} />
           </button>
         </div>
-        <div className="modal-body">
-          <div className="upload-area" onClick={handleUploadAreaClick}>
+        <div className="modal-body-upl">
+          <div className="upload-area-upl" onClick={handleUploadAreaClick}>
             <input
               type="file"
               ref={fileInputRef}
@@ -57,21 +57,21 @@ const ImageUploadModal = ({ isOpen, onClose, onImageSelect, currentImageUrl }) =
               onChange={handleFileChange}
             />
             {preview ? (
-              <img src={preview} alt="Preview" className="image-preview" />
+              <img src={preview} alt="Xem trước" className="image-preview-upl" />
             ) : (
-              <div className="upload-placeholder">
+              <div className="upload-placeholder-upl">
                 <ImageUp size={48} />
-                <span>Upload Image</span>
+                <span>Nhấp để tải ảnh lên</span>
               </div>
             )}
           </div>
         </div>
-        <div className="modal-footer">
-          <button className="btn btn-secondary" onClick={onClose}>
+        <div className="modal-footer-upl">
+          <button className="btn-upl btn-secondary-upl" onClick={onClose}>
             Hủy
           </button>
           <button 
-            className="btn btn-primary" 
+            className="btn-upl btn-primary-upl" 
             onClick={handleConfirmSelection}  
             disabled={!selectedFile}
           >

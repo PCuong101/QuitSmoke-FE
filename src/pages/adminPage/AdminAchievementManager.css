@@ -1,23 +1,23 @@
-/* src/pages/adminPage/AdminAchievementManager.css (PHIÊN BẢN NÂNG CẤP) */
+/* src/pages/adminPage/AdminAchievementManager.css (Đã cập nhật) */
 
-.admin-achievement-manager {
+.admin-achievement-manager-acm {
     padding: 24px;
 }
-.admin-achievement-manager .page-header {
+.admin-achievement-manager-acm .page-header-acm {
     display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;
 }
-.admin-achievement-manager .page-header h2 { font-size: 24px; margin: 0; }
-.admin-achievement-manager .card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); padding: 24px; }
-.admin-achievement-manager .data-table { width: 100%; border-collapse: collapse; }
-.admin-achievement-manager .data-table th, .data-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #e5e7eb; vertical-align: middle;}
-.admin-achievement-manager .data-table th { background-color: #f9fafb; font-weight: 600; color: #4b5563; }
-.admin-achievement-manager .action-buttons { display: flex; gap: 8px; }
+.admin-achievement-manager-acm .page-header-acm h2 { font-size: 24px; margin: 0; }
+.admin-achievement-manager-acm .card-acm { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); padding: 24px; }
+.admin-achievement-manager-acm .data-table-acm { width: 100%; border-collapse: collapse; }
+.admin-achievement-manager-acm .data-table-acm th, .admin-achievement-manager-acm .data-table-acm td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #e5e7eb; vertical-align: middle;}
+.admin-achievement-manager-acm .data-table-acm th { background-color: #f9fafb; font-weight: 600; color: #4b5563; }
+.admin-achievement-manager-acm .action-buttons-acm { display: flex; gap: 8px; }
 
 /* ================================================= */
-/* ============= CSS MỚI CHO MODAL ================= */
+/* ============= CSS CHO MODAL VÀ FORM ============= */
 /* ================================================= */
 
-.modal-overlay {
+.modal-overlay-acm {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.6);
@@ -28,7 +28,7 @@
     padding: 24px;
 }
 
-.modal-content {
+.modal-content-acm {
     background: #fff;
     border-radius: 12px;
     width: 100%;
@@ -36,51 +36,53 @@
     box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
-    max-height: 90vh; /* Giới hạn chiều cao tối đa */
+    max-height: 90vh;
+    overflow: hidden; /* <<< THAY ĐỔI Ở ĐÂY: "Cắt" các góc vuông của phần tử con (footer) */
 }
 
-.modal-header {
+.modal-header-acm {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 16px 24px;
     border-bottom: 1px solid #e5e7eb;
-    flex-shrink: 0; /* Header không co lại */
+    flex-shrink: 0;
 }
 
-.modal-header h3 { margin: 0; font-size: 20px; }
-.btn-close-modal { color: #9ca3af; }
-.btn-close-modal:hover { color: #1f2937; }
+.modal-header-acm h3 { margin: 0; font-size: 20px; }
+.btn-close-modal-acm { color: #9ca3af; }
+.btn-close-modal-acm:hover { color: #1f2937; }
 
-.modal-body {
+.modal-body-acm {
     padding: 24px;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    overflow-y: auto; /* Tự động có thanh cuộn nếu nội dung dài */
+    overflow-y: auto;
 }
 
-.modal-footer {
+.modal-footer-acm {
     display: flex;
     justify-content: flex-end;
     gap: 12px;
     padding: 16px 24px;
     border-top: 1px solid #e5e7eb;
     background-color: #f9fafb;
-    flex-shrink: 0; /* Footer không co lại */
+    flex-shrink: 0;
 }
 
-.modal-body .form-group label {
+.modal-body-acm .form-group-acm label {
     display: block;
     margin-bottom: 8px;
     font-weight: 500;
     font-size: 14px;
     color: #374151;
+    text-align: left; /* <<< THAY ĐỔI Ở ĐÂY: Đảm bảo label luôn căn trái */
 }
 
-.modal-body .form-group input,
-.modal-body .form-group textarea,
-.modal-body .form-group select {
+.modal-body-acm .form-group-acm input,
+.modal-body-acm .form-group-acm textarea,
+.modal-body-acm .form-group-acm select {
     width: 100%;
     padding: 10px 12px;
     border: 1px solid #d1d5db;
@@ -88,27 +90,27 @@
     font-size: 14px;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
-.modal-body .form-group input:focus,
-.modal-body .form-group textarea:focus,
-.modal-body .form-group select:focus {
+.modal-body-acm .form-group-acm input:focus,
+.modal-body-acm .form-group-acm textarea:focus,
+.modal-body-acm .form-group-acm select:focus {
     outline: none;
     border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
-.modal-body .form-grid {
+.modal-body-acm .form-grid-acm {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
 }
 
-.file-input-container {
+.file-input-container-acm {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.icon-preview {
+.icon-preview-acm {
     width: 48px;
     height: 48px;
     border-radius: 6px;
@@ -117,15 +119,71 @@
     flex-shrink: 0;
 }
 
-/* Các style khác giữ nguyên */
-.btn { padding: 8px 16px; border-radius: 6px; font-weight: 600; border: 1px solid transparent; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
-.btn-primary { background-color: #3b82f6; color: white; }
-.btn-secondary { background-color: #e5e7eb; color: #374151; }
-.btn-icon { background: none; border: none; padding: 4px; cursor: pointer; color: #6b7280; border-radius: 50%; }
-.btn-icon:hover { background-color: #f3f4f6; }
-.btn-icon-delete:hover { color: #ef4444; }
-.file-input-wrapper { position: relative; display: flex; align-items: center; gap: 8px; border: 1px solid #d1d5db; border-radius: 6px; padding: 10px; cursor: pointer; flex-grow: 1; }
-.file-input-wrapper input[type="file"] { position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
-.loading-container { text-align: center; padding: 40px; }
-.spinner { animation: spin 1s linear infinite; }
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.file-input-wrapper-acm { 
+    position: relative; 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    border: 1px solid #d1d5db; 
+    border-radius: 6px; 
+    padding: 10px; 
+    cursor: pointer; 
+    flex-grow: 1; 
+}
+
+.file-input-wrapper-acm:hover {
+    border-color: #9ca3af;
+}
+
+.file-input-wrapper-acm input[type="file"] { 
+    position: absolute; 
+    left: 0; 
+    top: 0; 
+    opacity: 0; 
+    width: 100%; 
+    height: 100%; 
+    cursor: pointer; 
+}
+
+/* ================================================= */
+/* ============= STYLE CHUNG CHO CÁC NÚT ============= */
+/* ================================================= */
+
+.btn-acm { 
+    padding: 8px 16px; 
+    border-radius: 6px; 
+    font-weight: 600; 
+    border: 1px solid transparent; 
+    cursor: pointer; 
+    display: inline-flex; 
+    align-items: center; 
+    gap: 8px; 
+    transition: background-color 0.2s;
+}
+.btn-primary-acm { background-color: #3b82f6; color: white; }
+.btn-primary-acm:hover { background-color: #2563eb; }
+.btn-secondary-acm { background-color: #e5e7eb; color: #374151; }
+.btn-secondary-acm:hover { background-color: #d1d5db; }
+
+.btn-icon-acm { 
+    background: none; 
+    border: none; 
+    padding: 6px; 
+    cursor: pointer; 
+    color: #6b7280; 
+    border-radius: 50%;
+    transition: background-color 0.2s, color 0.2s;
+}
+.btn-icon-acm:hover { background-color: #f3f4f6; }
+.btn-icon-delete-acm:hover { color: #ef4444; background-color: #fef2f2; }
+
+/* ================================================= */
+/* ============= STYLE CHO LOADING ============= */
+/* ================================================= */
+
+.loading-container-acm { text-align: center; padding: 40px; }
+.spinner-acm { animation: spin-acm 1s linear infinite; color: #3b82f6; }
+@keyframes spin-acm { 
+    from { transform: rotate(0deg); } 
+    to { transform: rotate(360deg); } 
+}

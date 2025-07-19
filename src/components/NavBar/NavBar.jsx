@@ -9,6 +9,17 @@ import { useUser } from "../../contexts/UserContext.jsx";
 import ToastNotification from "../ToastNotification/ToastNotification.jsx";
 import "./NavBar.css";
 
+
+const getAvatarUrl = (user) => {
+  // Kiểm tra xem user và user.name có tồn tại và không phải chuỗi rỗng
+  if (user?.name?.trim()) {
+    const formattedName = user.name.trim().replace(/\s+/g, '+');
+    // Thêm &color=fff để chữ luôn có màu trắng, dễ đọc trên nền màu ngẫu nhiên
+    return `https://ui-avatars.com/api/?name=${formattedName}&background=random&color=fff`;
+  }
+  // Fallback cuối cùng nếu không có tên
+  return "/default-avatar.png";
+};
 export default function NavBar() {
   const logout = useLogout();
   const location = useLocation();
@@ -145,7 +156,7 @@ export default function NavBar() {
           onClick={() => setUserMenuOpen((prev) => !prev)}
         >
           <img 
-                src={userAvatar || '/default-avatar.png'} 
+                src={userAvatar || getAvatarUrl({ name: userName })}
                 alt="User Avatar" 
                 style={{ width: '32px', height: '32px', borderRadius: '50%', marginRight: '8px', objectFit: 'cover' }}
             />

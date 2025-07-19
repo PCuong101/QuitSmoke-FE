@@ -1,134 +1,198 @@
-/* ============================================= */
-/* == CSS CHO MODAL CHỈNH SỬA GÓI THÀNH VIÊN == */
-/* ============================================= */
-:root {
-  --admin-bg: #1f2937; /* Nền chính của trang admin */
-  --card-bg: #374151; /* Nền của card, bảng */
-  --text-primary: #f9fafb; /* Màu chữ chính (trắng nhạt) */
-  --text-secondary: #9ca3af; /* Màu chữ phụ, tiêu đề bảng */
-  --border-color: #4b5563; /* Màu viền */
-  --primary-accent: #3b82f6; /* Màu xanh dương nhấn mạnh */
-  --primary-accent-hover: #2563eb;
-  --green-accent: #22c55e; /* Màu xanh lá cây cho gói miễn phí */
-  --green-accent-bg: #166534;
+/* ServicePackagesAdmin.css (Đã cập nhật với hậu tố -ser và mã màu hex) */
+
+/* --- STYLE CHUNG CHO TRANG --- */
+.admin-achievement-manager-ser {
+    padding: 24px;
+    background-color: white; /* Nền xám rất nhạt */
+    color: #212529; /* Chữ đen-xám đậm */
+    min-height: calc(100vh - 48px);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
-/* Lớp phủ nền tối, làm mờ phần còn lại của trang */
-.modal-overlay {
+.page-header-ser h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 24px;
+}
+
+.card-ser {
+    background-color: #ffffff; /* Nền card màu trắng */
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    border: 1px solid #dee2e6;
+}
+
+.loading-container-ser {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    color: #6c757d;
+}
+
+.spinner-ser {
+    animation: spin-ser 1s linear infinite;
+    color: #0d6efd; /* Màu xanh dương cho spinner */
+}
+
+@keyframes spin-ser {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* --- STYLE CHO BẢNG DỮ LIỆU (LIGHT MODE) --- */
+.data-table-ser {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table-ser th, .data-table-ser td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6; /* Viền xám nhạt */
+}
+
+.data-table-ser th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #6c757d; /* Màu chữ tiêu đề xám */
+}
+
+.data-table-ser tr:last-child td {
+    border-bottom: none;
+}
+
+.free-plan-ser {
+    color: #0f5132; /* Chữ xanh lá đậm */
+    font-weight: 600;
+    background-color: #d1e7dd; /* Nền xanh lá nhạt */
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    border: 1px solid #badbcc;
+}
+
+.paid-plan-ser {
+    font-weight: 600;
+    color: #0d6efd; /* Màu xanh dương */
+}
+
+.action-buttons-ser {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-icon-ser {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+    color: #6c757d; /* Màu icon xám */
+}
+
+.btn-icon-ser:hover {
+    background-color: #e9ecef; /* Nền xám nhạt khi hover */
+    color: #212529;
+}
+
+/* --- STYLE CHO MODAL --- */
+.modal-overlay-ser {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(17, 24, 39, 0.6); /* Màu nền đen mờ */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-/* Khung nội dung chính của modal */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(17, 24, 39, 0.8); /* Nền tối hơn */
+  background-color: rgba(17, 24, 39, 0.8);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  animation: fadeIn 0.3s ease-in-out;
+  animation: fadeIn-ser 0.3s ease-in-out;
 }
 
-/* Khung nội dung chính của modal */
-.modal-content {
-  background-color: var(--card-bg); /* Nền tối của modal */
-  color: var(--text-primary); /* Chữ trắng */
+.modal-content-ser {
+  background-color: #374151;
+  color: #f9fafb;
   padding: 28px 32px;
-  border-radius: 16px; /* Bo tròn nhiều hơn */
+  border-radius: 16px;
   width: 90%;
   max-width: 520px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  border: 1px solid var(--border-color);
-  animation: slideUp 0.4s ease-out;
+  border: 1px solid #4b5563;
+  animation: slideUp-ser 0.4s ease-out;
 }
 
-/* Tiêu đề modal */
-.modal-content h3 {
+.modal-content-ser h3 {
   margin-top: 0;
   margin-bottom: 28px;
   font-size: 1.6rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #f9fafb;
   text-align: center;
 }
 
-/* Mỗi dòng trong form */
-.modal-content .form-row {
+.modal-content-ser .form-row-ser {
   margin-bottom: 20px;
 }
 
-/* Nhãn của các ô nhập liệu */
-.modal-content .form-row label {
+.modal-content-ser .form-row-ser label {
   display: block;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-secondary); /* Màu chữ phụ */
+  color: #9ca3af;
   margin-bottom: 8px;
-  text-align: left; /* Căn lề trái */
+  text-align: left;
 }
 
-/* Style chung cho input và textarea */
-.modal-content input,
-.modal-content textarea {
+.modal-content-ser input,
+.modal-content-ser textarea {
   width: 100%;
   padding: 12px 14px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px; /* Bo tròn vừa phải */
+  border: 1px solid #4b5563;
+  border-radius: 8px;
   font-size: 1rem;
-  color: var(--text-primary);
-  background-color: var(--admin-bg); /* Nền input tối hơn nền modal */
+  color: #f9fafb;
+  background-color: #1f2937;
   transition: border-color 0.2s, box-shadow 0.2s;
   box-sizing: border-box;
 }
 
-.modal-content textarea {
+.modal-content-ser textarea {
   resize: vertical;
   min-height: 80px;
 }
 
-/* Hiệu ứng khi focus */
-.modal-content input:focus,
-.modal-content textarea:focus {
+.modal-content-ser input:focus,
+.modal-content-ser textarea:focus {
   outline: none;
-  border-color: var(--primary-accent);
+  border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
 }
 
-/* Style cho input bị khóa (readOnly) */
-.modal-content input[readOnly] {
+.modal-content-ser input[readOnly] {
   background-color: #4b5563;
   color: #9ca3af;
   cursor: not-allowed;
 }
 
-/* Khu vực chứa các nút bấm */
-.modal-buttons {
+.modal-buttons-ser {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
   margin-top: 28px;
   padding-top: 20px;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid #4b5563;
 }
 
-/* Style chung cho các nút */
-.modal-buttons button {
+.modal-buttons-ser button {
   padding: 10px 24px;
   border: none;
   border-radius: 8px;
@@ -138,42 +202,39 @@
   transition: all 0.2s;
 }
 
-.modal-buttons button:active {
+.modal-buttons-ser button:active {
     transform: scale(0.97);
 }
 
-/* Nút "Lưu" */
-.modal-buttons .save-btn {
-  background-color: var(--primary-accent);
+.modal-buttons-ser .save-btn-ser {
+  background-color: #3b82f6;
   color: white;
 }
 
-.modal-buttons .save-btn:hover {
-  background-color: var(--primary-accent-hover);
+.modal-buttons-ser .save-btn-ser:hover {
+  background-color: #2563eb;
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
 }
 
-/* Nút "Đóng" */
-.modal-buttons .cancel-btn {
+.modal-buttons-ser .cancel-btn-ser {
   background-color: transparent;
-  color: var(--text-secondary);
-  border: 1px solid var(--border-color);
+  color: #9ca3af;
+  border: 1px solid #4b5563;
 }
 
-.modal-buttons .cancel-btn:hover {
+.modal-buttons-ser .cancel-btn-ser:hover {
   background-color: rgba(255, 255, 255, 0.05);
-  color: var(--text-primary);
+  color: #f9fafb;
   border-color: #6b7280;
 }
 
-
 /* Animation */
-@keyframes fadeIn {
+@keyframes fadeIn-ser {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-@keyframes slideUp {
+@keyframes slideUp-ser {
   from { transform: translateY(20px) scale(0.98); opacity: 0; }
   to { transform: translateY(0) scale(1); opacity: 1; }
 }

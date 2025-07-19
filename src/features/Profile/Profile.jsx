@@ -13,6 +13,18 @@ import NavBar from "../../components/NavBar/NavBar";
 import Footer from "../../components/Footer/Footer";
 import { useUser } from "../../contexts/UserContext";
 
+const getAvatarUrl = (user) => {
+  // 1. Kiểm tra xem user và user.name có tồn tại và không phải chuỗi rỗng
+  if (user?.name?.trim()) {
+    // 2. Định dạng tên: bỏ khoảng trắng thừa và thay thế bằng '+'
+    const formattedName = user.name.trim().replace(/\s+/g, '+');
+    // 3. Trả về URL từ ui-avatars
+    return `https://ui-avatars.com/api/?name=${formattedName}&background=random`;
+  }
+  // 4. Nếu không, trả về một ảnh mặc định (fallback)
+  return "/default-avatar.png";
+};
+
 const Profile = () => {
   const [sessionUser, setSessionUser] = useState(null);
   const [achievementsCount, setAchievementsCount] = useState(0);
@@ -109,9 +121,7 @@ const Profile = () => {
     setIsEditing(false);
     setFormData({ fullName: userName, email: email });
     // Quay về ảnh cũ
-    if (sessionUser) {
-      setProfilePicturePreview(sessionUser.profilePicture);
-    }
+    setProfilePicturePreview(null);
     setProfilePictureFile(null); 
   };
 
@@ -174,6 +184,8 @@ const Profile = () => {
     }
   };
 
+  
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -210,128 +222,119 @@ const Profile = () => {
         onImageSelect={handleImageSelect}
         currentImageUrl={profilePicturePreview}
       />
-      <div className="profile-container">
-        <div className="profile-card">
-          <h1 className="profile-title">Thông tin cá nhân</h1>
-          <p className="profile-subtitle">
+      <div className="profile-container-pf">
+        <div className="profile-card-pf">
+          <h1 className="profile-title-pf">Thông tin cá nhân</h1>
+          <p className="profile-subtitle-pf">
             Quản lý thông tin và theo dõi tiến trình của bạn
           </p>
 
-          <div className="profile-header">
+          <div className="profile-header-pf">
             <div
-              className="avatar-container"
+              className="avatar-container-pf"
               onClick={() => isEditing && setIsModalOpen(true)}
               style={{ cursor: isEditing ? "pointer" : "default" }}
             >
               <div
-                className="avatar"
+                className="avatar-pf"
                 style={{
                   backgroundImage: `url(${
-                    profilePicturePreview || "/default-avatar.png"
+                    profilePicturePreview ||
+                    // Ưu tiên 2: Ảnh từ server HOẶC tạo từ tên nếu ảnh server không có
+                    (sessionUser.profilePicture || getAvatarUrl(sessionUser))
                   })`,
                 }}
               ></div>
-              {/* Icon chỉ hiển thị khi ở chế độ chỉnh sửa và hover */}
               {isEditing && (
-                <div className="edit-avatar-icon">
+                <div className="edit-avatar-icon-pf">
                   <Pencil size={32} />
                 </div>
               )}
             </div>
 
             {sessionUser.role !== "MEMBER" && (
-              <div className="premium-badge">
-                {/* --- 2. THAY THẾ ICON --- */}
+              <div className="premium-badge-pf">
                 <Crown size={16} style={{ marginRight: "4px" }} /> Premium
               </div>
             )}
           </div>
 
-          <div className="stats-grid">
-            <div className="stat-item" style={{ backgroundColor: "#e0f2fe" }}>
-              <div
-                className="stat-icon-wrapper"
-                style={{ backgroundColor: "#e0f2fe" }}
-              >
-                {/* --- 2. THAY THẾ ICON --- */}
+          <div className="stats-grid-pf">
+            <div className="stat-item-pf" style={{ backgroundColor: "#e0f2fe" }}>
+              <div className="stat-icon-wrapper-pf" style={{ backgroundColor: "#e0f2fe" }}>
                 <PiggyBank size={22} style={{ color: "#0ea5e9" }} />
               </div>
-              <div className="stat-text">
+              <div className="stat-text-pf">
                 <h3>{moneySaved.toLocaleString("vi-VN") || 0} đ</h3>
                 <p>Tiền tiết kiệm</p>
               </div>
             </div>
-            <div className="stat-item" style={{ backgroundColor: "#fefce8" }}>
-              <div
-                className="stat-icon-wrapper"
-                style={{ backgroundColor: "#fefce8" }}
-              >
-                {/* --- 2. THAY THẾ ICON --- */}
+            <div className="stat-item-pf" style={{ backgroundColor: "#fefce8" }}>
+              <div className="stat-icon-wrapper-pf" style={{ backgroundColor: "#fefce8" }}>
                 <Trophy size={22} style={{ color: "#eab308" }} />
               </div>
-              <div className="stat-text">
+              <div className="stat-text-pf">
                 <h3>{achievementsCount || 0}</h3>
                 <p>Thành tựu đạt được</p>
               </div>
             </div>
           </div>
-          <div className="profile-form-section">
-            <h2 className="form-section-title">Chi tiết tài khoản</h2>
-            <div className="profile-form">
-              <div className="form-group">
+          <div className="profile-form-section-pf">
+            <h2 className="form-section-title-pf">Chi tiết tài khoản</h2>
+            <div className="profile-form-pf">
+              <div className="form-group-pf">
                 <label htmlFor="fullName">Họ và tên</label>
-                <div className="form-field">
+                <div className="form-field-pf">
                   {isEditing ? (
                     <input
                       type="text"
                       id="fullName"
                       name="fullName"
-                      className="form-control"
+                      className="form-control-pf"
                       value={formData.fullName || ""}
                       onChange={handleInputChange}
                     />
                   ) : (
-                    <p className="info-text">{formData.fullName}</p>
+                    <p className="info-text-pf">{formData.fullName}</p>
                   )}
                 </div>
               </div>
 
-              <div className="form-group">
+              <div className="form-group-pf">
                 <label htmlFor="email">Email</label>
-                <div className="form-field">
+                <div className="form-field-pf">
                   {isEditing ? (
                     <input
                       type="email"
                       id="email"
                       name="email"
-                      className="form-control"
+                      className="form-control-pf"
                       value={formData.email || ""}
                       onChange={handleInputChange}
                     />
                   ) : (
-                    <p className="info-text">{formData.email}</p>
+                    <p className="info-text-pf">{formData.email}</p>
                   )}
                 </div>
               </div>
-              <div className="button-group">
+              <div className="button-group-pf">
                 {isEditing ? (
                   <>
                     <button
-                      className="btn btn-primary"
+                      className="btn-pf btn-primary-pf"
                       onClick={handleSaveClick}
                     >
                       Lưu thay đổi
                     </button>
                     <button
-                      className="btn btn-secondary"
+                      className="btn-pf btn-secondary-pf"
                       onClick={handleCancelClick}
                     >
                       Hủy
                     </button>
                   </>
                 ) : (
-                  <button className="btn btn-dark" onClick={handleEditClick}>
-                    {/* --- 2. THAY THẾ ICON --- */}
+                  <button className="btn-pf btn-dark-pf" onClick={handleEditClick}>
                     <Pencil size={16} style={{ marginRight: "8px" }} />
                     Cập nhật thông tin
                   </button>
