@@ -59,8 +59,8 @@
 .btn-meet,
 .btn-cancel {
   padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 6px;
+  font-size: 1em;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
@@ -79,6 +79,18 @@
 .btn-meet:hover,
 .btn-cancel:hover {
   opacity: 0.85;
+}
+
+.btn-meet.btn-disabled {
+  background: #6b7280 !important;
+  color: white !important;
+  cursor: not-allowed !important;
+  opacity: 1 !important;
+  border-radius: 6px !important;
+}
+
+.btn-meet.btn-disabled:hover {
+  opacity: 1 !important;
 }
 
 /* ---- Khu vực Danh sách chuyên gia ---- */
@@ -585,4 +597,137 @@
 .coach-card-actions .btn-join-meet {
   background-color: #16a34a; /* Màu xanh lá */
   color: white;
+}
+
+/* CSS cho nút đánh giá */
+.btn-rating {
+  background-color: #f59e0b !important;
+  color: white !important;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.btn-rating:hover {
+  background-color: #d97706 !important;
+}
+
+.btn-rated {
+  background-color: #6b7280 !important;
+  color: white !important;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: not-allowed;
+  font-weight: 600;
+}
+
+/* CSS cho nút xem đánh giá */
+.btn-view-rating {
+  background-color: #3b82f6 !important;
+  color: white !important;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.btn-view-rating:hover {
+  background-color: #2563eb !important;
+}
+
+/* CSS cho modal đánh giá */
+.rating-modal {
+  min-width: 500px;
+  max-width: 600px;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+  justify-content: center;
+}
+
+.star-button {
+  background: none;
+  border: none;
+  font-size: 32px;
+  color: #d1d5db;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 4px;
+}
+
+.star-button:hover {
+  color: #fbbf24;
+}
+
+.star-button.active {
+  color: #f59e0b;
+}
+
+.rating-text {
+  text-align: center;
+  font-weight: 600;
+  color: #374151;
+  margin: 8px 0 16px 0;
+  font-size: 16px;
+}
+
+.rating-comment {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  resize: vertical;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.rating-comment:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* CSS cho modal xem đánh giá */
+.rating-stars.view-only {
+  pointer-events: none;
+}
+
+.star-display {
+  font-size: 32px;
+  color: #d1d5db;
+  padding: 4px;
+  margin: 0 4px;
+}
+
+.star-display.active {
+  color: #f59e0b;
+}
+
+.rating-comment-display {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #374151;
+  min-height: 60px;
+  white-space: pre-wrap;
+}
+
+.rating-date {
+  color: #6b7280;
+  font-size: 14px;
+  font-style: italic;
+  margin: 8px 0 0 0;
 }

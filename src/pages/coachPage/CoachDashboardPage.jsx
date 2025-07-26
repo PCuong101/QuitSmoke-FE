@@ -22,23 +22,26 @@ function formatDateWithWeekday(dateStr) {
   });
 }
 
-// Hàm này sẽ trả về khoảng thời gian tương ứng với nhãn slot
-const getSlotTimeRange = (slotLabel) => {
-    // Kiểm tra xem chuỗi có chứa "sáng" hoặc "chiều" không (không phân biệt hoa thường)
-    if (slotLabel.toLowerCase().includes('sáng')) {
-        return 'Sáng (08:00 - 10:00)'; // Cập nhật đúng giờ theo DB của bạn
-    }
-    if (slotLabel.toLowerCase().includes('chiều')) {
-        return 'Chiều (14:00 - 16:00)'; // Cập nhật đúng giờ theo DB của bạn
-    }
-    // Trả về chính label nếu không khớp
-    return slotLabel;
-};
+function formatLocalTime(localTime) {
+  if (!localTime) return "";
+  
+  if (localTime.includes(":") && localTime.split(":").length === 3) {
+    return localTime.substring(0, 5);
+  }
+  
+  if (localTime.includes(":") && localTime.split(":").length === 2) {
+    return localTime;
+  }
+  
+  return localTime;
+}
+
 
 function CoachDashboardPage() {
   const [schedules, setSchedules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("schedule");
+  const [bookingRatings, setBookingRatings] = useState(new Map());
   const userId = useUserId();
 
 const fetchCoachSchedules = useCallback(async () => {
@@ -58,12 +61,41 @@ const fetchCoachSchedules = useCallback(async () => {
         (a, b) => new Date(a.date) - new Date(b.date)
       );
       setSchedules(sortedData); 
+      
+      // Lấy đánh giá cho các booking đã hoàn thành
+      await fetchBookingRatings(sortedData);
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
     }
 }, [userId]);
+
+const fetchBookingRatings = async (scheduleData) => {
+  const ratingsMap = new Map();
+  
+  // Lọc ra các booking đã hoàn thành và có bookingId
+  const finishedBookings = scheduleData.filter(
+    schedule => schedule.bookingStatus === "FINISHED" && schedule.bookingId
+  );
+  
+  // Lấy đánh giá cho từng booking
+  for (const booking of finishedBookings) {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/feedbacks/get-by-booking/${booking.bookingId}`
+      );
+      if (response.ok) {
+        const rating = await response.json();
+        ratingsMap.set(booking.bookingId, rating);
+      }
+    } catch (error) {
+      console.error(`Lỗi khi lấy đánh giá cho booking ${booking.bookingId}:`, error);
+    }
+  }
+  
+  setBookingRatings(ratingsMap);
+};
       
   const handleFinishBooking = async (bookingId) => {
     if (!window.confirm("Bạn có chắc chắn muốn đánh dấu cuộc hẹn này là đã hoàn thành?")) {
@@ -75,7 +107,7 @@ const fetchCoachSchedules = useCallback(async () => {
       );
       if (!response.ok) throw new Error("Không thể hoàn thành cuộc hẹn.");
       alert("Đã cập nhật trạng thái thành FINISHED!");
-      await fetchCoachSchedules();
+      await fetchCoachSchedules(); // Sẽ tự động fetch lại ratings
     } catch (error) {
       console.error("Lỗi khi hoàn thành booking:", error);
       alert("Có lỗi xảy ra, vui lòng thử lại.");
@@ -108,53 +140,92 @@ const pastBookings = schedules.filter(
     if (bookings.length === 0) {
       return <p>Không có lịch hẹn nào trong mục này.</p>;
     }
-    return bookings.map((schedule) => (
-      <div key={schedule.scheduleId} className="schedule-card">
-        <div className="card-header">
-          <span className="date-tag">
-            {dayjs(schedule.date).format("dd, DD/MM/YYYY")}
-          </span>
-          {schedule.bookingStatus && schedule.bookingStatus !== "UNKNOWN" && (
-            <span className={`status-tag status-${schedule.bookingStatus.toLowerCase()}`}>
-              {schedule.bookingStatus}
+    return bookings.map((schedule) => {
+      const rating = bookingRatings.get(schedule.bookingId);
+      
+      return (
+        <div key={schedule.scheduleId} className="schedule-card">
+          <div className="card-header">
+            <span className="date-tag">
+              {dayjs(schedule.date).format("dd, DD/MM/YYYY")}
             </span>
-          )}
-        </div>
-        <div className="card-body">
-            <p><strong>Slot:</strong>{getSlotTimeRange(schedule.slotLabel)}</p>
-            {schedule.bookedByName ? (
-            <>
-              <p><strong>Người đặt:</strong> {schedule.bookedByName} ({schedule.bookedByEmail})</p>
-              <p><strong>Triệu chứng:</strong> {schedule.notes || "Không có ghi chú"}</p>
-            </>
-            ) : (
-            <p><i>Thông tin người đặt không có sẵn.</i></p>
+            {schedule.bookingStatus && schedule.bookingStatus !== "UNKNOWN" && (
+              <span className={`status-tag status-${schedule.bookingStatus.toLowerCase()}`}>
+                {schedule.bookingStatus}
+              </span>
             )}
+          </div>
+          <div className="card-body">
+              <p><strong>Slot:</strong> {formatLocalTime(schedule.startTime)} - {formatLocalTime(schedule.endTime)}</p>
+              {schedule.bookedByName ? (
+              <>
+                <p><strong>Người đặt:</strong> {schedule.bookedByName} ({schedule.bookedByEmail})</p>
+                <p><strong>Triệu chứng:</strong> {schedule.notes || "Không có ghi chú"}</p>
+              </>
+              ) : (
+              <p><i>Thông tin người đặt không có sẵn.</i></p>
+              )}
+              
+              {/* Hiển thị đánh giá nếu có */}
+              {rating && schedule.bookingStatus === "FINISHED" && (
+                <div className="rating-section">
+                  <p><strong>Đánh giá từ khách hàng:</strong> {schedule.bookedByName}</p>
+                  <div className="rating-display">
+                    <div className="stars">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <span
+                          key={star}
+                          className={`star ${rating.rating >= star ? 'filled' : ''}`}
+                        >
+                          ★
+                        </span>
+                      ))}
+                      <span className="rating-number">({rating.rating}/5)</span>
+                    </div>
+                    {rating.comment && (
+                      <div className="rating-comment">
+                        <p>"{rating.comment}"</p>
+                      </div>
+                    )}
+                    <div className="rating-date">
+                      <small>Đánh giá vào: {new Date(rating.createdAt).toLocaleString("vi-VN")}</small>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* Hiển thị thông báo chưa có đánh giá */}
+              {!rating && schedule.bookingStatus === "FINISHED" && schedule.bookingId && (
+                <div className="no-rating">
+                  <p><em>Khách hàng chưa đánh giá buổi tư vấn này.</em></p>
+                </div>
+              )}
+          </div>
+          <div className="card-actions">
+            <button
+              className="btn-action btn-meet"
+              onClick={() => {
+                if (schedule.bookingStatus === "BOOKED" && schedule.meetingLink) {
+                  window.open(schedule.meetingLink, "_blank", "noopener,noreferrer");
+                } else {
+                  alert("Không có link Google Meet cho lịch này!");
+                }
+              }}
+              disabled={schedule.bookingStatus !== "BOOKED" || !schedule.meetingLink}
+            >
+              Vào buổi gặp
+            </button>
+            <button
+              className="btn-action btn-finish"
+              disabled={schedule.bookingStatus !== "BOOKED"}
+              onClick={() => handleFinishBooking(schedule.bookingId)}
+            >
+              Đánh dấu hoàn thành
+            </button>
+          </div>
         </div>
-        <div className="card-actions">
-          <button
-            className="btn-action btn-meet"
-            onClick={() => {
-              if (schedule.bookingStatus === "BOOKED" && schedule.meetingLink) {
-                window.open(schedule.meetingLink, "_blank", "noopener,noreferrer");
-              } else {
-                alert("Không có link Google Meet cho lịch này!");
-              }
-            }}
-            disabled={schedule.bookingStatus !== "BOOKED" || !schedule.meetingLink}
-          >
-            Vào buổi gặp
-          </button>
-          <button
-            className="btn-action btn-finish"
-            disabled={schedule.bookingStatus !== "BOOKED"}
-            onClick={() => handleFinishBooking(schedule.bookingId)}
-          >
-            Đánh dấu hoàn thành
-          </button>
-        </div>
-      </div>
-    ));
+      );
+    });
   };
 
   return (
@@ -168,7 +239,7 @@ const pastBookings = schedules.filter(
               schedulesUpcoming.map((s) => (
                 <div key={s.scheduleId} className={`coach-slot ${s.bookingStatus !== "EMPTY" ? "slot-booked" : "slot-available"}`}>
                   <div>{formatDateWithWeekday(s.date)}</div>
-                  <div>{getSlotTimeRange(s.slotLabel)}</div>
+                  <div>{formatLocalTime(s.startTime)} - {formatLocalTime(s.endTime)}</div>
                 </div>
               ))
             )}

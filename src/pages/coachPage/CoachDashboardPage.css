@@ -219,3 +219,80 @@
 a.btn-action:disabled {
   pointer-events: none;
 }
+
+/* CSS cho phần hiển thị đánh giá */
+.rating-section {
+  margin-top: 16px;
+  padding: 16px;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  border-left: 4px solid #3b82f6;
+}
+
+.rating-display {
+  margin-top: 8px;
+  text-align: center;
+}
+
+.stars {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.star {
+  font-size: 18px;
+  color: #d1d5db;
+}
+
+.star.filled {
+  color: #f59e0b;
+}
+
+.rating-number {
+  margin-left: 8px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.rating-comment {
+  background-color: white;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  margin: 8px 0;
+  text-align: left;
+}
+
+.rating-comment p {
+  font-style: italic;
+  color: #4b5563;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.rating-date {
+  margin-top: 8px;
+  text-align: center;
+}
+
+.rating-date small {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.no-rating {
+  margin-top: 16px;
+  padding: 12px;
+  background-color: #f9fafb;
+  border-radius: 6px;
+  border: 1px dashed #d1d5db;
+}
+
+.no-rating p {
+  color: #6b7280;
+  margin: 0;
+  text-align: center;
+}
