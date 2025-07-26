@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"
 import { Heart, Droplets, BrainCircuit, Wallet, Pencil, Target } from "lucide-react";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -11,6 +11,7 @@ import { useUser } from "../../contexts/UserContext";
 import useHealthList from "../../hooks/useHealthListRealtime";
 
 import './Dashboard.css';
+
 
 function formatRemaining(seconds) {
   if (typeof seconds !== "number" || isNaN(seconds) || seconds <= 0) return "Hoàn thành";
@@ -24,6 +25,8 @@ function formatRemaining(seconds) {
 }
 
 const formatCurrency = (num) => (num ? Math.round(num).toLocaleString('vi-VN') + ' đ' : '0 đ');
+
+
 
 function WelcomeHeader({ userName }) {
     return (
@@ -53,6 +56,7 @@ function HealthMilestoneCard({ item }) {
             </div>
             <div className="health-card-info">
                 <div className="health-card-title">
+                    {/* <Icon size={20} className="health-card-icon" /> */}
                     <h4>{item.name}</h4>
                 </div>
                 <p>Thời gian hồi phục còn lại:</p>
@@ -68,6 +72,7 @@ function SavingsInsightCard() {
     const [activeTab, setActiveTab] = useState('total');
 
     useEffect(() => {
+        // Nếu không có userId (đã logout), dọn dẹp state và dừng lại
         if (!userId) {
             setSavedMoney({});
             return;
@@ -80,7 +85,7 @@ function SavingsInsightCard() {
                     const data = await response.json();
                     setSavedMoney(data);
                 } else {
-                    setSavedMoney({});
+                    setSavedMoney({}); // Nếu lỗi (ví dụ user mới chưa có plan), cũng dọn dẹp
                 }
             } catch (error) {
                 console.error("Lỗi khi fetch savings:", error);
@@ -90,10 +95,11 @@ function SavingsInsightCard() {
 
         fetchData();
 
+        // Hàm cleanup: sẽ chạy khi userId thay đổi hoặc component bị unmount
         return () => {
             setSavedMoney({});
         };
-    }, [userId]);
+    }, [userId]); // Phụ thuộc vào userId
     
     const displayData = {
         total: { label: "Tổng Tiết Kiệm", value: formatCurrency(savedMoney.totalSavings) },
@@ -131,7 +137,7 @@ function SavingsInsightCard() {
 function QuickActionsCard() {
     return (
         <div className="quick-actions-card">
-            <div className="card-header">
+             <div className="card-header">
                 <h4>Hành Động Nhanh</h4>
             </div>
             <Link to="/diary" className="action-item">
@@ -146,21 +152,30 @@ function QuickActionsCard() {
     );
 }
 
+
+
 function DashBoard() {
-  const { healthList, loading: healthLoading } = useHealthList();
+  const { healthList, loading: healthLoading } = useHealthList(); // Custom hook đã được sửa
   const { userId, userName } = useUser();
 
+  
   const [dailyLogs, setDailyLogs] = useState([]);
   const [logsLoading, setLogsLoading] = useState(true);
 
   useEffect(() => {
+    // Nếu không có userId (vừa logout), dọn dẹp tất cả state và dừng lại
     if (!userId) {
       setDailyLogs([]);
-      setLogsLoading(false);
+      setLogsLoading(false); // Quan trọng: dừng trạng thái loading
       return;
     }
 
+    // Khi có userId mới, bắt đầu fetch dữ liệu
     const fetchAllDashboardData = async () => {
+      // 1. Lấy tên user
+      
+      
+      // 2. Lấy dữ liệu nhật ký
       setLogsLoading(true);
       try {
         const logsRes = await fetch(`http://localhost:8080/api/user-daily-logs/get-daily-logs/${userId}`);
@@ -169,7 +184,7 @@ function DashBoard() {
           const sortedData = data.sort((a, b) => new Date(a.logDate) - new Date(b.logDate));
           setDailyLogs(sortedData);
         } else {
-            setDailyLogs([]);
+            setDailyLogs([]); // Nếu response không ok (e.g. 404), set mảng rỗng
         }
       } catch (error) {
         console.error("Lỗi khi fetch daily logs:", error);
@@ -181,11 +196,13 @@ function DashBoard() {
 
     fetchAllDashboardData();
 
+    // Hàm cleanup: Chạy khi component unmount hoặc userId thay đổi
     return () => {
         setDailyLogs([]);
     }
-  }, [userId]);
+  }, [userId]); // Phụ thuộc duy nhất vào userId
 
+  // Loading state
   if (healthLoading || logsLoading) {
     return (
         <>
@@ -198,11 +215,13 @@ function DashBoard() {
     );
   }
 
+  // Render giao diện
   return (
     <>
       <NavBar />
       <div className="dashboard-container">
         <WelcomeHeader userName={userName} />
+
         <div className="dashboard-grid">
             <div className="main-column">
                 {dailyLogs.length > 0 && (
@@ -229,11 +248,13 @@ function DashBoard() {
                     </div>
                 </div>
             </div>
+
             <div className="side-column">
                 <SavingsInsightCard />
                 <QuickActionsCard />
             </div>
         </div>
+
       </div>
       <Footer />
     </>

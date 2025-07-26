@@ -1,5 +1,3 @@
-// src/components/Sidebar.jsx (PHIÊN BẢN SỬA LỖI CUỐI CÙNG)
-
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
@@ -30,15 +28,11 @@ const Sidebar = () => {
       text: "Quản lý bài đăng",
       icon: <FiFileText size={20} />,
     },
-    // ===================================================================
-    // === DÒNG NÀY ĐÃ ĐƯỢC SỬA LẠI CHO ĐÚNG CÚ PHÁP CỦA MỘT OBJECT ===
-    // ===================================================================
     {
       to: "/admin/achievements",
       text: "Quản lý Thành tựu",
       icon: <FiAward size={20} />,
     },
-    // ===================================================================
     { to: "/admin/settings", text: "Cài đặt", icon: <FiSettings size={20} /> },
   ];
 

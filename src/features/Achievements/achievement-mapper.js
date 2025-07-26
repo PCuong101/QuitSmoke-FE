@@ -1,8 +1,5 @@
-// src/features/Achievements/achievement-mapper.js
-
 import { Calendar, Award, Target, PiggyBank, Star, Sun, ShieldCheck, BookOpen, HeartPulse } from 'lucide-react';
 
-// Hàm này sẽ "trang trí" cho DTO từ API với các thuộc tính của frontend
 export const mapApiToFeAchievement = (templateDto) => {
     let icon = Star; // Icon mặc định
     let tier = 'bronze'; // Tier mặc định
@@ -34,8 +31,8 @@ export const mapApiToFeAchievement = (templateDto) => {
     }
 
     return {
-        ...templateDto, // Giữ lại tất cả các thuộc tính từ API
-        icon: icon,      // Thêm icon component
-        tier: tier       // Thêm tier
+        ...templateDto, 
+        icon: icon,      
+        tier: tier       
     };
 };

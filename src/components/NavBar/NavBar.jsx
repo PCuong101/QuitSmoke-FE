@@ -1,5 +1,3 @@
-// src/components/NavBar/NavBar.jsx (PHIÊN BẢN HOÀN CHỈNH)
-
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import * as icon from "lucide-react";
@@ -11,13 +9,10 @@ import "./NavBar.css";
 
 
 const getAvatarUrl = (user) => {
-  // Kiểm tra xem user và user.name có tồn tại và không phải chuỗi rỗng
   if (user?.name?.trim()) {
     const formattedName = user.name.trim().replace(/\s+/g, '+');
-    // Thêm &color=fff để chữ luôn có màu trắng, dễ đọc trên nền màu ngẫu nhiên
     return `https://ui-avatars.com/api/?name=${formattedName}&background=random&color=fff`;
   }
-  // Fallback cuối cùng nếu không có tên
   return "/default-avatar.png";
 };
 export default function NavBar() {
@@ -27,10 +22,8 @@ export default function NavBar() {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const { userName, role ,userAvatar} = useUser();
 
-  // === SỬA Ở ĐÂY: Lấy các hàm mới từ Context ===
   const { notifications, markAsRead, markAllAsRead, deleteNotification } =
     useNotifications();
-  // ===========================================
 
   const popupRef = useRef();
 
@@ -39,19 +32,16 @@ export default function NavBar() {
   const handleNotificationClick = () =>
     setIsNotificationOpen(!isNotificationOpen);
 
-  // === SỬA Ở ĐÂY: Sử dụng hàm `markAsRead` từ Context ===
   const handleItemClick = (notification) => {
     if (!notification.read) {
       markAsRead(notification.id);
     }
-    // Logic điều hướng giữ nguyên
     if (notification.link) {
       navigate(notification.link);
       setIsNotificationOpen(false);
     }
   };
 
-  // === SỬA Ở ĐÂY: Sử dụng hàm `deleteNotification` từ Context ===
   const handleDeleteNotification = (notificationId, event) => {
     event.stopPropagation();
     deleteNotification(notificationId);
