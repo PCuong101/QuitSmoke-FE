@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Plus, User, FilePenLine, Trash2 } from "lucide-react";
+import { Plus, User, FilePenLine, Trash2, Loader2 } from "lucide-react";
 
 const CoachManagement = () => {
   const [coaches, setCoaches] = useState([]);
   const navigate = useNavigate();
   
   const [coachToDelete, setCoachToDelete] = useState(null);
+  const [isCreatingSchedule, setIsCreatingSchedule] = useState(null); // Track which coach is having schedule created
 
   useEffect(() => {
     axios
       .get("http://localhost:8080/api/admin/coaches")
       .then((res) => {
-        
-        console.log("Dữ liệu coaches từ API:", res.data); 
         setCoaches(res.data);
       })
       
@@ -51,7 +50,39 @@ const CoachManagement = () => {
     }
 };
 
-  const handleRowClick = (coachId) => navigate(`/admin/coach/${coachId}`);
+  const handleRowClick = async (coachId) => {
+    try {
+      setIsCreatingSchedule(coachId); // Set loading state for this coach
+      
+      // Gọi API tạo lịch cho coach
+      const response = await axios.post(
+        `http://localhost:8080/api/admin/coach/${coachId}/create-schedule`,
+        {}, // Body có thể trống hoặc chứa thông tin cần thiết
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.status === 200 || response.status === 201) {
+        navigate(`/admin/coach/${coachId}`);
+      }
+    } catch (error) {
+      console.error("Lỗi khi tạo lịch:", error);
+      
+      // Hiển thị thông báo lỗi cho user
+      if (error.response?.status === 400) {
+        alert("Lịch cho chuyên gia này đã tồn tại hoặc dữ liệu không hợp lệ.");
+      } else if (error.response?.status === 404) {
+        alert("Không tìm thấy chuyên gia.");
+      } else {
+        alert("Đã xảy ra lỗi khi tạo lịch. Vui lòng thử lại.");
+      }
+    } finally {
+      setIsCreatingSchedule(null); // Clear loading state
+    }
+  };
   const handleAddCoach = () => navigate("/admin/create-coach");
 
   return (
@@ -100,9 +131,19 @@ const CoachManagement = () => {
                   className="btn btn-text-action"
                   key={coach.id}
                   onClick={() => handleRowClick(coach.id)}
-                  style={{ cursor: "pointer" }}
+                  disabled={isCreatingSchedule === coach.id}
+                  style={{ 
+                    cursor: isCreatingSchedule === coach.id ? "not-allowed" : "pointer",
+                    opacity: isCreatingSchedule === coach.id ? 0.6 : 1,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "4px"
+                  }}
                 >
-                  Tạo lịch
+                  {isCreatingSchedule === coach.id && (
+                    <Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} />
+                  )}
+                  {isCreatingSchedule === coach.id ? "Đang tạo..." : "Tạo lịch"}
                 </button>
                
                 <button

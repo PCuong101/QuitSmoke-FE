@@ -49,22 +49,9 @@ const CoachDetail = () => {
     const fetchData = async () => {
         setLoading(true);
         try {
-            // Bước 1: Lấy thông tin cơ bản của Coach
-            console.log(`Bắt đầu fetch thông tin coach với ID: ${id}`);
             const coachRes = await axios.get(`http://localhost:8080/api/admin/coach/${id}`);
             setCoach(coachRes.data);
-            console.log(">>>>> Bước 1 THÀNH CÔNG: Lấy được thông tin coach:", coachRes.data);
-
-            // Bước 2: Dùng coachId đó để lấy TẤT CẢ lịch của họ
-            console.log(`Bắt đầu fetch lịch cho coach ID: ${id}`);
             const schedulesRes = await axios.get(`http://localhost:8080/api/bookings/coach/${id}/schedule`);
-            console.log(">>>>> Bước 2 THÀNH CÔNG: Dữ liệu lịch trả về từ API là:", schedulesRes.data);
-
-            // Kiểm tra xem phần tử đầu tiên có 'isPublished' không
-            if (schedulesRes.data && schedulesRes.data.length > 0) {
-                console.log("Kiểm tra phần tử đầu tiên, có 'isPublished' không?:", 'isPublished' in schedulesRes.data[0]);
-            }
-
             const sortedSchedules = schedulesRes.data.sort((a, b) => new Date(a.date) - new Date(b.date));
             setSchedules(sortedSchedules);
 

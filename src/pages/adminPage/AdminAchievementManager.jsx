@@ -122,18 +122,13 @@ const AdminAchievementManager = () => {
     const fetchData = async () => {
     setIsLoading(true);
     try {
-        // Gửi yêu cầu lấy templates
-        console.log("Đang gửi yêu cầu GET tới:", API_URL);
         const templatesRes = await axios.get(API_URL);
         setTemplates(templatesRes.data);
-        console.log("Tải templates thành công:", templatesRes.data);
 
         // Gửi yêu cầu lấy logic keys
         const logicKeysUrl = `${API_URL}/list-logic`;
-        console.log("Đang gửi yêu cầu GET tới:", logicKeysUrl);
         const logicKeysRes = await axios.get(logicKeysUrl);
         setLogicKeys(logicKeysRes.data);
-        console.log("Tải logic keys thành công:", logicKeysRes.data);
 
     } catch (error) {
         // Log ra lỗi chi tiết hơn
