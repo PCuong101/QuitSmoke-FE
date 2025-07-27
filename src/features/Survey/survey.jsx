@@ -3,7 +3,7 @@ import Footer from "../../components/Footer/Footer.jsx";
 import { useNavigate } from "react-router-dom";
 import "./survey.css"; // Import CSS styles
 import { toZonedTime, format } from 'date-fns-tz';
-import { useUser } from "../../contexts/UserContext.jsx"; // Giả sử bạn có UserContext để lấy userId
+import { useUser } from "../../contexts/UserContext.jsx"; 
 
 function Survey() {
 

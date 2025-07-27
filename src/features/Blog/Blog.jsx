@@ -1,5 +1,3 @@
-// src/features/Blog/Blog.jsx (Đã nâng cấp)
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import NavBar from "../../components/NavBar/NavBar";

@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import * as icon from "lucide-react";
 import useLogout from "../../hooks/useLogout";
 import useNotificationPolling from "../../hooks/useNotificationPolling";
-import { useNotifications } from "../../contexts/NotificationContext.jsx"; // Context đã nâng cấp
+import { useNotifications } from "../../contexts/NotificationContext.jsx";
 import { useUser } from "../../contexts/UserContext.jsx";
 import ToastNotification from "../ToastNotification/ToastNotification.jsx";
 import "./NavBar.css";
@@ -145,7 +145,7 @@ export default function NavBar() {
         Bài viết
       </h4>
 
-      {/* Phần bên phải - Bắt đầu bằng user-section có margin-left: auto */}
+      {/* Phần bên phải  */}
       <div className="user-section" ref={userMenuRef}>
         <div
           className="user-trigger"
@@ -241,7 +241,7 @@ export default function NavBar() {
               >
                 Thông báo
               </h4>
-              {/* === SỬA Ở ĐÂY: Gọi hàm `markAllAsRead` từ Context === */}
+          
               <button
                 onClick={(e) => {
                   e.stopPropagation();

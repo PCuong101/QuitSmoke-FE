@@ -129,18 +129,18 @@ function Missions() {
     return (
         <>
             
-            {/* --- Thanh điều hướng --- */}
+        
             <NavBar />
-            {/* --- Phần layout chính của trang --- */}
+            {/*layout chinh của trang*/}
             <div className={`missions-page ${isLoading ? 'loading' : ''}`}>
                 
 
-            {/* Đặt component thông báo ở đây, bên ngoài layout chính */}
+            {/* Đặt component thông báo ở đây */}
             <ToastNotification
                 icon={Check}
                 show={notification.show}
                 message={notification.message}
-                color="#16a34a" // Màu xanh lá cây
+                color="#16a34a" 
             />
                 {isLoading ? (
                     <div className="loading-container">

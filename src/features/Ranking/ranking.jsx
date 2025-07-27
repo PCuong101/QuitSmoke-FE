@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import Footer from "../../components/Footer/Footer";
 import NavBar from "../../components/NavBar/NavBar";
@@ -11,19 +12,24 @@ import {
 import { mapApiToFeAchievement } from "../Achievements/achievement-mapper";
 import "./ranking.css";
 
+
+const getAvatarUrl = (member) => {
+  if (member?.username?.trim()) {
+    const formattedName = member.username.trim().replace(/\s+/g, "+");
+    return `https://ui-avatars.com/api/?name=${formattedName}&background=random`;
+  }
+  return "/default-avatar.png";
+};
+
 function getTopAchievements(member, allAchievementTemplates) {
   if (!allAchievementTemplates || allAchievementTemplates.length === 0)
     return [];
-  // Thứ tự ưu tiên các loại thành tựu
   const categoriesInOrder = ["time", "money", "mission", "diary"];
   const categoryChampions = [];
-  // Duyệt từng loại thành tựu
   categoriesInOrder.forEach((category) => {
-    // Lọc ra các thành tựu thuộc loại này
     const achievementsInCategory = allAchievementTemplates.filter(
       (ach) => ach.category === category
     );
-    // Kiểm tra thành tựu nào user này đã đạt (dựa vào số liệu user)
     const unlockedInCategory = achievementsInCategory.filter((ach) => {
       switch (ach.category) {
         case "time":
@@ -38,32 +44,25 @@ function getTopAchievements(member, allAchievementTemplates) {
           return false;
       }
     });
-    // Nếu có thành tựu đạt được trong category này
     if (unlockedInCategory.length > 0) {
-      // Lấy thành tựu có ngưỡng cao nhất (tức là "xịn" nhất)
       const champion = unlockedInCategory.reduce((best, current) => {
         return current.threshold > best.threshold ? current : best;
       });
       categoryChampions.push(champion);
     }
   });
-  // Sắp xếp lại danh sách champion theo độ xịn (tier: vàng > bạc > đồng)
   const tierOrder = { gold: 3, silver: 2, bronze: 1 };
   const categoryPriority = { time: 4, money: 3, mission: 2, diary: 1 };
-
   categoryChampions.sort((a, b) => {
     const tierCompare = (tierOrder[b.tier] || 0) - (tierOrder[a.tier] || 0);
     if (tierCompare !== 0) return tierCompare;
-    // Nếu tier bằng nhau thì so độ ưu tiên theo category
     return (
       (categoryPriority[b.category] || 0) - (categoryPriority[a.category] || 0)
     );
   });
-  // Trả về 3 thành tựu nổi bật nhất
   return categoryChampions.slice(0, 3);
 }
 
-// --- COMPONENT CON: THẺ XẾP HẠNG  --- Thẻ hiển thị một người trong bảng xếp hạng
 function MemberRankCard({ rank, member, topAchievements, isActive, onClick }) {
   const formattedMoney = Math.round(member.moneySaved).toLocaleString("vi-VN");
 
@@ -72,18 +71,15 @@ function MemberRankCard({ rank, member, topAchievements, isActive, onClick }) {
       className={`member-rank-card ${isActive ? "active" : ""}`}
       onClick={onClick}
     >
-      {/* Thông tin chính: avatar, tên, stats */}
       <div className="card-main-content">
         <span className={`rank-number rank-${rank}`}>{rank}</span>
+
         <img
-          src={
-            member.avatarUrl || `https://ui-avatars.com/api/?name=${member.username.replace(' ', '+')}&background=random`
-          }
+          src={member.avatarUrl || getAvatarUrl(member)}
           alt={member.username}
           className="member-avatar"
         />
         <p className="member-name">{member.username}</p>
-        {/* Thống kê: số ngày cai, tiền tiết kiệm, nhiệm vụ */}
         <div className="member-stats">
           <div className="stat-item">
             <CalendarDays size={20} className="stat-icon" />
@@ -103,12 +99,10 @@ function MemberRankCard({ rank, member, topAchievements, isActive, onClick }) {
         </div>
         <ChevronDown className="chevron-icon" size={24} />
       </div>
-      {/* Chi tiết thành tựu nổi bật */}
       <div className="card-details-content">
         {topAchievements.length > 0 ? (
           topAchievements.map((ach) => {
             const Icon = ach.icon;
-
             return (
               <div key={ach.templateID} className="achievement-detail">
                 <Icon size={24} className="achievement-icon" />
@@ -129,38 +123,31 @@ function MemberRankCard({ rank, member, topAchievements, isActive, onClick }) {
   );
 }
 
-// --- COMPONENT CHÍNH  ---
 function Ranking() {
   const [rankings, setRankings] = useState([]);
   const [allAchievementTemplates, setAllAchievementTemplates] = useState([]);
   const [rankingType, setRankingType] = useState("days");
   const [isLoading, setIsLoading] = useState(true);
   const [activeIndex, setActiveIndex] = useState(null);
-  // Fetch dữ liệu khi component mount hoặc khi thay đổi rankingType
+
   useEffect(() => {
     const fetchAllData = async () => {
       setIsLoading(true);
       setActiveIndex(null);
-
-      // Chọn API dựa trên loại xếp hạng
       let apiUrl = "http://localhost:8080/api/rankings";
       if (rankingType === "money")
         apiUrl = "http://localhost:8080/api/rankings/Rankingmoney";
       else if (rankingType === "mission")
         apiUrl = "http://localhost:8080/api/rankings/RankingsMission";
-
       try {
         const [rankingRes, templateRes] = await Promise.all([
           fetch(apiUrl),
           fetch(`http://localhost:8080/api/achievement-templates`),
         ]);
-
         if (!rankingRes.ok || !templateRes.ok)
           throw new Error("Lỗi tải dữ liệu");
-
         const rankingData = await rankingRes.json();
         const templateData = await templateRes.json();
-
         setRankings(rankingData);
         setAllAchievementTemplates(templateData.map(mapApiToFeAchievement));
       } catch (error) {
@@ -170,7 +157,6 @@ function Ranking() {
         setIsLoading(false);
       }
     };
-
     fetchAllData();
   }, [rankingType]);
 
@@ -188,7 +174,6 @@ function Ranking() {
             Vinh danh những chiến binh có thành tích cai thuốc ấn tượng nhất!
           </p>
         </header>
-
         <div className="ranking-tabs">
           <button
             className={`ranking-tab-button ${
@@ -215,7 +200,6 @@ function Ranking() {
             🎯 Theo Nhiệm Vụ
           </button>
         </div>
-        {/* Các tab chọn loại xếp hạng */}
         <div className="ranking-list">
           {isLoading ? (
             <div

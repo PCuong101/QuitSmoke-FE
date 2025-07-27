@@ -77,8 +77,6 @@ function Achievement() {
 
         const feTemplates = templateDtos.map(mapApiToFeAchievement);
         setAllAchievements(feTemplates); // State  chứa tất cả các thành tựu có thể có
-
-        // Logic thông báo không đổi
         const knownAchievementsKey = `known_achievements_count_${userId}`;
         const knownCount = parseInt(localStorage.getItem(knownAchievementsKey) || '0', 10);
         if (unlockedDtos.length > knownCount) {

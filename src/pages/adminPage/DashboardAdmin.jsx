@@ -45,7 +45,7 @@ const DashboardAdmin = () => {
           throw new Error('Không thể tải dữ liệu bài viết từ server.');
         }
         const blogPosts = await blogPostsResponse.json();
-        // Giả sử API trả về một mảng, chúng ta lấy độ dài của nó
+      
         const blogPostsCount = blogPosts.length;
 
         // 4. CẬP NHẬT STATE VỚI TẤT CẢ DỮ LIỆU MỚI

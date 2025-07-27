@@ -5,7 +5,7 @@ import { ArrowLeft } from 'lucide-react';
 import dayjs from 'dayjs';
 
 function ArticleDetail() {
-  const { id } = useParams(); // <-- Lấy id thay vì slug
+  const { id } = useParams(); 
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(true);
   

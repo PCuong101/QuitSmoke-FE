@@ -28,24 +28,22 @@ import { NotificationProvider } from "./contexts/NotificationContext.jsx";
 import PaymentReturn from "./components/PaymentReturn/PaymentReturn.jsx";
 import AdminAchievementManager from "./pages/adminPage/AdminAchievementManager.jsx";
 import ServicePackageAdmin from "./pages/adminPage/ServicePackagesAdmin.jsx";
-
-// ================== IMPORTS CHO CÁC TRANG CỦA COACH ==================
 import CoachDashboardPage from "./pages/coachPage/CoachDashboardPage.jsx";
 import CoachBlogManagementPage from "./pages/coachPage/CoachBlogManagementPage.jsx";
-// =====================================================================
 
-// ================== IMPORTS THÊM TỪ FILE CỦA BẠN ==================
+
+
 import DashboardWebsocket from "./features/Dashboard/dashBoard.jsx";
 import Profile from "./features/Profile/Profile.jsx";
 import PublicRoute from "./routes/PublicRoute.jsx";
-// ===================================================================
+
 
 function App() {
   return (
     <NotificationProvider>
       <BrowserRouter>
         <Routes>
-          {/* === CÁC ROUTE CÔNG KHAI === */}
+          
           <Route
             path="/survey"
             element={
@@ -71,10 +69,10 @@ function App() {
             }
           />
 
-          {/* === ROUTE TEST (từ file của bạn) === */}
+          
           <Route path="/test" element={<DashboardWebsocket />} />
 
-          {/* === CÁC ROUTE CHO MEMBER === */}
+          
           <Route
             path="/payment-return"
             element={
@@ -149,7 +147,7 @@ function App() {
             }
           />
 
-          {/* === CÁC ROUTE CHO BLOG (USER) === */}
+          
           <Route
             path="blog"
             element={
@@ -158,7 +156,7 @@ function App() {
               </PrivateRoute>
             }
           />
-          {/* Giữ cả 2 format route cho blog để tương thích */}
+          
           <Route
             path="blog/:id"
             element={
@@ -212,7 +210,7 @@ function App() {
                 </PrivateRoute>
               }
             />
-            {/* === THÊM ROUTE MỚI TẠI ĐÂY === */}
+            
             <Route
               path="achievements"
               element={
@@ -221,7 +219,7 @@ function App() {
                 </PrivateRoute>
               }
             />
-            {/* ============================= */}
+            
             <Route
               path="users"
               element={

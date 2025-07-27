@@ -22,7 +22,7 @@ import {
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
 
-import "./CoachDashboardPage.css"; 
+import "./CoachBlogManagementPage.css"; 
 
 dayjs.locale("vi");
 

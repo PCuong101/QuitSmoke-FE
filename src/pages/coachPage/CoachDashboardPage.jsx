@@ -6,7 +6,7 @@ import "./CoachDashboardPage.css";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 dayjs.extend(isSameOrAfter);
-
+import "./CoachDashboardPage.css"; 
 import "dayjs/locale/vi";
 import updateLocale from "dayjs/plugin/updateLocale";
 dayjs.extend(updateLocale);

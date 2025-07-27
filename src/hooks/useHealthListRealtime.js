@@ -1,5 +1,3 @@
-// src/hooks/useHealthListRealtime.js (PHIÊN BẢN ĐÃ SỬA LỖI)
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -11,15 +9,15 @@ function useHealthList() {
 
   const { userId } = useUser();
 
-  // 📦 Gọi API khi userId thay đổi (đây là thay đổi quan trọng nhất)
+  
   useEffect(() => {
-    // Nếu không có userId (ví dụ: vừa logout), dọn dẹp state và dừng lại
+   
     if (!userId) {
       setHealthList([]);
       setLoading(false);
       return;
     }
-    setLoading(true); // Bắt đầu loading khi có userId mới
+    setLoading(true); 
     axios
       .get(`http://localhost:8080/api/health-milestones/progress/${userId}`)
       .then((res) => {
@@ -31,12 +29,12 @@ function useHealthList() {
       })
       .catch((err) => {
         console.error("Lỗi khi gọi API health-milestones:", err);
-        setHealthList([]); // Nếu lỗi, cũng dọn dẹp dữ liệu
+        setHealthList([]); 
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [userId]); // <-- SỬA Ở ĐÂY: Thêm [userId] để hook chạy lại khi user thay đổi
+  }, [userId]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -57,7 +55,7 @@ function useHealthList() {
   return { healthList, loading };
 }
 
-// 👉 Hàm tính số giây còn lại đến recoveryEndTime (giữ nguyên)
+
 function calculateRemaining(recoveryEndTime) {
   if (!recoveryEndTime) return 0;
   const end = dayjs(recoveryEndTime);
