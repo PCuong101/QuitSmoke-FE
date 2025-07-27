@@ -77,7 +77,7 @@ function MemberRankCard({ rank, member, topAchievements, isActive, onClick }) {
         <span className={`rank-number rank-${rank}`}>{rank}</span>
         <img
           src={
-            member.avatarUrl || `https://i.pravatar.cc/150?u=${member.username}`
+            member.avatarUrl || `https://ui-avatars.com/api/?name=${member.username.replace(' ', '+')}&background=random`
           }
           alt={member.username}
           className="member-avatar"

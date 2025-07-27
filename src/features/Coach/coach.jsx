@@ -32,7 +32,7 @@ function formatDateWithWeekday(dateStr) {
 
 function Coach() {
   // Sử dụng context để lấy thông tin người dùng
-  const { addBookingNotification } = useNotifications();
+  const { refreshNotifications } = useNotifications();
   const [activeTab, setActiveTab] = useState("list");
   const [coaches, setCoaches] = useState([]);
   const [selected, setSelected] = useState({
@@ -166,12 +166,8 @@ function Coach() {
         (s) => s.scheduleId === selected.slot
       );
       if (bookedSlotDetails) {
-        // GỌI HÀM TỪ CONTEXT, truyền thêm hàm formatDateWithWeekday vào
-        addBookingNotification(
-          selected.coach.name,
-          bookedSlotDetails,
-          formatDateWithWeekday
-        );
+        // Refresh notifications để lấy thông báo mới từ backend
+        refreshNotifications();
       }
 
       setConfirmedSlot({ coachId: selected.coach.id, slot: selected.slot });

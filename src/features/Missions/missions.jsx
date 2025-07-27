@@ -48,7 +48,7 @@ function Missions() {
     // Dùng useRef để quản lý các bộ đếm thời gian
     const notificationTimer = useRef(null);
     const { userId } = useUser(); // Sử dụng context để lấy userId
-    const { addMissionCompletionNotification } = useNotifications();
+    const { refreshNotifications } = useNotifications();
         // --- Fetch nhiệm vụ hàng ngày ---
     useEffect(() => {
         const fetchData = async () => {
@@ -109,8 +109,8 @@ function Missions() {
                 notificationTimer.current = setTimeout(() => {
                     setNotification({ show: false, message: '' });
                 }, 3000);
-                // Gửi vào hệ thống notification toàn app
-                addMissionCompletionNotification(mission);
+                // Gửi vào hệ thống notification toàn app - refresh để lấy thông báo mới từ backend
+                refreshNotifications();
             }
         } catch (error) {
             console.error("Lỗi hoàn thành nhiệm vụ:", error);

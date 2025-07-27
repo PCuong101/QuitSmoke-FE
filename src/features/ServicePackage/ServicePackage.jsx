@@ -38,6 +38,9 @@ function ServicePackage() {
           throw new Error("Không thể tải gói dịch vụ của người dùng");
         }
         const data = await response.json();
+        if (data.length === 0) {
+          return;
+        }
         setUserPlan(data[0].plan); // Giả sử data[0] là gói dịch vụ hiện tại của người dùng
         console.log("Gói dịch vụ của người dùng:", data[0].plan);
       } catch (error) {

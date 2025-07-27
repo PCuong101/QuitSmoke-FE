@@ -1,90 +1,181 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
+import { useUser } from './UserContext';
 
 const NotificationContext = createContext();
 
-// Hook tùy chỉnh (không đổi)
+// Hook tùy chỉnh
 export const useNotifications = () => {
   return useContext(NotificationContext);
 };
 
+// API endpoints
+const API_BASE_URL = 'http://localhost:8080/api';
+
 // --- COMPONENT PROVIDER ĐÃ ĐƯỢC NÂNG CẤP ---
 export const NotificationProvider = ({ children }) => {
-  // BƯỚC 1: KHỞI TẠO STATE TỪ LOCALSTORAGE
-  const [notifications, setNotifications] = useState(() => {
-    try {
-      // Thử lấy danh sách thông báo đã lưu từ localStorage
-      const storedNotifications = localStorage.getItem('app_notifications');
-      // Nếu có, parse nó từ chuỗi JSON về lại mảng. Nếu không, trả về mảng rỗng.
-      return storedNotifications ? JSON.parse(storedNotifications) : [];
-    } catch (error) {
-      console.error("Lỗi khi đọc thông báo từ localStorage:", error);
-      return []; // Nếu có lỗi (ví dụ JSON không hợp lệ), trả về mảng rỗng
-    }
-  });
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const { userId } = useUser();
 
-  // BƯỚC 2: TỰ ĐỘNG LƯU VÀO LOCALSTORAGE MỖI KHI STATE THAY ĐỔI
+  // Fetch thông báo từ backend
+  const fetchNotifications = async () => {
+    if (!userId) return;
+    
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_BASE_URL}/notifications/user/${userId}`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setNotifications(data);
+      } else {
+        console.error('Lỗi khi lấy thông báo:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Lỗi khi fetch thông báo:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load thông báo khi userId thay đổi
   useEffect(() => {
-    try {
-      // Chuyển mảng notifications thành chuỗi JSON và lưu lại
-      localStorage.setItem('app_notifications', JSON.stringify(notifications));
-    } catch (error) {
-      console.error("Lỗi khi lưu thông báo vào localStorage:", error);
+    if (userId) {
+      fetchNotifications();
+    } else {
+      setNotifications([]);
     }
-  }, [notifications]);
+  }, [userId]);
 
-  // Các hàm thêm thông báo
-  const addBookingNotification = (coachName, bookedSlot, formatDateFunc) => {
-    const newNotification = {
-      id: Date.now(),
-      type: 'appointment',
-      title: 'Đặt lịch hẹn thành công!',
-      description: `Bạn đã đặt lịch thành công với chuyên gia ${coachName} vào ${formatDateFunc(bookedSlot.date)} (${bookedSlot.slotLabel === "1" ? "Sáng" : "Chiều"}).`,
-      time: 'Vừa xong',
-      read: false,
-      link: '/coach',
-    };
-    setNotifications(prev => [newNotification, ...prev]);
+  // Đánh dấu thông báo đã đọc
+  const markAsRead = async (notificationId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/notifications/${notificationId}/read`, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        // Cập nhật state local
+        setNotifications(prev => 
+          prev.map(notification => 
+            notification.id === notificationId 
+              ? { ...notification, read: true }
+              : notification
+          )
+        );
+      } else {
+        console.error('Lỗi khi đánh dấu đã đọc:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Lỗi khi đánh dấu đã đọc:', error);
+    }
   };
 
-  const addAchievementNotification = (achievement) => {
-    const newNotification = {
-      id: `ach-${Date.now()}-${achievement.customLogicKey}`,
-      type: 'achievement',
-      title: 'Thành tựu mới được mở khóa!',
-      description: `Chúc mừng! Bạn đã đạt được: "${achievement.title}"`,
-      time: 'Vừa xong',
-      read: false,
-      link: '/achievement',
-    };
-    setNotifications(prev => [newNotification, ...prev]);
+  // Đánh dấu tất cả thông báo đã đọc
+  const markAllAsRead = async () => {
+    if (!userId) return;
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/notifications/user/${userId}/read-all`, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        // Cập nhật state local
+        setNotifications(prev => 
+          prev.map(notification => ({ ...notification, read: true }))
+        );
+      } else {
+        console.error('Lỗi khi đánh dấu tất cả đã đọc:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Lỗi khi đánh dấu tất cả đã đọc:', error);
+    }
   };
 
-  const addMissionCompletionNotification = (mission) => {
-    const newNotification = {
-      id: `mission-complete-${mission.templateID}-${new Date().toISOString()}`,
-      type: 'mission_complete', // Một loại mới để phân biệt với "nhiệm vụ mới"
-      title: 'Nhiệm vụ hoàn thành!',
-      description: `Chúc mừng! Bạn đã hoàn thành: "${mission.title}"`,
-      time: 'Vừa xong',
-      read: false, // Mặc định là chưa đọc
-      link: '/missions', // Link về trang nhiệm vụ
-    };
-    // Thêm vào đầu danh sách
-    setNotifications(prev => [newNotification, ...prev]);
+  // Xóa thông báo
+  const deleteNotification = async (notificationId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/notifications/${notificationId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        // Cập nhật state local
+        setNotifications(prev => 
+          prev.filter(notification => notification.id !== notificationId)
+        );
+      } else {
+        console.error('Lỗi khi xóa thông báo:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Lỗi khi xóa thông báo:', error);
+    }
   };
 
+  // Làm mới danh sách thông báo
+  const refreshNotifications = () => {
+    fetchNotifications();
+  };
+
+  // Xóa tất cả thông báo (cho logout)
   const clearNotifications = () => {
     setNotifications([]);
+  };
+
+  // Tính toán số thông báo chưa đọc
+  const unreadCount = notifications.filter(n => !n.read).length;
+
+  // Định dạng thời gian hiển thị
+  const formatNotificationTime = (createdAt) => {
+    if (!createdAt) return 'Vừa xong';
+    
+    const now = new Date();
+    const notificationTime = new Date(createdAt);
+    const diffInMs = now - notificationTime;
+    const diffInMinutes = Math.floor(diffInMs / 60000);
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+
+    if (diffInMinutes < 1) return 'Vừa xong';
+    if (diffInMinutes < 60) return `${diffInMinutes} phút trước`;
+    if (diffInHours < 24) return `${diffInHours} giờ trước`;
+    if (diffInDays < 7) return `${diffInDays} ngày trước`;
+    
+    return notificationTime.toLocaleDateString('vi-VN');
   };
 
   // Giá trị cung cấp cho Context
   const value = {
     notifications,
+    loading,
+    unreadCount,
     setNotifications,
-    addBookingNotification,
-    addAchievementNotification,
-    addMissionCompletionNotification,
-    clearNotifications
+    fetchNotifications,
+    markAsRead,
+    markAllAsRead,
+    deleteNotification,
+    refreshNotifications,
+    clearNotifications,
+    formatNotificationTime,
   };
 
   return (

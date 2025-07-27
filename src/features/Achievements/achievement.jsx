@@ -53,7 +53,7 @@ function Achievement() {
   const [allAchievements, setAllAchievements] = useState([]);
   const [userAchievementsMap, setUserAchievementsMap] = useState(new Map());
   const [isLoading, setIsLoading] = useState(true);
-  const { addAchievementNotification } = useNotifications();
+  const { refreshNotifications } = useNotifications();
 
   useEffect(() => {
     if (!userId) {
@@ -86,7 +86,10 @@ function Achievement() {
              const newAchievements = unlockedDtos.filter(dto => !knownAchievements.includes(dto.name));
              newAchievements.forEach(newAchDto => {
                 const achievementTemplate = feTemplates.find(a => a.title === newAchDto.name);
-                if (achievementTemplate) addAchievementNotification(achievementTemplate);
+                if (achievementTemplate) {
+                  // Refresh notifications để lấy thông báo thành tựu mới từ backend
+                  refreshNotifications();
+                }
              });
         }
         localStorage.setItem(knownAchievementsKey, unlockedDtos.length.toString());
@@ -104,7 +107,7 @@ function Achievement() {
     };
 
     fetchAllData();
-  }, [userId, addAchievementNotification]);
+  }, [userId, refreshNotifications]);
 
   const achievementsByCategory = {
     time: allAchievements.filter(a => a.category === 'time' || a.category === 'health'),

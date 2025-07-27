@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import * as icon from "lucide-react";
 import useLogout from "../../hooks/useLogout";
+import useNotificationPolling from "../../hooks/useNotificationPolling";
 import { useNotifications } from "../../contexts/NotificationContext.jsx"; // Context đã nâng cấp
 import { useUser } from "../../contexts/UserContext.jsx";
 import ToastNotification from "../ToastNotification/ToastNotification.jsx";
@@ -22,23 +23,28 @@ export default function NavBar() {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const { userName, role ,userAvatar} = useUser();
 
-  const { notifications, markAsRead, markAllAsRead, deleteNotification } =
-    useNotifications();
+  // Setup notification polling
+  useNotificationPolling(30000); // Poll every 30 seconds
+
+  const { 
+    notifications, 
+    loading, 
+    unreadCount, 
+    markAsRead, 
+    markAllAsRead, 
+    deleteNotification,
+    formatNotificationTime 
+  } = useNotifications();
 
   const popupRef = useRef();
-
-  const unreadCount = notifications.filter((n) => !n.read).length;
 
   const handleNotificationClick = () =>
     setIsNotificationOpen(!isNotificationOpen);
 
-  const handleItemClick = (notification) => {
+  const handleItemClick = async (notification) => {
+    // Đánh dấu đã đọc nếu chưa đọc
     if (!notification.read) {
-      markAsRead(notification.id);
-    }
-    if (notification.link) {
-      navigate(notification.link);
-      setIsNotificationOpen(false);
+      await markAsRead(notification.id);
     }
   };
 
@@ -256,7 +262,17 @@ export default function NavBar() {
             </div>
 
             <div style={{ maxHeight: "400px", overflowY: "auto" }}>
-              {notifications.length > 0 ? (
+              {loading ? (
+                <div style={{ textAlign: "center", padding: "20px" }}>
+                  <icon.Loader2 
+                    size={24} 
+                    style={{ animation: "spin 1s linear infinite" }} 
+                  />
+                  <p style={{ margin: "8px 0 0 0", color: "#6b7280" }}>
+                    Đang tải thông báo...
+                  </p>
+                </div>
+              ) : notifications.length > 0 ? (
                 notifications.map((n) => {
                   const getIcon = (type) => {
                     const iconStyle = {
@@ -269,43 +285,69 @@ export default function NavBar() {
                       flexShrink: 0,
                       marginRight: "16px",
                     };
-                    if (type === "achievement")
-                      return (
-                        <div
-                          style={{ ...iconStyle, backgroundColor: "#fffbe6" }}
-                        >
-                          <icon.Trophy size={20} color="#fbbd23" />
-                        </div>
-                      );
-                    if (type === "appointment")
-                      return (
-                        <div
-                          style={{ ...iconStyle, backgroundColor: "#eef9ff" }}
-                        >
-                          <icon.Calendar size={20} color="#3b82f6" />
-                        </div>
-                      );
-                    if (type === "reminder")
-                      return (
-                        <div
-                          style={{ ...iconStyle, backgroundColor: "#fef2f2" }}
-                        >
-                          <icon.AlarmClock size={20} color="#ef4444" />
-                        </div>
-                      );
-                    if (type === "mission_complete")
-                      return (
-                        <div
-                          style={{ ...iconStyle, backgroundColor: "#eef2ff" }}
-                        >
-                          <icon.CheckCircle size={20} color="#4f46e5" />
-                        </div>
-                      );
-                    return (
-                      <div style={{ ...iconStyle, backgroundColor: "#f3f4f6" }}>
-                        <icon.Bell size={20} color="#4b5563" />
-                      </div>
-                    );
+                    
+                    const normalizedType = type?.toLowerCase();
+                    
+                    switch (normalizedType) {
+                      case "achievement":
+                        return (
+                          <div
+                            style={{ ...iconStyle, backgroundColor: "#fffbe6" }}
+                          >
+                            <icon.Trophy size={20} color="#fbbd23" />
+                          </div>
+                        );
+                      case "appointment":
+                      case "booking":
+                        return (
+                          <div
+                            style={{ ...iconStyle, backgroundColor: "#eef9ff" }}
+                          >
+                            <icon.Calendar size={20} color="#3b82f6" />
+                          </div>
+                        );
+                      case "reminder":
+                        return (
+                          <div
+                            style={{ ...iconStyle, backgroundColor: "#fef2f2" }}
+                          >
+                            <icon.AlarmClock size={20} color="#ef4444" />
+                          </div>
+                        );
+                      case "mission":
+                      case "mission_complete":
+                        return (
+                          <div
+                            style={{ ...iconStyle, backgroundColor: "#eef2ff" }}
+                          >
+                            <icon.CheckCircle size={20} color="#4f46e5" />
+                          </div>
+                        );
+                      case "blog":
+                      case "article":
+                        return (
+                          <div
+                            style={{ ...iconStyle, backgroundColor: "#f0fdf4" }}
+                          >
+                            <icon.FileText size={20} color="#16a34a" />
+                          </div>
+                        );
+                      case "system":
+                      case "announcement":
+                        return (
+                          <div
+                            style={{ ...iconStyle, backgroundColor: "#fdf2f8" }}
+                          >
+                            <icon.Info size={20} color="#ec4899" />
+                          </div>
+                        );
+                      default:
+                        return (
+                          <div style={{ ...iconStyle, backgroundColor: "#f3f4f6" }}>
+                            <icon.Bell size={20} color="#4b5563" />
+                          </div>
+                        );
+                    }
                   };
                   return (
                     <div
@@ -343,10 +385,10 @@ export default function NavBar() {
                             lineHeight: "1.5",
                           }}
                         >
-                          {n.description}
+                          {n.content}
                         </p>
                         <small style={{ color: "#9ca3af", fontSize: "13px" }}>
-                          {n.time}
+                          {formatNotificationTime(n.createdAt)}
                         </small>
                       </div>
                       {!n.read && (
