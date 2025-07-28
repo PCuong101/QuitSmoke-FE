@@ -25,7 +25,7 @@ import "dayjs/locale/vi";
 import "./CoachBlogManagementPage.css"; 
 
 dayjs.locale("vi");
-
+// hàm StatusBadge để hiển thị trạng thái bài viết
 const StatusBadge = ({ status }) => {
   const statusMap = {
     PENDING: {
@@ -52,7 +52,7 @@ const StatusBadge = ({ status }) => {
     </span>
   );
 };
-
+// MenuBar component để hiển thị thanh công cụ soạn thảo
 const MenuBar = ({ editor }) => {
   if (!editor) {
     return null;
@@ -149,7 +149,7 @@ const MenuBar = ({ editor }) => {
     </div>
   );
 };
-
+// Component chính của trang quản lý bài viết của coach
 function CoachBlogManagementPage() {
   const [activeTab, setActiveTab] = useState("create");
   const coachId = useUserId();
@@ -175,7 +175,7 @@ function CoachBlogManagementPage() {
       },
     },
   });
-
+  // Hàm xử lý khi tạo bài viết mới
   const handleCreateBlog = async (e) => {
     e.preventDefault();
     const editorContent = editor.getHTML();
@@ -212,7 +212,7 @@ function CoachBlogManagementPage() {
       setIsSubmitting(false);
     }
   };
-
+  // Hàm lấy danh sách bài viết của coach
   const fetchMyBlogsForCoach = async () => {
     if (!coachId) return;
     setIsLoading(true);

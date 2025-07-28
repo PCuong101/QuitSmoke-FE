@@ -6,7 +6,7 @@ import "./CoachDashboardPage.css";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 dayjs.extend(isSameOrAfter);
-import "./CoachDashboardPage.css"; 
+
 import "dayjs/locale/vi";
 import updateLocale from "dayjs/plugin/updateLocale";
 dayjs.extend(updateLocale);
@@ -21,7 +21,7 @@ function formatDateWithWeekday(dateStr) {
     month: "2-digit",
   });
 }
-
+// Hàm định dạng giờ địa phương, trả về chuỗi giờ theo định dạng "HH:mm"
 function formatLocalTime(localTime) {
   if (!localTime) return "";
   
@@ -36,14 +36,14 @@ function formatLocalTime(localTime) {
   return localTime;
 }
 
-
+// Component chính của trang Coach Dashboard
 function CoachDashboardPage() {
   const [schedules, setSchedules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("schedule");
   const [bookingRatings, setBookingRatings] = useState(new Map());
   const userId = useUserId();
-
+// Hàm lấy lịch hẹn của coach từ API
 const fetchCoachSchedules = useCallback(async () => {
     if (!userId) {
       setLoading(false);
@@ -71,6 +71,7 @@ const fetchCoachSchedules = useCallback(async () => {
     }
 }, [userId]);
 
+// Hàm lấy đánh giá cho các booking đã hoàn thành
 const fetchBookingRatings = async (scheduleData) => {
   const ratingsMap = new Map();
   
@@ -96,7 +97,7 @@ const fetchBookingRatings = async (scheduleData) => {
   
   setBookingRatings(ratingsMap);
 };
-      
+      // Hàm đánh dấu cuộc hẹn là đã hoàn thành
   const handleFinishBooking = async (bookingId) => {
     if (!window.confirm("Bạn có chắc chắn muốn đánh dấu cuộc hẹn này là đã hoàn thành?")) {
       return;
@@ -128,7 +129,8 @@ const activeBookings = schedules.filter(
 
 const schedulesUpcoming = schedules.filter(s => dayjs(s.date).isSameOrAfter(today));
 
-
+// Lọc lịch hẹn đã qua, bao gồm cả những lịch đã hoàn thành, 
+// //hủy hoặc đã đặt nhưng ngày đã qua
 const pastBookings = schedules.filter(
   (s) =>
     s.bookingStatus === "FINISHED" ||

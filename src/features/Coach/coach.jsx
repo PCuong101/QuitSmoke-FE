@@ -7,7 +7,7 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import "./coach.css";
 import { useNotifications } from "../../contexts/NotificationContext.jsx";
-import { Video } from 'lucide-react';
+import { Video } from "lucide-react";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -29,7 +29,7 @@ function formatDateWithWeekday(dateStr) {
     year: "numeric",
   });
 }
-
+// Component chính của trang Coach
 function Coach() {
   // Sử dụng context để lấy thông tin người dùng
   const { refreshNotifications } = useNotifications();
@@ -46,13 +46,14 @@ function Coach() {
   const [userBookings, setUserBookings] = useState([]);
   const [activeMeetingLinks, setActiveMeetingLinks] = useState(new Map());
   const [showRatingModal, setShowRatingModal] = useState(false);
-  const [selectedBookingForRating, setSelectedBookingForRating] = useState(null);
+  const [selectedBookingForRating, setSelectedBookingForRating] =
+    useState(null);
   const [rating, setRating] = useState(0);
   const [ratingComment, setRatingComment] = useState("");
   const [showViewRatingModal, setShowViewRatingModal] = useState(false);
   const [viewingRating, setViewingRating] = useState(null);
   const [ratedBookingIds, setRatedBookingIds] = useState(new Set());
-// Gọi API lấy danh sách coach và lịch rảnh
+  // Gọi API lấy danh sách coach và lịch rảnh
   const fetchCoaches = async () => {
     try {
       const response = await fetch(
@@ -73,13 +74,15 @@ function Coach() {
       return;
     }
     try {
-      const res = await fetch(`http://localhost:8080/api/feedbacks/user/${userId}`);
+      const res = await fetch(
+        `http://localhost:8080/api/feedbacks/user/${userId}`
+      );
       if (!res.ok) {
         setRatedBookingIds(new Set());
         return;
       }
       const feedbacks = await res.json();
-      const ratedIds = new Set(feedbacks.map(feedback => feedback.bookingId));
+      const ratedIds = new Set(feedbacks.map((feedback) => feedback.bookingId));
       console.log("Rated booking IDs:", feedbacks);
       setRatedBookingIds(ratedIds);
     } catch (err) {
@@ -87,9 +90,7 @@ function Coach() {
       setRatedBookingIds(new Set());
     }
   }, [userId]);
-// Gọi API lấy lịch hẹn đã đặt của user, đồng thời trích meetingLink hợp lệ
-// Gọi API để lấy danh sách lịch hẹn đã đặt của user hiện tại
-// - Gộp luôn việc kiểm tra meetingLink để hiển thị nút "Vào buổi gặp" ở tab "Lịch sử booking"
+  // Gọi API lấy lịch hẹn đã đặt của user
 
   const fetchBookings = useCallback(async () => {
     if (!userId) {
@@ -98,7 +99,9 @@ function Coach() {
       return;
     }
     try {
-      const res = await fetch(`http://localhost:8080/api/bookings/get-booking/${userId}`);
+      const res = await fetch(
+        `http://localhost:8080/api/bookings/get-booking/${userId}`
+      );
       if (!res.ok) {
         setUserBookings([]);
         setActiveMeetingLinks(new Map());
@@ -111,22 +114,25 @@ function Coach() {
       data.forEach((booking) => {
         //  Chỉ cần lịch hẹn đã được đặt và có link là sẽ hiển thị nút.
         // Thêm kiểm tra booking.meetingLink !== "string" để phòng trường hợp dữ liệu rác.
-        if (booking.status === "BOOKED" && booking.meetingLink && booking.meetingLink !== "string") {
+        if (
+          booking.status === "BOOKED" &&
+          booking.meetingLink &&
+          booking.meetingLink !== "string"
+        ) {
           activeLinksMap.set(booking.coachId, booking.meetingLink);
         }
       });
       setActiveMeetingLinks(activeLinksMap);
-
     } catch (err) {
       console.error("Lỗi khi lấy lịch người dùng:", err);
       setUserBookings([]);
       setActiveMeetingLinks(new Map());
     }
   }, [userId]);
-// Khi component mount hoặc userId thay đổi:
-// - Gọi API để lấy danh sách chuyên gia và lịch rảnh
-// - Gọi API để lấy danh sách các lịch hẹn đã đặt của user
-// - Gọi API để lấy danh sách feedback của user
+  // Khi component mount hoặc userId thay đổi:
+  // - Gọi API để lấy danh sách chuyên gia và lịch rảnh
+  // - Gọi API để lấy danh sách các lịch hẹn đã đặt của user
+  // - Gọi API để lấy danh sách feedback của user
   useEffect(() => {
     fetchCoaches();
     if (userId) {
@@ -134,18 +140,19 @@ function Coach() {
       fetchUserFeedbacks();
     }
   }, [userId, fetchBookings, fetchUserFeedbacks]);
-// Mở modal khi chọn coach, reset triệu chứng và slot
+  // Mở modal khi chọn coach, reset triệu chứng và slot
   const openModal = (coach) => setSelected({ coach, symptom: "", slot: null });
   // Đóng modal đặt lịch
   const closeModal = () =>
     setSelected({ coach: null, symptom: "", slot: null });
-// Gửi dữ liệu đặt lịch (userId, scheduleId, triệu chứng) đến server
-// Gửi yêu cầu đặt lịch đến server, nếu thành công:
-// - Gọi ToastContext để hiển thị thông báo
-// - Lưu lại slot đã đặt để đánh dấu trên giao diện
-// - Làm mới lại danh sách coach và lịch
-// - Mở modal xác nhận đặt lịch thành công
+  // Gửi dữ liệu đặt lịch (userId, scheduleId, triệu chứng) đến server
+  // Gửi yêu cầu đặt lịch đến server, nếu thành công:
+  // - Gọi ToastContext để hiển thị thông báo
+  // - Lưu lại slot đã đặt để đánh dấu trên giao diện
+  // - Làm mới lại danh sách coach và lịch
+  // - Mở modal xác nhận đặt lịch thành công
 
+  // Xác nhận đặt lịch
   const confirm = async () => {
     if (!selected.symptom || selected.slot === null) {
       setShowConfirmation(true);
@@ -184,7 +191,7 @@ function Coach() {
       console.error("Booking error:", err);
     }
   };
-
+// hủy lịch
   const closeConfirmation = () => {
     setShowConfirmation(false);
     if (selected.symptom && selected.slot !== null) {
@@ -264,9 +271,11 @@ function Coach() {
   // Xem đánh giá đã gửi
   const viewRating = async (bookingId) => {
     try {
-      const res = await fetch(`http://localhost:8080/api/feedbacks/get-by-booking/${bookingId}`);
+      const res = await fetch(
+        `http://localhost:8080/api/feedbacks/get-by-booking/${bookingId}`
+      );
       if (!res.ok) throw new Error("Lỗi khi lấy đánh giá");
-      
+
       const ratingData = await res.json();
       setViewingRating(ratingData);
       setShowViewRatingModal(true);
@@ -319,7 +328,7 @@ function Coach() {
                   return (
                     <div key={c.id} className="coach-card-detailed">
                       {/* Mỗi coach hiển thị avatar, tên, email và khung giờ có sẵn 
-                      Nếu slot đã được đặt thì disable, còn nếu được chọn thì highlight*/ }
+                      Nếu slot đã được đặt thì disable, còn nếu được chọn thì highlight*/}
                       <div className="coach-main-info">
                         <img
                           src={c.avatar}
@@ -334,11 +343,8 @@ function Coach() {
                           <div className="coach-header">
                             <h3 className="coach-name">{c.name}</h3>
                             <p className="coach-email">{c.email}</p>
-                            
                           </div>
                         </div>
-                        
-
                       </div>
 
                       <div className="coach-availability-section">
@@ -373,14 +379,15 @@ function Coach() {
                                 )}
                               </div>
                               <div>
-                                {s.slotLabel === "1" ? "08:00 - 10:00" : "14:00 - 16:00"}
+                                {s.slotLabel === "1"
+                                  ? "08:00 - 10:00"
+                                  : "14:00 - 16:00"}
                               </div>
                             </div>
                           ))}
                         </div>
                       </div>
 
-                     
                       <div className="coach-card-actions">
                         {/* Nút vào buổi gặp sẽ chỉ hiển thị nếu có link */}
                         {/* {meetingLink && (
@@ -485,7 +492,7 @@ function Coach() {
                     let meetingStatusLabel = "";
                     let isJoinEnabled = false;
                     const hasRated = ratedBookingIds.has(b.bookingId);
-                  // Tính trạng thái của mỗi booking (đã hủy, đã hoàn thành, có thể tham gia,...)
+                    // Tính trạng thái của mỗi booking (đã hủy, đã hoàn thành, có thể tham gia,...)
                     if (b.status === "CANCELED") {
                       meetingStatusLabel = "Đã hủy";
                     } else if (b.status === "FINISHED") {
@@ -653,14 +660,16 @@ function Coach() {
               <h3 className="modal-title">
                 Đánh giá buổi tư vấn với {selectedBookingForRating.coachName}
               </h3>
-              
+
               <div className="modal-section">
                 <p className="modal-label">Chất lượng buổi tư vấn:</p>
                 <div className="rating-stars">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
                       key={star}
-                      className={`star-button ${rating >= star ? 'active' : ''}`}
+                      className={`star-button ${
+                        rating >= star ? "active" : ""
+                      }`}
                       onClick={() => setRating(star)}
                     >
                       ★
@@ -704,17 +713,17 @@ function Coach() {
         {showViewRatingModal && viewingRating && (
           <div className="modal-overlay">
             <div className="modal-content rating-modal">
-              <h3 className="modal-title">
-                Đánh giá của bạn
-              </h3>
-              
+              <h3 className="modal-title">Đánh giá của bạn</h3>
+
               <div className="modal-section">
                 <p className="modal-label">Chất lượng buổi tư vấn:</p>
                 <div className="rating-stars view-only">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <span
                       key={star}
-                      className={`star-display ${viewingRating.rating >= star ? 'active' : ''}`}
+                      className={`star-display ${
+                        viewingRating.rating >= star ? "active" : ""
+                      }`}
                     >
                       ★
                     </span>

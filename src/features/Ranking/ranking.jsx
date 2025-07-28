@@ -20,7 +20,7 @@ const getAvatarUrl = (member) => {
   }
   return "/default-avatar.png";
 };
-
+// Lấy top 3 thành tựu nổi bật của thành viên
 function getTopAchievements(member, allAchievementTemplates) {
   if (!allAchievementTemplates || allAchievementTemplates.length === 0)
     return [];
@@ -62,7 +62,7 @@ function getTopAchievements(member, allAchievementTemplates) {
   });
   return categoryChampions.slice(0, 3);
 }
-
+// Component hiển thị thông tin thành viên trong bảng xếp hạng
 function MemberRankCard({ rank, member, topAchievements, isActive, onClick }) {
   const formattedMoney = Math.round(member.moneySaved).toLocaleString("vi-VN");
 
@@ -122,7 +122,7 @@ function MemberRankCard({ rank, member, topAchievements, isActive, onClick }) {
     </div>
   );
 }
-
+// Component chính của trang Bảng Xếp Hạng
 function Ranking() {
   const [rankings, setRankings] = useState([]);
   const [allAchievementTemplates, setAllAchievementTemplates] = useState([]);

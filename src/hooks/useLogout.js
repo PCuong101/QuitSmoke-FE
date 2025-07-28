@@ -16,6 +16,8 @@ const useLogout = () => {
       clearUserId(); // Xóa userId khỏi context
       clearNotifications(); // Xóa tất cả thông báo
       navigate("/login"); // hoặc navigate("/", { replace: true });
+      localStorage.removeItem("achievements");
+
     } catch (error) {
       console.error("Đăng xuất thất bại:", error);
     }

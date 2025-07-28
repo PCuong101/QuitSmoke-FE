@@ -8,7 +8,7 @@ const CoachManagement = () => {
   const navigate = useNavigate();
   
   const [coachToDelete, setCoachToDelete] = useState(null);
-  const [isCreatingSchedule, setIsCreatingSchedule] = useState(null); // Track which coach is having schedule created
+  const [isCreatingSchedule, setIsCreatingSchedule] = useState(null); 
 
   useEffect(() => {
     axios

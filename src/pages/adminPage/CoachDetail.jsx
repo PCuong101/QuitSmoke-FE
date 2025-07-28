@@ -7,20 +7,20 @@ import 'dayjs/locale/vi';
 import './CoachDetail.css';
 
 dayjs.locale('vi');
-
+// Hàm để lấy khoảng thời gian của khung giờ dựa trên nhãn
 const getSlotTimeRange = (slotLabel) => {
     if (slotLabel.toLowerCase().includes('sáng')) return 'Sáng (08:00 - 10:00)';
     if (slotLabel.toLowerCase().includes('chiều')) return 'Chiều (14:00 - 16:00)';
     return slotLabel;
 };
-
+// Hàm để xác định trạng thái của khung giờ cho quản trị viên
 const getSlotStateForAdmin = (schedule) => {
     if (schedule.isPublished) {
         return { className: 'state-published', text: 'Đã công khai' };
     }
     return { className: 'state-unpublished', text: 'Chưa công khai' };
 };
-
+// Component hiển thị một ô khung giờ
 const SlotCell = ({ schedule, isSelected, onClick }) => {
     if (!schedule) {
         return <div className="slot-card placeholder"></div>;
@@ -34,7 +34,7 @@ const SlotCell = ({ schedule, isSelected, onClick }) => {
         </div>
     );
 };
-
+// Component chính hiển thị chi tiết chuyên gia và lịch làm việc
 const CoachDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -45,7 +45,7 @@ const CoachDetail = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [selectedSlots, setSelectedSlots] = useState(new Set());
 
-   
+   // Hàm để fetch dữ liệu chuyên gia và lịch làm việc
     const fetchData = async () => {
         setLoading(true);
         try {
@@ -63,7 +63,7 @@ const CoachDetail = () => {
     };
 
     useEffect(() => { fetchData(); }, [id]);
-
+    // Hàm xử lý khi người dùng click vào một khung giờ
     const handleSlotClick = (schedule) => {
         if (!schedule || schedule.isPublished) return;
         const newSelectedSlots = new Set(selectedSlots);
@@ -74,7 +74,7 @@ const CoachDetail = () => {
         }
         setSelectedSlots(newSelectedSlots);
     };
-
+    // Hàm xử lý khi người dùng xác nhận công khai các khung giờ đã chọn
     const handleConfirmPublish = async () => {
         if (selectedSlots.size === 0) {
             alert("Vui lòng chọn ít nhất một lịch để công khai.");
@@ -96,7 +96,7 @@ const CoachDetail = () => {
             setIsSubmitting(false);
         }
     };
-    
+    // Sắp xếp lịch theo ngày và buổi (sáng/chiều)
     const schedulesByDate = useMemo(() => {
         return schedules.reduce((acc, schedule) => {
             const date = schedule.date;

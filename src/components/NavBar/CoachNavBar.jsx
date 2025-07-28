@@ -13,7 +13,7 @@ export default function CoachNavBar() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef();
 
-  useEffect(() => {
+  useEffect(() => {// thuc thi cac tac vu 
     if (userId) {
       const fetchCoachName = async () => {
         try {
@@ -32,7 +32,7 @@ export default function CoachNavBar() {
       };
       fetchCoachName();
     }
-  }, [userId]);
+  }, [userId]);// "dependency array" to ensure it runs when userId changes
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -42,7 +42,7 @@ export default function CoachNavBar() {
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, []);//<--rong nên chỉ chạy 1 lần duy nhất
 
   return (
     <div className="coach-navbar">

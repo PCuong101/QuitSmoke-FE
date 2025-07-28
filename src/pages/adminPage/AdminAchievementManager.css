@@ -1,4 +1,4 @@
-/* src/pages/adminPage/AdminAchievementManager.css (Đã cập nhật) */
+/* src/pages/adminPage/AdminAchievementManager.css  */
 
 .admin-achievement-manager-acm {
     padding: 24px;
@@ -13,9 +13,6 @@
 .admin-achievement-manager-acm .data-table-acm th { background-color: #f9fafb; font-weight: 600; color: #4b5563; }
 .admin-achievement-manager-acm .action-buttons-acm { display: flex; gap: 8px; }
 
-/* ================================================= */
-/* ============= CSS CHO MODAL VÀ FORM ============= */
-/* ================================================= */
 
 .modal-overlay-acm {
     position: fixed;
@@ -37,7 +34,7 @@
     display: flex;
     flex-direction: column;
     max-height: 90vh;
-    overflow: hidden; /* <<< THAY ĐỔI Ở ĐÂY: "Cắt" các góc vuông của phần tử con (footer) */
+    overflow: hidden; 
 }
 
 .modal-header-acm {
@@ -77,7 +74,7 @@
     font-weight: 500;
     font-size: 14px;
     color: #374151;
-    text-align: left; /* <<< THAY ĐỔI Ở ĐÂY: Đảm bảo label luôn căn trái */
+    text-align: left; 
 }
 
 .modal-body-acm .form-group-acm input,
@@ -145,9 +142,9 @@
     cursor: pointer; 
 }
 
-/* ================================================= */
+
 /* ============= STYLE CHUNG CHO CÁC NÚT ============= */
-/* ================================================= */
+
 
 .btn-acm { 
     padding: 8px 16px; 
@@ -179,7 +176,7 @@
 
 /* ================================================= */
 /* ============= STYLE CHO LOADING ============= */
-/* ================================================= */
+
 
 .loading-container-acm { text-align: center; padding: 40px; }
 .spinner-acm { animation: spin-acm 1s linear infinite; color: #3b82f6; }
